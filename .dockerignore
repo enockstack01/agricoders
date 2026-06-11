@@ -1,0 +1,29 @@
+# Node
+node_modules
+npm-debug.log*
+
+# Next.js
+.next
+out
+
+# Env files — pass secrets at runtime, never bake them into the image
+.env*
+
+# Git
+.git
+.gitignore
+
+# Dev tooling
+.eslintrc*
+eslint.config.*
+*.tsbuildinfo
+next-env.d.ts
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker files themselves
+Dockerfile*
+docker-compose*
+.dockerignore
