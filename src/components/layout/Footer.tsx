@@ -16,7 +16,6 @@ import {
   BookOpen,
   HelpCircle,
   MessageSquare,
-  Download,
 } from "lucide-react";
 
 const YEAR = new Date().getFullYear();
@@ -44,10 +43,9 @@ const NAV_COLS = [
     links: [
       { label: "How It Works",     href: "/#how",        icon: <BookOpen size={13} /> },
       { label: "Features",         href: "/#features",   icon: <Globe size={13} /> },
-      { label: "Download App",     href: "/#download",   icon: <Download size={13} /> },
       { label: "Agricoders Portal",href: "/",             icon: <Globe size={13} /> },
       { label: "System Status",    href: "/api/health",  icon: <Shield size={13} />, external: true },
-      { label: "Support",          href: "mailto:enockstack@gmail.com", icon: <HelpCircle size={13} />, external: true },
+      { label: "Support",          href: "mailto:agricoders@gmail.com", icon: <HelpCircle size={13} />, external: true },
     ],
   },
   {
@@ -55,7 +53,7 @@ const NAV_COLS = [
     links: [
       { label: "Privacy Policy",   href: "/privacy",  icon: <FileText size={13} /> },
       { label: "Terms of Service", href: "/terms",    icon: <FileText size={13} /> },
-      { label: "Contact",          href: "mailto:enockstack@gmail.com", icon: <MessageSquare size={13} />, external: true },
+      { label: "Contact",          href: "mailto:agricoders@gmail.com", icon: <MessageSquare size={13} />, external: true },
     ],
   },
 ];
@@ -64,7 +62,7 @@ const SOCIALS = [
   { label: "LinkedIn", href: "https://linkedin.com", icon: <Link2 size={16} /> },
   { label: "Twitter",  href: "https://twitter.com",  icon: <Share2 size={16} /> },
   { label: "GitHub",   href: "https://github.com",   icon: <GitBranch size={16} /> },
-  { label: "Email",    href: "mailto:enockstack@gmail.com", icon: <Mail size={16} /> },
+  { label: "Email",    href: "mailto:agricoders@gmail.com", icon: <Mail size={16} /> },
 ];
 
 const FEATURES = [
@@ -93,7 +91,7 @@ export default function Footer() {
               <span className="font-bold text-white text-base tracking-tight">Logistack Plan</span>
             </Link>
             <p className="text-sm leading-relaxed text-gray-500 mb-5">
-              Logistack Plan generates professional business plans and financial models — powered by AI and Python charts.
+              Logistack Plan generates professional business plans and financial models using AI and Python charts.
             </p>
 
             {/* Social links */}
