@@ -22,6 +22,8 @@ import {
   CheckCircle,
   AlertCircle,
   Clock,
+  XCircle,
+  Inbox,
 } from "lucide-react";
 
 interface Stats {
@@ -53,7 +55,20 @@ interface AdminSubmission {
   createdAt: string;
 }
 
-type Tab = "overview" | "users" | "submissions" | "credits";
+interface CreditRequestItem {
+  _id: string;
+  userId: string;
+  status: "pending" | "approved" | "rejected";
+  documents: { type: string; count: number }[];
+  creditsRequested: number;
+  note?: string;
+  adminNote?: string;
+  reviewedAt?: string;
+  createdAt: string;
+  user: { name: string; email: string; imageUrl: string };
+}
+
+type Tab = "overview" | "users" | "submissions" | "credits" | "requests";
 
 export default function AdminPage() {
   const { user, isLoaded } = useUser();
@@ -71,6 +86,9 @@ export default function AdminPage() {
   const [loadingStats, setLoadingStats] = useState(true);
   const [loadingUsers, setLoadingUsers] = useState(false);
   const [loadingSubmissions, setLoadingSubmissions] = useState(false);
+  const [requests, setRequests] = useState<CreditRequestItem[]>([]);
+  const [loadingRequests, setLoadingRequests] = useState(false);
+  const [requestsFilter, setRequestsFilter] = useState<"pending" | "all">("pending");
   const [forbidden, setForbidden] = useState(false);
 
   // Redirect non-admins
@@ -111,11 +129,22 @@ export default function AdminPage() {
     }
   }, []);
 
+  const loadRequests = useCallback(async (filter: "pending" | "all" = "pending") => {
+    setLoadingRequests(true);
+    try {
+      const { data } = await axios.get(`/api/admin/credits/requests?status=${filter}`);
+      setRequests(data);
+    } finally {
+      setLoadingRequests(false);
+    }
+  }, []);
+
   useEffect(() => { loadStats(); }, [loadStats]);
 
   useEffect(() => {
     if (tab === "users" && users.length === 0) loadUsers();
     if (tab === "submissions") loadSubmissions(submissionsPage, submissionsSearch);
+    if (tab === "requests") loadRequests(requestsFilter);
   }, [tab]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isLoaded || role === "user") return null;
@@ -132,11 +161,14 @@ export default function AdminPage() {
     );
   }
 
-  const TABS: { key: Tab; label: string; icon: React.ReactNode }[] = [
+  const pendingRequestCount = requests.filter((r) => r.status === "pending").length;
+
+  const TABS: { key: Tab; label: string; icon: React.ReactNode; badge?: number }[] = [
     { key: "overview", label: "Overview", icon: <BarChart2 size={15} /> },
     { key: "users", label: "Users", icon: <Users size={15} /> },
     { key: "submissions", label: "All Plans", icon: <FileText size={15} /> },
     { key: "credits", label: "Credits", icon: <Coins size={15} /> },
+    { key: "requests", label: "Requests", icon: <Inbox size={15} />, badge: pendingRequestCount },
   ];
 
   const filteredUsers = userSearch
@@ -163,6 +195,11 @@ export default function AdminPage() {
           >
             {t.icon}
             {t.label}
+            {t.badge != null && t.badge > 0 && (
+              <span className="ml-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
+                {t.badge}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -447,7 +484,255 @@ export default function AdminPage() {
 
       {/* ── Credits tab ─────────────────────────────────────────────────────── */}
       {tab === "credits" && <AdminCreditsPanel />}
+
+      {/* ── Requests tab ────────────────────────────────────────────────────── */}
+      {tab === "requests" && (
+        <AdminRequestsPanel
+          requests={requests}
+          loading={loadingRequests}
+          filter={requestsFilter}
+          onFilterChange={(f) => { setRequestsFilter(f); loadRequests(f); }}
+          onRefresh={() => loadRequests(requestsFilter)}
+          onReviewed={(id, status, adminNote) => {
+            setRequests((prev) =>
+              prev.map((r) => r._id === id ? { ...r, status, adminNote } : r)
+            );
+          }}
+        />
+      )}
     </AppShell>
+  );
+}
+
+// ── Admin Requests Panel ──────────────────────────────────────────────────────
+
+function AdminRequestsPanel({
+  requests,
+  loading,
+  filter,
+  onFilterChange,
+  onRefresh,
+  onReviewed,
+}: {
+  requests: CreditRequestItem[];
+  loading: boolean;
+  filter: "pending" | "all";
+  onFilterChange: (f: "pending" | "all") => void;
+  onRefresh: () => void;
+  onReviewed: (id: string, status: "approved" | "rejected", adminNote?: string) => void;
+}) {
+  const [reviewing, setReviewing] = useState<{ id: string; action: "approve" | "reject" } | null>(null);
+  const [adminNote, setAdminNote] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState("");
+
+  function startReview(id: string, action: "approve" | "reject") {
+    setReviewing({ id, action });
+    setAdminNote("");
+    setError("");
+  }
+
+  function cancelReview() {
+    setReviewing(null);
+    setAdminNote("");
+    setError("");
+  }
+
+  async function confirmReview() {
+    if (!reviewing) return;
+    setSubmitting(true);
+    setError("");
+    try {
+      await axios.patch(`/api/admin/credits/requests/${reviewing.id}`, {
+        action: reviewing.action,
+        adminNote: adminNote.trim() || undefined,
+      });
+      onReviewed(reviewing.id, reviewing.action === "approve" ? "approved" : "rejected", adminNote.trim() || undefined);
+      setReviewing(null);
+      setAdminNote("");
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { error?: string } } })?.response?.data?.error ||
+        "Action failed. Please try again.";
+      setError(msg);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  const DOC_LABELS: Record<string, string> = {
+    "business-plan": "Business Plan",
+    "financial-model": "Financial Model",
+  };
+
+  const STATUS_COLORS: Record<string, string> = {
+    pending: "bg-amber-50 text-amber-700 border-amber-200",
+    approved: "bg-green-50 text-green-700 border-green-200",
+    rejected: "bg-red-50 text-red-700 border-red-200",
+  };
+
+  return (
+    <div className="space-y-4">
+      {/* Header + filter */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-lg w-fit">
+          {(["pending", "all"] as const).map((f) => (
+            <button
+              key={f}
+              onClick={() => onFilterChange(f)}
+              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+                filter === f ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              {f === "pending" ? "Pending" : "All Requests"}
+            </button>
+          ))}
+        </div>
+        <button
+          onClick={onRefresh}
+          className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors self-start sm:self-auto"
+        >
+          <RefreshCw size={14} />
+        </button>
+      </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center py-16 gap-2 text-gray-400">
+          <Loader2 size={18} className="animate-spin" />
+          <span className="text-sm">Loading requests…</span>
+        </div>
+      ) : requests.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-20 text-center bg-white border border-gray-200 rounded-xl">
+          <Inbox size={32} className="text-gray-300 mb-3" />
+          <p className="text-sm font-medium text-gray-500">No {filter === "pending" ? "pending" : ""} requests</p>
+          <p className="text-xs text-gray-400 mt-1">Users will appear here when they request credits.</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {requests.map((req) => {
+            const isReviewing = reviewing?.id === req._id;
+            return (
+              <div
+                key={req._id}
+                className="bg-white border border-gray-200 rounded-xl overflow-hidden"
+              >
+                <div className="px-5 py-4 flex flex-col sm:flex-row sm:items-start gap-4">
+                  {/* User */}
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    {req.user.imageUrl ? (
+                      <img src={req.user.imageUrl} alt="" className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
+                    ) : (
+                      <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                        <Users size={14} className="text-gray-500" />
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-gray-900 truncate">{req.user.name || "—"}</p>
+                      <p className="text-xs text-gray-400 truncate">{req.user.email}</p>
+                    </div>
+                  </div>
+
+                  {/* Request details */}
+                  <div className="flex-1 min-w-0 space-y-1.5">
+                    <div className="flex flex-wrap gap-1.5">
+                      {req.documents.map((d, i) => (
+                        <span
+                          key={i}
+                          className="inline-flex items-center gap-1 text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded-full font-medium"
+                        >
+                          <FileText size={10} />
+                          {d.count}× {DOC_LABELS[d.type] ?? d.type}
+                        </span>
+                      ))}
+                      <span className="inline-flex items-center gap-1 text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full font-semibold">
+                        <Coins size={10} />
+                        {req.creditsRequested} credits
+                      </span>
+                    </div>
+                    {req.note && (
+                      <p className="text-xs text-gray-500 italic">&ldquo;{req.note}&rdquo;</p>
+                    )}
+                    {req.adminNote && (
+                      <p className="text-xs text-gray-400">Admin note: <span className="text-gray-600">{req.adminNote}</span></p>
+                    )}
+                    <p className="text-xs text-gray-400">
+                      <Clock size={10} className="inline mr-1" />
+                      {new Date(req.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
+                    </p>
+                  </div>
+
+                  {/* Status + actions */}
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <span className={`text-xs font-medium px-2 py-1 rounded-full border capitalize ${STATUS_COLORS[req.status]}`}>
+                      {req.status}
+                    </span>
+                    {req.status === "pending" && !isReviewing && (
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          onClick={() => startReview(req._id, "approve")}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors"
+                        >
+                          <CheckCircle size={12} />
+                          Approve
+                        </button>
+                        <button
+                          onClick={() => startReview(req._id, "reject")}
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-medium rounded-lg transition-colors"
+                        >
+                          <XCircle size={12} />
+                          Reject
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Inline review form */}
+                {isReviewing && (
+                  <div className={`px-5 py-4 border-t ${reviewing.action === "approve" ? "bg-green-50 border-green-100" : "bg-red-50 border-red-100"}`}>
+                    <p className="text-xs font-semibold mb-2 text-gray-700">
+                      {reviewing.action === "approve"
+                        ? `Approve and grant ${req.creditsRequested} credits to ${req.user.name}?`
+                        : `Reject this request from ${req.user.name}?`}
+                    </p>
+                    <input
+                      value={adminNote}
+                      onChange={(e) => setAdminNote(e.target.value)}
+                      placeholder="Add a note for the user (optional)…"
+                      className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white mb-3"
+                    />
+                    {error && (
+                      <p className="text-xs text-red-600 mb-2">{error}</p>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={cancelReview}
+                        disabled={submitting}
+                        className="px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={confirmReview}
+                        disabled={submitting}
+                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white rounded-lg transition-colors disabled:opacity-60 ${
+                          reviewing.action === "approve"
+                            ? "bg-green-600 hover:bg-green-700"
+                            : "bg-red-600 hover:bg-red-700"
+                        }`}
+                      >
+                        {submitting && <Loader2 size={11} className="animate-spin" />}
+                        {reviewing.action === "approve" ? "Confirm Approve" : "Confirm Reject"}
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </div>
   );
 }
 

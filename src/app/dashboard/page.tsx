@@ -21,7 +21,8 @@ import {
   RefreshCw,
   Coins,
   ChevronDown,
-  Mail,
+  CheckCircle2,
+  Send,
 } from "lucide-react";
 
 interface Submission {
@@ -42,40 +43,173 @@ const fmt = (n: number) => n.toLocaleString();
 const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" });
 
-// Insufficient credits modal
+const CREDITS_PER_DOC = 5;
+
+function CountStepper({
+  value,
+  onChange,
+}: {
+  value: number;
+  onChange: (v: number) => void;
+}) {
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        onClick={() => onChange(Math.max(0, value - 1))}
+        className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 disabled:opacity-40"
+        disabled={value === 0}
+      >
+        −
+      </button>
+      <span className="w-5 text-center text-sm font-semibold text-gray-800">{value}</span>
+      <button
+        type="button"
+        onClick={() => onChange(value + 1)}
+        className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100"
+      >
+        +
+      </button>
+    </div>
+  );
+}
+
 function CreditsModal({ required, balance, onClose }: { required: number; balance: number; onClose: () => void }) {
+  const [bpCount, setBpCount] = useState(required > 0 ? 1 : 0);
+  const [fmCount, setFmCount] = useState(0);
+  const [note, setNote] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+
+  const totalCredits = (bpCount + fmCount) * CREDITS_PER_DOC;
+  const canSubmit = totalCredits > 0 && !submitting;
+
+  async function handleSubmit() {
+    setError("");
+    setSubmitting(true);
+    const documents: { type: "business-plan" | "financial-model"; count: number }[] = [];
+    if (bpCount > 0) documents.push({ type: "business-plan", count: bpCount });
+    if (fmCount > 0) documents.push({ type: "financial-model", count: fmCount });
+    try {
+      await axios.post("/api/credits/request", { documents, note: note.trim() || undefined });
+      setSubmitted(true);
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { error?: string } } })?.response?.data?.error ||
+        "Failed to submit request. Please try again.";
+      setError(msg);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
-      <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-6 text-center">
-        <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
-          <Coins size={24} className="text-amber-600" />
-        </div>
-        <h3 className="font-semibold text-gray-900 mb-1">Insufficient Credits</h3>
-        <p className="text-xs text-gray-500 mb-4">
-          You need <strong>{required}</strong> credits to generate a document, but you only have{" "}
-          <strong className="text-red-600">{balance}</strong>.
-        </p>
-        <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-5 flex items-start gap-2 text-left">
-          <Mail size={14} className="text-blue-500 flex-shrink-0 mt-0.5" />
-          <p className="text-xs text-blue-700 leading-relaxed">
-            Contact your administrator to request additional credits for your account.
-          </p>
-        </div>
-        <div className="flex gap-2">
-          <Link
-            href="/profile"
-            className="flex-1 text-center py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-medium rounded-lg transition-colors border border-gray-200"
-            onClick={onClose}
-          >
-            View Credit History
-          </Link>
-          <button
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-600 text-xs font-medium rounded-lg transition-colors border border-gray-200"
-          >
-            Close
-          </button>
-        </div>
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-md p-6">
+        {submitted ? (
+          <div className="text-center py-4">
+            <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 size={24} className="text-green-600" />
+            </div>
+            <h3 className="font-semibold text-gray-900 mb-1">Request Sent!</h3>
+            <p className="text-xs text-gray-500 mb-5">
+              Your credit request has been submitted. The admin will review it shortly and credits will
+              appear in your account once approved.
+            </p>
+            <div className="flex gap-2 justify-center">
+              <Link
+                href="/profile"
+                onClick={onClose}
+                className="px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-medium rounded-lg border border-gray-200 transition-colors"
+              >
+                View History
+              </Link>
+              <button
+                onClick={onClose}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors"
+              >
+                Done
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-start gap-3 mb-5">
+              <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                <Coins size={20} className="text-amber-600" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900 text-sm">Insufficient Credits</h3>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  You need <strong>{required}</strong> credits but have{" "}
+                  <strong className="text-red-600">{balance}</strong>. Request more from your admin below.
+                </p>
+              </div>
+            </div>
+
+            <p className="text-xs font-semibold text-gray-700 mb-3">
+              Which documents do you need? ({CREDITS_PER_DOC} credits each)
+            </p>
+
+            <div className="space-y-3 mb-4">
+              <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
+                <div>
+                  <p className="text-xs font-medium text-gray-800">Business Plan (.docx)</p>
+                  <p className="text-xs text-gray-400">Narrative + charts</p>
+                </div>
+                <CountStepper value={bpCount} onChange={setBpCount} />
+              </div>
+              <div className="flex items-center justify-between rounded-lg border border-gray-200 px-4 py-3">
+                <div>
+                  <p className="text-xs font-medium text-gray-800">Financial Model (.xlsx)</p>
+                  <p className="text-xs text-gray-400">19-sheet spreadsheet</p>
+                </div>
+                <CountStepper value={fmCount} onChange={setFmCount} />
+              </div>
+            </div>
+
+            <textarea
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              placeholder="Add a note for the admin (optional)…"
+              rows={2}
+              className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-green-500 mb-4"
+            />
+
+            <div className="flex items-center justify-between mb-4 bg-gray-50 rounded-lg px-4 py-2">
+              <span className="text-xs text-gray-600">Credits to request</span>
+              <span className="text-sm font-bold text-gray-900">{totalCredits}</span>
+            </div>
+
+            {error && (
+              <p className="text-xs text-red-600 mb-3 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+                {error}
+              </p>
+            )}
+
+            <div className="flex gap-2">
+              <button
+                onClick={onClose}
+                className="flex-1 py-2 bg-gray-50 hover:bg-gray-100 text-gray-600 text-xs font-medium rounded-lg border border-gray-200 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSubmit}
+                disabled={!canSubmit}
+                className="flex-1 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
+              >
+                {submitting ? (
+                  <Loader2 size={12} className="animate-spin" />
+                ) : (
+                  <Send size={12} />
+                )}
+                {submitting ? "Sending…" : "Send Request"}
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
