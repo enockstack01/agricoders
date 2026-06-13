@@ -791,27 +791,9 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Payment methods row */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 text-xs text-gray-400">
-            <div className="flex items-center gap-2">
-              <svg viewBox="0 0 38 24" className="h-5 w-auto opacity-60" fill="none">
-                <rect width="38" height="24" rx="4" fill="#1A1F71"/>
-                <path d="M15.9 8.6l-2.6 6.8h-1.7l-1.3-5.4c-.1-.3-.2-.4-.4-.5-.4-.2-1-.4-1.5-.5v-.2h2.7c.4 0 .7.3.7.6l.7 3.6 1.7-4.2h1.7zm6.7 4.6c0-1.6-2.3-1.7-2.3-2.4 0-.2.2-.5.7-.5.5-.1.9 0 1.3.2l.2-1.1c-.4-.1-.8-.2-1.4-.2-1.5 0-2.5.8-2.5 1.9 0 .8.8 1.3 1.4 1.6.6.3.8.5.8.7 0 .4-.5.6-1 .6-.5 0-1-.1-1.4-.3l-.3 1.1c.4.2 1 .3 1.6.3 1.6 0 2.6-.8 2.6-2zm4.1 2.2h1.5l-1.3-6.8H25c-.3 0-.6.2-.7.5l-2.4 6.3h1.7l.3-.9h2.1l.2.9zm-1.8-2.2l.9-2.3.5 2.3h-1.4zm-6.8-4.6l-1.3 6.8h-1.6l1.3-6.8h1.6z" fill="white"/>
-              </svg>
-              <svg viewBox="0 0 38 24" className="h-5 w-auto opacity-60" fill="none">
-                <rect width="38" height="24" rx="4" fill="#EB001B" fillOpacity=".15"/>
-                <circle cx="15" cy="12" r="7" fill="#EB001B"/>
-                <circle cx="23" cy="12" r="7" fill="#F79E1B"/>
-                <path d="M19 7.3a7 7 0 0 1 0 9.4A7 7 0 0 1 19 7.3z" fill="#FF5F00"/>
-              </svg>
-            </div>
-            <span className="hidden sm:inline">·</span>
-            <span>Visa · Mastercard · Apple Pay · Google Pay · Bank Transfer · and more</span>
-            <span className="hidden sm:inline">·</span>
-            <span className="flex items-center gap-1">
-              <ShieldCheck size={11} className="text-green-500" />
-              Secured by Stripe
-            </span>
+          <div className="flex items-center justify-center gap-1.5 text-xs text-gray-400">
+            <ShieldCheck size={11} className="text-green-500" />
+            <span>5 credits per generation · Contact admin to get credits</span>
           </div>
         </div>
       </section>
@@ -851,7 +833,7 @@ export default function Home() {
             </SignInButton>
           </div>
           <p className="text-green-200 text-xs mt-7">
-            5 credits per generation · No subscription required · Secured by Stripe
+            5 credits per generation · No subscription required
           </p>
         </div>
       </section>

@@ -29,7 +29,11 @@ import {
   ChevronRight,
   Layers,
   Loader2,
+  Coins,
+  Mail,
 } from "lucide-react";
+
+const REQUIRED_CREDITS = 5;
 
 const STEPS = [
   { label: "Company Info",         icon: Building2 },
@@ -53,9 +57,18 @@ function FormPageContent() {
   const [formData, setFormData] = useState<Omit<FormSubmission, "userId">>(defaultFormData);
   const [submitting, setSubmitting] = useState(false);
   const [loadingEdit, setLoadingEdit] = useState(true); // true while loading profile + optional edit
+  const [credits, setCredits] = useState<number | null>(null);
 
   useEffect(() => {
     const init = async () => {
+      // Check credit balance first
+      try {
+        const { data } = await axios.get<{ credits: number }>("/api/credits");
+        setCredits(data.credits ?? 0);
+      } catch {
+        setCredits(0);
+      }
+
       // Load user profile defaults first (for new plans)
       let profileData = null;
       if (!editId) {
@@ -109,6 +122,49 @@ function FormPageContent() {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center gap-2 text-gray-500">
         <Loader2 size={20} className="animate-spin" />
         <span className="text-sm">Loading submission…</span>
+      </div>
+    );
+  }
+
+  // Credit gate — user must have at least 5 credits to create a plan
+  if (credits !== null && credits < REQUIRED_CREDITS) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <header className="bg-white border-b border-gray-200 px-4 sm:px-6 h-14 flex items-center sticky top-0 z-10">
+          <button
+            onClick={() => router.push("/dashboard")}
+            className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 text-sm transition-colors"
+          >
+            <ChevronLeft size={16} />
+            <span className="hidden sm:inline">Dashboard</span>
+          </button>
+        </header>
+        <div className="flex-1 flex items-center justify-center px-4">
+          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm max-w-sm w-full p-8 text-center">
+            <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-5">
+              <Coins size={28} className="text-amber-600" />
+            </div>
+            <h2 className="text-lg font-bold text-gray-900 mb-2">Insufficient Credits</h2>
+            <p className="text-sm text-gray-500 mb-1">
+              You need at least <strong>{REQUIRED_CREDITS} credits</strong> to create a business plan proposal.
+            </p>
+            <p className="text-sm text-gray-500 mb-6">
+              Your current balance: <strong className="text-red-600">{credits} credit{credits === 1 ? "" : "s"}</strong>
+            </p>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-6 flex items-start gap-2 text-left">
+              <Mail size={14} className="text-blue-500 flex-shrink-0 mt-0.5" />
+              <p className="text-xs text-blue-700 leading-relaxed">
+                Contact your administrator to request additional credits for your account.
+              </p>
+            </div>
+            <button
+              onClick={() => router.push("/dashboard")}
+              className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-colors"
+            >
+              Back to Dashboard
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
