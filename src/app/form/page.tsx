@@ -30,7 +30,8 @@ import {
   Layers,
   Loader2,
   Coins,
-  Mail,
+  Send,
+  CheckCircle2,
 } from "lucide-react";
 
 const REQUIRED_CREDITS = 5;
@@ -47,6 +48,157 @@ const STEPS = [
   { label: "Financial Settings",   icon: Settings },
   { label: "Review & Submit",      icon: ClipboardCheck },
 ];
+
+const CREDITS_PER_DOC = 5;
+
+function CreditGate({ credits, required, onBack }: { credits: number; required: number; onBack: () => void }) {
+  const [bpCount, setBpCount] = useState(1);
+  const [fmCount, setFmCount] = useState(0);
+  const [note, setNote] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState("");
+
+  const totalCredits = (bpCount + fmCount) * CREDITS_PER_DOC;
+
+  async function handleSubmit() {
+    setError("");
+    setSubmitting(true);
+    const documents: { type: "business-plan" | "financial-model"; count: number }[] = [];
+    if (bpCount > 0) documents.push({ type: "business-plan", count: bpCount });
+    if (fmCount > 0) documents.push({ type: "financial-model", count: fmCount });
+    try {
+      await axios.post("/api/credits/request", { documents, note: note.trim() || undefined });
+      setSubmitted(true);
+    } catch (err: unknown) {
+      const msg =
+        (err as { response?: { data?: { error?: string } } })?.response?.data?.error ||
+        "Failed to submit request. Please try again.";
+      setError(msg);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50 flex flex-col">
+      <header className="bg-white border-b border-gray-200 px-4 sm:px-6 h-14 flex items-center sticky top-0 z-10">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 text-sm transition-colors"
+        >
+          <ChevronLeft size={16} />
+          <span className="hidden sm:inline">Dashboard</span>
+        </button>
+      </header>
+
+      <div className="flex-1 flex items-center justify-center px-4 py-10">
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-sm w-full max-w-md p-8">
+          {submitted ? (
+            <div className="text-center py-4">
+              <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                <CheckCircle2 size={28} className="text-green-600" />
+              </div>
+              <h2 className="text-lg font-bold text-gray-900 mb-2">Request Sent!</h2>
+              <p className="text-sm text-gray-500 mb-6">
+                Your credit request has been submitted. The admin will review it and credits will appear in your account once approved.
+              </p>
+              <button
+                onClick={onBack}
+                className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-colors"
+              >
+                Back to Dashboard
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-start gap-4 mb-6">
+                <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
+                  <Coins size={24} className="text-amber-600" />
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold text-gray-900">Insufficient Credits</h2>
+                  <p className="text-sm text-gray-500 mt-0.5">
+                    You need <strong>{required} credits</strong> to create a plan. Your balance:{" "}
+                    <strong className="text-red-600">{credits} credit{credits === 1 ? "" : "s"}</strong>.
+                  </p>
+                </div>
+              </div>
+
+              <p className="text-xs font-semibold text-gray-700 mb-3">
+                Request credits from your admin — select what you need ({CREDITS_PER_DOC} credits each):
+              </p>
+
+              <div className="space-y-3 mb-4">
+                {[
+                  { label: "Business Plan (.docx)", sub: "Narrative + charts", count: bpCount, setCount: setBpCount },
+                  { label: "Financial Model (.xlsx)", sub: "19-sheet spreadsheet", count: fmCount, setCount: setFmCount },
+                ].map(({ label, sub, count, setCount }) => (
+                  <div key={label} className="flex items-center justify-between border border-gray-200 rounded-xl px-4 py-3">
+                    <div>
+                      <p className="text-xs font-medium text-gray-800">{label}</p>
+                      <p className="text-xs text-gray-400">{sub}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setCount(Math.max(0, count - 1))}
+                        disabled={count === 0}
+                        className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 disabled:opacity-40"
+                      >−</button>
+                      <span className="w-5 text-center text-sm font-semibold text-gray-800">{count}</span>
+                      <button
+                        type="button"
+                        onClick={() => setCount(count + 1)}
+                        className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100"
+                      >+</button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <textarea
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Add a note for the admin (optional)…"
+                rows={2}
+                className="w-full text-xs border border-gray-200 rounded-xl px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-green-500 mb-4"
+              />
+
+              <div className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-2.5 mb-4">
+                <span className="text-xs text-gray-600">Credits to request</span>
+                <span className="text-sm font-bold text-gray-900">{totalCredits}</span>
+              </div>
+
+              {error && (
+                <p className="text-xs text-red-600 bg-red-50 border border-red-200 rounded-lg px-3 py-2 mb-3">
+                  {error}
+                </p>
+              )}
+
+              <div className="flex gap-2">
+                <button
+                  onClick={onBack}
+                  className="flex-1 py-2.5 bg-gray-50 hover:bg-gray-100 text-gray-600 text-sm font-medium rounded-xl border border-gray-200 transition-colors"
+                >
+                  Back
+                </button>
+                <button
+                  onClick={handleSubmit}
+                  disabled={totalCredits === 0 || submitting}
+                  className="flex-1 py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-sm font-semibold rounded-xl transition-colors flex items-center justify-center gap-1.5"
+                >
+                  {submitting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+                  {submitting ? "Sending…" : "Send Request"}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function FormPageContent() {
   const router = useRouter();
@@ -128,45 +280,7 @@ function FormPageContent() {
 
   // Credit gate — user must have at least 5 credits to create a plan
   if (credits !== null && credits < REQUIRED_CREDITS) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex flex-col">
-        <header className="bg-white border-b border-gray-200 px-4 sm:px-6 h-14 flex items-center sticky top-0 z-10">
-          <button
-            onClick={() => router.push("/dashboard")}
-            className="flex items-center gap-1.5 text-gray-500 hover:text-gray-700 text-sm transition-colors"
-          >
-            <ChevronLeft size={16} />
-            <span className="hidden sm:inline">Dashboard</span>
-          </button>
-        </header>
-        <div className="flex-1 flex items-center justify-center px-4">
-          <div className="bg-white rounded-2xl border border-gray-200 shadow-sm max-w-sm w-full p-8 text-center">
-            <div className="w-14 h-14 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-5">
-              <Coins size={28} className="text-amber-600" />
-            </div>
-            <h2 className="text-lg font-bold text-gray-900 mb-2">Insufficient Credits</h2>
-            <p className="text-sm text-gray-500 mb-1">
-              You need at least <strong>{REQUIRED_CREDITS} credits</strong> to create a business plan proposal.
-            </p>
-            <p className="text-sm text-gray-500 mb-6">
-              Your current balance: <strong className="text-red-600">{credits} credit{credits === 1 ? "" : "s"}</strong>
-            </p>
-            <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-6 flex items-start gap-2 text-left">
-              <Mail size={14} className="text-blue-500 flex-shrink-0 mt-0.5" />
-              <p className="text-xs text-blue-700 leading-relaxed">
-                Contact your administrator to request additional credits for your account.
-              </p>
-            </div>
-            <button
-              onClick={() => router.push("/dashboard")}
-              className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-semibold rounded-xl transition-colors"
-            >
-              Back to Dashboard
-            </button>
-          </div>
-        </div>
-      </div>
-    );
+    return <CreditGate credits={credits} required={REQUIRED_CREDITS} onBack={() => router.push("/dashboard")} />;
   }
 
   const stepProps = { formData, update };

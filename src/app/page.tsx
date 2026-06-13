@@ -18,6 +18,9 @@ import {
   Share2,
   GitBranch,
   Mail,
+  Smartphone,
+  Megaphone,
+  BarChart2,
 } from "lucide-react";
 import AgriStatsBar from "@/components/AgriStatsBar";
 
@@ -27,46 +30,60 @@ export const metadata: Metadata = {
     "Agricoders is a program dedicated to equipping the agricultural sector with Geospatial Intelligence solutions and AI-powered software that farmers rely on to achieve maximum productivity.",
 };
 
-/* ─── Mission pillars ───────────────────────────────────────────────────── */
+/* ─── Services ──────────────────────────────────────────────────────────── */
 const PILLARS = [
   {
     Icon: Satellite,
     bg: "bg-amber-50",
     iconColor: "text-amber-700",
     border: "border-amber-100",
-    title: "Geospatial Technology",
-    desc: "Satellite imagery, GIS analysis, and remote-sensing pipelines that give farmers and agribusinesses a precise, data-rich view of every field.",
+    title: "Geospatial & Location Intelligence",
+    desc: "We empower farmers with location intelligence advisory services — developing open-source spatial planning tools and delivering Agtech consultancy to help agribusinesses make precision, data-driven decisions.",
     features: [
-      "NDVI & multi-spectral analysis",
-      "Land use & boundary mapping",
-      "Real-time crop monitoring",
+      "Open-source spatial planning tools",
+      "GIS & remote-sensing advisory",
+      "Agtech consultancy services",
     ],
   },
   {
-    Icon: Brain,
-    bg: "bg-green-50",
-    iconColor: "text-green-800",
-    border: "border-green-100",
-    title: "AI-Powered Software",
-    desc: "Purpose-built machine learning systems that automate planning, generate financial intelligence, and surface actionable agronomic insights.",
+    Icon: Smartphone,
+    bg: "bg-blue-50",
+    iconColor: "text-blue-700",
+    border: "border-blue-100",
+    title: "Web & Mobile App Development",
+    desc: "We design and develop intelligent, production-grade Web and Mobile Applications purpose-built for agribusinesses — from farm management systems to market-linkage platforms.",
     features: [
-      "AI business plan generation",
-      "Automated financial modelling",
-      "Data-driven decision support",
+      "Custom agribusiness web apps",
+      "iOS & Android mobile apps",
+      "Scalable, API-first architecture",
     ],
   },
   {
-    Icon: Sprout,
+    Icon: Megaphone,
+    bg: "bg-rose-50",
+    iconColor: "text-rose-600",
+    border: "border-rose-100",
+    title: "Digital Marketing Services",
+    desc: "We help agricultural businesses grow their digital presence through targeted content strategies, SEO, social media campaigns, and data-driven performance marketing tailored to the agri-sector.",
+    features: [
+      "Agribusiness SEO & content strategy",
+      "Social media & paid campaigns",
+      "Brand positioning for agri-markets",
+    ],
+  },
+  {
+    Icon: BarChart2,
     bg: "bg-emerald-50",
     iconColor: "text-emerald-700",
     border: "border-emerald-100",
-    title: "Agricultural Transformation",
-    desc: "Integrated digital tools that modernise operations across the entire agricultural value chain — from field to finance.",
+    title: "Agribusiness Planning & Financial Modelling",
+    desc: "We provide professional Agribusiness Planning and Financial Modelling services. Our AI-powered platform, Logistack Plan, generates investor-ready business plans and 19-sheet financial models in under 15 minutes.",
     features: [
-      "Digital farm management",
-      "Investor-ready documentation",
-      "Market & supply-chain insights",
+      "Investor-ready business plans",
+      "19-sheet Excel financial models",
+      "AI-powered narrative generation",
     ],
+    cta: { label: "Try Logistack Plan", href: "/app" },
   },
 ] as const;
 
@@ -187,11 +204,12 @@ export default function AgricodersPage() {
           </h1>
 
           <p className="text-base sm:text-lg text-green-200/75 mb-10 max-w-2xl mx-auto leading-relaxed">
-            Agricoders aims to equip the agricultural sector with{" "}
-            <strong className="text-amber-300 font-semibold">Geospatial Intelligence solutions</strong>{" "}
-            that farmers and agribusinesses can rely on to achieve{" "}
-            <strong className="text-white font-semibold">maximum productivity</strong> — through
-            precision data, AI automation, and smart financial planning.
+            Agricoders empowers farmers and agribusinesses with{" "}
+            <strong className="text-amber-300 font-semibold">location intelligence</strong>,{" "}
+            <strong className="text-white font-semibold">intelligent applications</strong>,{" "}
+            <strong className="text-amber-300 font-semibold">digital marketing</strong>, and{" "}
+            <strong className="text-white font-semibold">AI-powered business planning</strong> — so
+            every agricultural business can operate with precision, grow with confidence, and plan with intelligence.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center mb-14">
@@ -215,10 +233,10 @@ export default function AgricodersPage() {
           <div className="flex flex-wrap items-center justify-center gap-2">
             {[
               "Geospatial Intelligence",
-              "Machine Learning",
-              "Remote Sensing",
-              "Precision Agriculture",
-              "Agricultural Finance",
+              "Web & Mobile Apps",
+              "Digital Marketing",
+              "Agribusiness Planning",
+              "AI Financial Modelling",
             ].map((tag) => (
               <span
                 key={tag}
@@ -256,17 +274,16 @@ export default function AgricodersPage() {
                   Our Core Goal
                 </div>
                 <blockquote className="text-lg sm:text-xl font-bold text-gray-900 leading-snug mb-3">
-                  &ldquo;Agricoders aims to equip the agricultural sector with{" "}
+                  &ldquo;We empower farmers with{" "}
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-700 to-emerald-600">
-                    Geospatial Intelligence solutions
+                    location intelligence
                   </span>{" "}
-                  that farmers can rely on to achieve maximum productivity.&rdquo;
+                  — building open-source spatial tools, intelligent applications, and AI-powered planning systems that any agribusiness can rely on.&rdquo;
                 </blockquote>
                 <p className="text-sm text-gray-500 leading-relaxed max-w-2xl">
-                  By combining satellite data, precision mapping, and AI-driven software, we give
-                  every farmer — regardless of scale — tools previously available only to large
-                  enterprises. Data-informed decisions lead to better yields, optimised resources,
-                  and sustainable growth.
+                  From geospatial advisory and custom software to digital marketing and financial modelling,
+                  Agricoders delivers the full stack of digital services that modern agribusinesses need
+                  to grow, attract investors, and operate with precision.
                 </p>
               </div>
             </div>
@@ -297,24 +314,25 @@ export default function AgricodersPage() {
           <div className="text-center mb-14">
             <div className="inline-flex items-center gap-2 text-xs font-semibold text-green-800 bg-green-50 border border-green-200 rounded-full px-3.5 py-1.5 mb-5">
               <Leaf size={11} />
-              What we build
+              What we do
             </div>
             <h2 className="text-2xl sm:text-3xl font-bold mb-3" style={{ color: "#052e16" }}>
-              Three pillars of agricultural innovation
+              Four services driving agricultural transformation
             </h2>
             <p className="text-sm text-gray-500 max-w-lg mx-auto leading-relaxed">
-              Agricoders combines satellite data, artificial intelligence, and deep agricultural
-              domain expertise to build tools that solve real problems at scale.
+              Agricoders combines geospatial intelligence, software development, digital marketing,
+              and AI-powered planning to solve real problems across the agricultural value chain.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             {PILLARS.map((p) => {
               const Icon = p.Icon;
+              const hasCta = "cta" in p && p.cta;
               return (
                 <div
                   key={p.title}
-                  className={`bg-white rounded-2xl border ${p.border} p-7 hover:shadow-xl hover:-translate-y-1.5 hover:border-amber-200 transition-all duration-200 group cursor-default`}
+                  className={`bg-white rounded-2xl border ${p.border} p-7 hover:shadow-xl hover:-translate-y-1.5 hover:border-amber-200 transition-all duration-200 group flex flex-col`}
                 >
                   <div className={`w-12 h-12 rounded-xl ${p.bg} flex items-center justify-center mb-5 group-hover:scale-110 transition-transform`}>
                     <Icon size={22} className={p.iconColor} />
@@ -323,7 +341,7 @@ export default function AgricodersPage() {
                     {p.title}
                   </h3>
                   <p className="text-xs text-gray-500 leading-relaxed mb-4">{p.desc}</p>
-                  <ul className="space-y-2">
+                  <ul className="space-y-2 mb-5">
                     {p.features.map((f) => (
                       <li key={f} className="flex items-center gap-2 text-xs text-gray-500">
                         <CheckCircle size={11} className="text-amber-500 flex-shrink-0" />
@@ -331,6 +349,17 @@ export default function AgricodersPage() {
                       </li>
                     ))}
                   </ul>
+                  {hasCta && (
+                    <div className="mt-auto">
+                      <a
+                        href={(p as typeof p & { cta: { label: string; href: string } }).cta.href}
+                        className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-semibold rounded-lg transition-colors"
+                      >
+                        {(p as typeof p & { cta: { label: string; href: string } }).cta.label}
+                        <ArrowRight size={12} />
+                      </a>
+                    </div>
+                  )}
                 </div>
               );
             })}
