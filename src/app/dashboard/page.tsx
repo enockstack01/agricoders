@@ -21,10 +21,8 @@ import {
   RefreshCw,
   Coins,
   ChevronDown,
-  CreditCard,
+  Mail,
 } from "lucide-react";
-import { CREDIT_PACKAGES } from "@/lib/credit-packages";
-import type { PackageId } from "@/lib/credit-packages";
 
 interface Submission {
   _id: string;
@@ -44,83 +42,32 @@ const fmt = (n: number) => n.toLocaleString();
 const fmtDate = (iso: string) =>
   new Date(iso).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" });
 
-// Insufficient credits modal — with direct Buy Credits flow
+// Insufficient credits modal
 function CreditsModal({ required, balance, onClose }: { required: number; balance: number; onClose: () => void }) {
-  const [buyingPkg, setBuyingPkg] = useState<PackageId | null>(null);
-
-  const handleBuy = async (packageId: PackageId) => {
-    setBuyingPkg(packageId);
-    try {
-      const res = await axios.post<{ url: string }>("/api/payments/create-checkout", { packageId });
-      window.location.href = res.data.url;
-    } catch {
-      alert("Could not start checkout. Please try again.");
-      setBuyingPkg(null);
-    }
-  };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40">
-      <div className="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
-            <Coins size={20} className="text-amber-600" />
-          </div>
-          <div>
-            <h3 className="font-semibold text-gray-900 text-sm">Insufficient Credits</h3>
-            <p className="text-xs text-gray-500">
-              Need <strong>{required}</strong> · Have <strong className="text-red-600">{balance}</strong>
-            </p>
-          </div>
+      <div className="bg-white rounded-xl shadow-xl max-w-sm w-full p-6 text-center">
+        <div className="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center mx-auto mb-4">
+          <Coins size={24} className="text-amber-600" />
         </div>
-
-        <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2 flex items-center gap-1.5">
-          <CreditCard size={11} />
-          Buy Credits — paid via Stripe
+        <h3 className="font-semibold text-gray-900 mb-1">Insufficient Credits</h3>
+        <p className="text-xs text-gray-500 mb-4">
+          You need <strong>{required}</strong> credits to generate a document, but you only have{" "}
+          <strong className="text-red-600">{balance}</strong>.
         </p>
-
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          {CREDIT_PACKAGES.map((pkg) => (
-            <button
-              key={pkg.id}
-              onClick={() => handleBuy(pkg.id)}
-              disabled={buyingPkg !== null}
-              className={`relative flex flex-col items-center text-center rounded-xl border px-3 py-3 transition-all disabled:opacity-60 disabled:cursor-not-allowed ${
-                pkg.popular
-                  ? "border-green-400 bg-green-50 hover:bg-green-100"
-                  : "border-gray-200 bg-white hover:border-green-300 hover:bg-gray-50"
-              }`}
-            >
-              {pkg.popular && (
-                <span className="absolute -top-2 left-1/2 -translate-x-1/2 text-[8px] font-bold bg-green-600 text-white px-1.5 py-0.5 rounded-full whitespace-nowrap">
-                  Popular
-                </span>
-              )}
-              <p className="text-base font-extrabold text-gray-900 leading-none">{pkg.credits} cr</p>
-              <p className="text-sm font-bold text-gray-700 mt-1">${(pkg.usdCents / 100).toFixed(0)}</p>
-              {pkg.saves && <p className="text-[9px] text-green-600 font-semibold mt-0.5">{pkg.saves}</p>}
-              {buyingPkg === pkg.id ? (
-                <span className="mt-1.5 flex items-center gap-1 text-[10px] text-gray-500">
-                  <Loader2 size={9} className="animate-spin" />Opening…
-                </span>
-              ) : (
-                <span className="mt-1.5 text-[10px] text-gray-500">{pkg.description}</span>
-              )}
-            </button>
-          ))}
+        <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 mb-5 flex items-start gap-2 text-left">
+          <Mail size={14} className="text-blue-500 flex-shrink-0 mt-0.5" />
+          <p className="text-xs text-blue-700 leading-relaxed">
+            Contact your administrator to request additional credits for your account.
+          </p>
         </div>
-
-        <p className="text-[10px] text-gray-400 mb-3 text-center">
-          Cards, Apple Pay, Google Pay, bank transfers &amp; more supported
-        </p>
-
         <div className="flex gap-2">
           <Link
             href="/profile"
             className="flex-1 text-center py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 text-xs font-medium rounded-lg transition-colors border border-gray-200"
             onClick={onClose}
           >
-            View Credits History
+            View Credit History
           </Link>
           <button
             onClick={onClose}

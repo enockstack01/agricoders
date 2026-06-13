@@ -10,7 +10,6 @@ export interface ICreditTransaction extends Document {
   balanceAfter: number;
   paymentAmount?: number;
   currency?: string;
-  stripeSessionId?: string;
   note?: string;
   createdAt: Date;
 }
@@ -24,7 +23,6 @@ const CreditTransactionSchema = new Schema<ICreditTransaction>(
     balanceAfter: { type: Number, required: true },
     paymentAmount: { type: Number },
     currency: { type: String },
-    stripeSessionId: { type: String },
     note: { type: String },
   },
   { timestamps: true }

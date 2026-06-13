@@ -19,11 +19,8 @@ import {
   Copy,
   Coins,
   Clock,
-  CreditCard,
-  Zap,
+  Mail,
 } from "lucide-react";
-import { CREDIT_PACKAGES } from "@/lib/credit-packages";
-import type { PackageId } from "@/lib/credit-packages";
 
 const CURRENCIES = ["USD","EUR","GBP","RWF","KES","NGN","ZAR","GHS","UGX","TZS","ETB","INR","CAD","AUD","BRL","MXN","JPY","CNY","SGD","AED"];
 const COMPANY_TYPES = ["Private Limited Company","Public Limited Company","LLC","Sole Proprietorship","Partnership","LLP","Non-profit Organization","Cooperative","Other"];
@@ -114,7 +111,6 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
-  const [buyingPkg, setBuyingPkg] = useState<PackageId | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -151,16 +147,6 @@ export default function ProfilePage() {
     }
   };
 
-  const handleBuyCredits = async (packageId: PackageId) => {
-    setBuyingPkg(packageId);
-    try {
-      const res = await axios.post<{ url: string }>("/api/payments/create-checkout", { packageId });
-      window.location.href = res.data.url;
-    } catch {
-      setError("Failed to start checkout. Please try again.");
-      setBuyingPkg(null);
-    }
-  };
 
   const set = (key: keyof UserProfileDefaults, val: string | number) =>
     setDefaults((prev) => ({ ...prev, [key]: val }));
@@ -282,59 +268,10 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Buy Credits heading */}
-          <div className="flex items-center gap-2 mb-3">
-            <CreditCard size={13} className="text-green-600" />
-            <p className="text-xs font-semibold text-gray-700 uppercase tracking-wide">Buy Credits</p>
-          </div>
-
-          {/* Credit packages */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 mb-5">
-            {CREDIT_PACKAGES.map((pkg) => (
-              <button
-                key={pkg.id}
-                onClick={() => handleBuyCredits(pkg.id)}
-                disabled={buyingPkg !== null}
-                className={`relative flex flex-col items-center text-center rounded-xl border px-3 py-3.5 transition-all group disabled:opacity-60 disabled:cursor-not-allowed ${
-                  pkg.popular
-                    ? "border-green-400 bg-green-50 hover:bg-green-100 shadow-sm"
-                    : "border-gray-200 bg-white hover:border-green-300 hover:bg-gray-50"
-                }`}
-              >
-                {pkg.popular && (
-                  <span className="absolute -top-2 left-1/2 -translate-x-1/2 text-[9px] font-bold bg-green-600 text-white px-2 py-0.5 rounded-full whitespace-nowrap">
-                    Most Popular
-                  </span>
-                )}
-                {pkg.saves && (
-                  <span className="text-[9px] font-semibold text-green-600 mb-0.5">{pkg.saves}</span>
-                )}
-                <p className="text-lg font-extrabold text-gray-900 leading-none">{pkg.credits}</p>
-                <p className="text-[10px] text-gray-500 mt-0.5">credits</p>
-                <p className="text-sm font-bold text-gray-800 mt-1.5">
-                  ${(pkg.usdCents / 100).toFixed(0)}
-                </p>
-                <p className="text-[10px] text-gray-400 mt-0.5">{pkg.description}</p>
-                <div className={`mt-2.5 w-full py-1.5 rounded-lg text-xs font-semibold transition-colors ${
-                  pkg.popular
-                    ? "bg-green-600 text-white group-hover:bg-green-700"
-                    : "bg-gray-100 text-gray-700 group-hover:bg-green-600 group-hover:text-white"
-                }`}>
-                  {buyingPkg === pkg.id ? (
-                    <span className="flex items-center justify-center gap-1">
-                      <Loader2 size={11} className="animate-spin" />
-                      Opening…
-                    </span>
-                  ) : "Buy"}
-                </div>
-              </button>
-            ))}
-          </div>
-
           <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2.5 text-xs text-blue-700 mb-5">
-            <Zap size={12} className="flex-shrink-0 mt-0.5 text-blue-500" />
+            <Mail size={12} className="flex-shrink-0 mt-0.5 text-blue-500" />
             <span>
-              Secure payment via <strong>Stripe</strong>. Supports cards, Apple Pay, Google Pay, bank transfers, and more. Credits are added instantly after payment.
+              To get more credits, contact your administrator. Each business plan generation costs <strong>5 credits</strong>.
             </span>
           </div>
 

@@ -73,13 +73,11 @@ export async function getBalance(userId: string): Promise<number> {
   return (doc?.credits as number) ?? 0;
 }
 
-/** Add credits after a successful Stripe payment */
+/** Add credits (called by admin credit assignment) */
 export async function addCredits(
   userId: string,
   amount: number,
-  paymentAmount: number,
-  currency: string,
-  stripeSessionId: string
+  note?: string
 ): Promise<number> {
   const updated = await UserCredit.findOneAndUpdate(
     { userId },
@@ -91,9 +89,7 @@ export async function addCredits(
     type: "purchase" as TxType,
     credits: amount,
     balanceAfter: updated.credits,
-    paymentAmount,
-    currency: currency.toUpperCase(),
-    stripeSessionId,
+    note: note || "Credits added",
   }).catch(() => {/* non-fatal */});
   return updated.credits;
 }
