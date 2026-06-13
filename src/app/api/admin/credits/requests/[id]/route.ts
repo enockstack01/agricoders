@@ -42,7 +42,7 @@ export async function PATCH(
   let newBalance: number | undefined;
   if (action === "approve") {
     const docLabels = request.documents
-      .map((d) => `${d.count}x ${d.type}`)
+      .map((d: { count: number; type: string }) => `${d.count}x ${d.type}`)
       .join(", ");
     newBalance = await addCredits(
       request.userId,
