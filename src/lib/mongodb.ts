@@ -15,21 +15,24 @@ global.mongoose = cached;
 
 export function classifyMongoError(err: unknown): "CLUSTER_PAUSED" | "IP_BLOCKED" | "AUTH_FAILED" | "NETWORK" | "UNKNOWN" {
   const msg = err instanceof Error ? err.message : String(err);
-  const reason = (err as { reason?: { servers?: Record<string, { error?: { beforeHandshake?: boolean } }> } }).reason;
+  const reason = (err as { reason?: { servers?: Record<string, { error?: { beforeHandshake?: boolean; message?: string } }> } }).reason;
 
-  // Check beforeHandshake across all servers
   if (reason?.servers) {
     const serverEntries = Object.values(reason.servers);
     const anyBeforeHandshake = serverEntries.some((s) => s?.error?.beforeHandshake === true);
-    const allUnknown = serverEntries.every((s) => (s as { type?: string }).type === "Unknown");
     if (anyBeforeHandshake) return "IP_BLOCKED";
-    if (allUnknown && !anyBeforeHandshake) return "CLUSTER_PAUSED";
+
+    // Check server error messages for timeout/network vs paused
+    const serverMsgs = serverEntries.map((s) => s?.error?.message ?? "").join(" ");
+    if (serverMsgs.includes("ETIMEDOUT") || serverMsgs.includes("ECONNREFUSED")) return "NETWORK";
+    if (serverMsgs.includes("ReplicaSetNoPrimary") || serverMsgs.includes("paused")) return "CLUSTER_PAUSED";
   }
 
   if (msg.includes("Authentication failed") || msg.includes("SCRAM")) return "AUTH_FAILED";
   if (msg.includes("IP") || msg.includes("whitelist") || msg.includes("beforeHandshake")) return "IP_BLOCKED";
-  if (msg.includes("ECONNREFUSED") || msg.includes("ETIMEDOUT")) return "NETWORK";
-  return "CLUSTER_PAUSED"; // Most common cause of ReplicaSetNoPrimary on free tier
+  if (msg.includes("ECONNREFUSED") || msg.includes("ETIMEDOUT") || msg.includes("timed out")) return "NETWORK";
+  if (msg.includes("ReplicaSetNoPrimary") || msg.includes("paused")) return "CLUSTER_PAUSED";
+  return "UNKNOWN";
 }
 
 export async function connectDB() {

@@ -90,7 +90,7 @@ export default function Dashboard() {
   const [credits, setCredits] = useState<number | null>(null);
   const [creditModal, setCreditModal] = useState<{ required: number; balance: number } | null>(null);
   const [loading, setLoading] = useState(true);
-  const [dbError, setDbError] = useState<{ code: string; message: string } | null>(null);
+  const [dbError, setDbError] = useState<{ code: string; message: string; detail?: string } | null>(null);
   const [downloading, setDownloading] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -130,7 +130,7 @@ export default function Dashboard() {
       .catch((err) => {
         const data = err?.response?.data;
         if (data?.error && data?.message) {
-          setDbError({ code: data.error, message: data.message });
+          setDbError({ code: data.error, message: data.message, detail: data.detail });
         } else {
           setDbError({ code: "UNKNOWN", message: "Failed to load submissions. Please try again." });
         }
@@ -334,6 +334,9 @@ export default function Dashboard() {
                   : "Database Connection Failed"}
               </p>
               <p className="text-sm text-red-700 mt-1">{dbError.message}</p>
+              {dbError.detail && (
+                <p className="text-xs text-red-500 mt-1 font-mono break-all">{dbError.detail}</p>
+              )}
               <div className="mt-3 bg-white border border-red-200 rounded-lg p-4 space-y-2">
                 {dbError.code === "CLUSTER_PAUSED" && (
                   <>

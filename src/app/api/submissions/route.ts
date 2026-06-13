@@ -18,8 +18,10 @@ const MONGO_ERROR_MESSAGES: Record<string, string> = {
 
 function dbErrorResponse(err: unknown) {
   const code = classifyMongoError(err);
+  const detail = err instanceof Error ? err.message : String(err);
+  console.error("[MongoDB]", code, detail);
   return NextResponse.json(
-    { error: code, message: MONGO_ERROR_MESSAGES[code] },
+    { error: code, message: MONGO_ERROR_MESSAGES[code], detail },
     { status: 503 }
   );
 }
