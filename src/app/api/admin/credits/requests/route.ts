@@ -4,9 +4,11 @@ import { connectDB } from "@/lib/mongodb";
 import { CreditRequest } from "@/models/CreditRequest";
 
 export async function GET(req: NextRequest) {
-  const { userId, sessionClaims } = await auth();
+  const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const { currentUser } = await import("@clerk/nextjs/server");
+  const me = await currentUser();
+  const role = me?.publicMetadata?.role as string | undefined;
   if (role !== "admin" && role !== "super_admin") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }

@@ -5,9 +5,11 @@ import { UserCredit } from "@/models/UserCredit";
 import { CreditTransaction } from "@/models/CreditTransaction";
 
 export async function POST(req: NextRequest) {
-  const { userId: adminId, sessionClaims } = await auth();
+  const { userId: adminId } = await auth();
   if (!adminId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  const { currentUser } = await import("@clerk/nextjs/server");
+  const me = await currentUser();
+  const role = me?.publicMetadata?.role as string | undefined;
   if (role !== "admin" && role !== "super_admin") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
