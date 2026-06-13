@@ -968,14 +968,35 @@ function AdminCreditsPanel() {
 
 function AdminDeductPanel() {
   const [userId, setUserId] = useState("");
+  const [balance, setBalance] = useState<number | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [checkError, setCheckError] = useState("");
   const [credits, setCredits] = useState("");
   const [note, setNote] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
 
+  const handleCheck = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userId.trim()) return;
+    setChecking(true);
+    setCheckError("");
+    setBalance(null);
+    setCredits("");
+    setResult(null);
+    try {
+      const { data } = await axios.get(`/api/admin/credits/assign?userId=${encodeURIComponent(userId.trim())}`);
+      setBalance(data.credits as number);
+    } catch {
+      setCheckError("Could not load balance. Check the User ID and try again.");
+    } finally {
+      setChecking(false);
+    }
+  };
+
   const handleDeduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userId.trim() || !credits) return;
+    if (!userId.trim() || !credits || balance === null) return;
     setSubmitting(true);
     setResult(null);
     try {
@@ -984,8 +1005,10 @@ function AdminDeductPanel() {
         credits: parseInt(credits),
         note: note || undefined,
       });
-      setResult({ ok: true, message: `Deducted ${data.deducted} credits. New balance: ${data.newBalance}` });
-      setUserId(""); setCredits(""); setNote("");
+      setResult({ ok: true, message: `Dismissed ${data.deducted} credits. New balance: ${data.newBalance}` });
+      setBalance(data.newBalance as number);
+      setCredits("");
+      setNote("");
     } catch (err: unknown) {
       const msg = axios.isAxiosError(err) ? (err.response?.data?.error || "Failed") : "Failed";
       setResult({ ok: false, message: msg });
@@ -993,6 +1016,8 @@ function AdminDeductPanel() {
       setSubmitting(false);
     }
   };
+
+  const maxDeduct = balance ?? 0;
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
@@ -1002,57 +1027,98 @@ function AdminDeductPanel() {
         </div>
         <h2 className="font-semibold text-gray-900 text-sm">Dismiss Credits</h2>
       </div>
-      <form onSubmit={handleDeduct} className="px-5 py-5 space-y-4">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">User Account ID <span className="text-red-500">*</span></label>
-          <p className="text-xs text-gray-400 mb-1">The user can find their ID in Profile → Account.</p>
-          <input
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            placeholder="user_2abc123def..."
-            required
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-400"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Credits to Dismiss <span className="text-red-500">*</span></label>
-          <input
-            type="number"
-            min={1}
-            value={credits}
-            onChange={(e) => setCredits(e.target.value)}
-            placeholder="e.g. 5"
-            required
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">Reason (optional)</label>
-          <input
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            placeholder="e.g. Correction, duplicate assignment"
-            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
-          />
-        </div>
-        {result && (
-          <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${result.ok ? "bg-green-50 border border-green-200 text-green-700" : "bg-red-50 border border-red-200 text-red-700"}`}>
-            {result.ok ? <CheckCircle size={15} className="mt-0.5 flex-shrink-0" /> : <AlertCircle size={15} className="mt-0.5 flex-shrink-0" />}
-            {result.message}
+      <div className="px-5 py-5 space-y-4">
+        {/* Step 1: Enter ID and check balance */}
+        <form onSubmit={handleCheck} className="space-y-3">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              User Account ID <span className="text-red-500">*</span>
+            </label>
+            <p className="text-xs text-gray-400 mb-1">The user can find their ID in Profile → Account.</p>
+            <div className="flex gap-2">
+              <input
+                value={userId}
+                onChange={(e) => { setUserId(e.target.value); setBalance(null); setResult(null); }}
+                placeholder="user_2abc123def..."
+                required
+                className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-400"
+              />
+              <button
+                type="submit"
+                disabled={checking || !userId.trim()}
+                className="inline-flex items-center gap-1.5 px-3 py-2 bg-gray-900 hover:bg-black disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors whitespace-nowrap"
+              >
+                {checking ? <Loader2 size={12} className="animate-spin" /> : <Search size={12} />}
+                {checking ? "Checking…" : "Check Balance"}
+              </button>
+            </div>
           </div>
+          {checkError && (
+            <div className="flex items-center gap-2 p-2.5 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700">
+              <AlertCircle size={13} />
+              {checkError}
+            </div>
+          )}
+        </form>
+
+        {/* Step 2: Balance shown + dismiss form */}
+        {balance !== null && (
+          <form onSubmit={handleDeduct} className="space-y-4 pt-2 border-t border-gray-100">
+            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+              <span className="text-sm text-gray-600 font-medium">Current Balance</span>
+              <span className={`text-xl font-bold ${balance === 0 ? "text-red-500" : "text-gray-900"}`}>
+                {balance} credits
+              </span>
+            </div>
+
+            {balance === 0 ? (
+              <p className="text-xs text-gray-400 text-center py-2">This user has no credits to dismiss.</p>
+            ) : (
+              <>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Credits to Dismiss <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    min={1}
+                    max={maxDeduct}
+                    value={credits}
+                    onChange={(e) => setCredits(e.target.value)}
+                    placeholder={`1 – ${maxDeduct}`}
+                    required
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                  />
+                  <p className="text-xs text-gray-400 mt-1">Max {maxDeduct} (user cannot go below zero)</p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Reason (optional)</label>
+                  <input
+                    value={note}
+                    onChange={(e) => setNote(e.target.value)}
+                    placeholder="e.g. Correction, duplicate assignment"
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                  />
+                </div>
+                {result && (
+                  <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${result.ok ? "bg-green-50 border border-green-200 text-green-700" : "bg-red-50 border border-red-200 text-red-700"}`}>
+                    {result.ok ? <CheckCircle size={15} className="mt-0.5 flex-shrink-0" /> : <AlertCircle size={15} className="mt-0.5 flex-shrink-0" />}
+                    {result.message}
+                  </div>
+                )}
+                <button
+                  type="submit"
+                  disabled={submitting || !credits || parseInt(credits) < 1 || parseInt(credits) > maxDeduct}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
+                >
+                  {submitting ? <Loader2 size={14} className="animate-spin" /> : <AlertCircle size={14} />}
+                  {submitting ? "Dismissing…" : "Dismiss Credits"}
+                </button>
+              </>
+            )}
+          </form>
         )}
-        <div className="pt-1">
-          <p className="text-xs text-gray-400 mb-3">Credits are clamped at 0 — users cannot go below zero.</p>
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
-          >
-            {submitting ? <Loader2 size={14} className="animate-spin" /> : <AlertCircle size={14} />}
-            {submitting ? "Dismissing…" : "Dismiss Credits"}
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
   );
 }
