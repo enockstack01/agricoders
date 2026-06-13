@@ -1,0 +1,52 @@
+import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@clerk/nextjs/server";
+import { connectDB } from "@/lib/mongodb";
+import { UserCredit } from "@/models/UserCredit";
+import { CreditTransaction } from "@/models/CreditTransaction";
+
+export async function POST(req: NextRequest) {
+  const { userId: adminId, sessionClaims } = await auth();
+  if (!adminId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const role = (sessionClaims?.metadata as { role?: string })?.role;
+  if (role !== "admin" && role !== "super_admin") {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  const { userId, credits, note } = await req.json() as {
+    userId: string;
+    credits: number;
+    note?: string;
+  };
+
+  if (!userId || typeof userId !== "string") {
+    return NextResponse.json({ error: "userId is required" }, { status: 400 });
+  }
+  if (!Number.isInteger(credits) || credits <= 0) {
+    return NextResponse.json({ error: "credits must be a positive integer" }, { status: 400 });
+  }
+
+  await connectDB();
+
+  const current = await UserCredit.findOne({ userId });
+  if (!current) {
+    return NextResponse.json({ error: "User has no credit account." }, { status: 404 });
+  }
+
+  const deduct = Math.min(current.credits, credits);
+  const updated = await UserCredit.findOneAndUpdate(
+    { userId },
+    { $inc: { credits: -deduct }, $set: { updatedAt: new Date() } },
+    { new: true }
+  );
+
+  await CreditTransaction.create({
+    userId,
+    adminId,
+    type: "generate",
+    credits: -deduct,
+    balanceAfter: updated!.credits,
+    note: note?.trim() || "Admin credit deduction",
+  }).catch(() => {});
+
+  return NextResponse.json({ ok: true, newBalance: updated!.credits, deducted: deduct });
+}
