@@ -288,6 +288,7 @@ export default function AdminPage() {
                   <thead>
                     <tr className="bg-gray-50 border-b border-gray-100">
                       <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">User</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden xl:table-cell">User ID</th>
                       <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Role</th>
                       <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Plans</th>
                       <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Credits</th>
@@ -312,6 +313,9 @@ export default function AdminPage() {
                               <p className="text-xs text-gray-400 truncate">{u.email}</p>
                             </div>
                           </div>
+                        </td>
+                        <td className="px-4 py-3.5 hidden xl:table-cell">
+                          <span className="font-mono text-[11px] text-gray-400 select-all">{u.id}</span>
                         </td>
                         <td className="px-4 py-3.5">
                           <Badge variant={roleBadgeVariant(u.role)}>
@@ -358,6 +362,7 @@ export default function AdminPage() {
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 truncate">{u.name || "—"}</p>
                       <p className="text-xs text-gray-400 truncate">{u.email}</p>
+                      <p className="text-[10px] font-mono text-gray-300 truncate select-all mt-0.5">{u.id}</p>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
                         <Badge variant={roleBadgeVariant(u.role)}>
                           {u.role === "super_admin" ? "Super Admin" : u.role === "admin" ? "Admin" : "User"}
@@ -798,7 +803,7 @@ function AdminCreditsPanel() {
   const CURRENCIES = ["USD", "EUR", "GBP", "RWF", "KES", "NGN", "ZAR", "UGX", "TZS"];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
       {/* Assign Credits Form */}
       <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2.5">
@@ -954,6 +959,100 @@ function AdminCreditsPanel() {
           )}
         </div>
       </div>
+
+      {/* Deduct Credits */}
+      <AdminDeductPanel />
+    </div>
+  );
+}
+
+function AdminDeductPanel() {
+  const [userId, setUserId] = useState("");
+  const [credits, setCredits] = useState("");
+  const [note, setNote] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
+
+  const handleDeduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userId.trim() || !credits) return;
+    setSubmitting(true);
+    setResult(null);
+    try {
+      const { data } = await axios.post("/api/admin/credits/deduct", {
+        userId: userId.trim(),
+        credits: parseInt(credits),
+        note: note || undefined,
+      });
+      setResult({ ok: true, message: `Deducted ${data.deducted} credits. New balance: ${data.newBalance}` });
+      setUserId(""); setCredits(""); setNote("");
+    } catch (err: unknown) {
+      const msg = axios.isAxiosError(err) ? (err.response?.data?.error || "Failed") : "Failed";
+      setResult({ ok: false, message: msg });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2.5">
+        <div className="w-7 h-7 rounded-lg bg-red-50 flex items-center justify-center text-red-500">
+          <AlertCircle size={15} />
+        </div>
+        <h2 className="font-semibold text-gray-900 text-sm">Dismiss Credits</h2>
+      </div>
+      <form onSubmit={handleDeduct} className="px-5 py-5 space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">User Account ID <span className="text-red-500">*</span></label>
+          <p className="text-xs text-gray-400 mb-1">The user can find their ID in Profile → Account.</p>
+          <input
+            value={userId}
+            onChange={(e) => setUserId(e.target.value)}
+            placeholder="user_2abc123def..."
+            required
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-400"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Credits to Dismiss <span className="text-red-500">*</span></label>
+          <input
+            type="number"
+            min={1}
+            value={credits}
+            onChange={(e) => setCredits(e.target.value)}
+            placeholder="e.g. 5"
+            required
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">Reason (optional)</label>
+          <input
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            placeholder="e.g. Correction, duplicate assignment"
+            className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+          />
+        </div>
+        {result && (
+          <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${result.ok ? "bg-green-50 border border-green-200 text-green-700" : "bg-red-50 border border-red-200 text-red-700"}`}>
+            {result.ok ? <CheckCircle size={15} className="mt-0.5 flex-shrink-0" /> : <AlertCircle size={15} className="mt-0.5 flex-shrink-0" />}
+            {result.message}
+          </div>
+        )}
+        <div className="pt-1">
+          <p className="text-xs text-gray-400 mb-3">Credits are clamped at 0 — users cannot go below zero.</p>
+          <button
+            type="submit"
+            disabled={submitting}
+            className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
+          >
+            {submitting ? <Loader2 size={14} className="animate-spin" /> : <AlertCircle size={14} />}
+            {submitting ? "Dismissing…" : "Dismiss Credits"}
+          </button>
+        </div>
+      </form>
     </div>
   );
 }
