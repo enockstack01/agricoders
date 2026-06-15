@@ -744,13 +744,14 @@ function AdminRequestsPanel({
 // ── Admin Credits Panel ───────────────────────────────────────────────────────
 
 function AdminCreditsPanel() {
-  const [userId, setUserId] = useState("");
-  const [credits, setCredits] = useState("");
+  // Assign state
+  const [assignUserId, setAssignUserId] = useState("");
+  const [assignCredits, setAssignCredits] = useState("");
   const [paymentAmount, setPaymentAmount] = useState("");
   const [currency, setCurrency] = useState("USD");
-  const [note, setNote] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
+  const [assignNote, setAssignNote] = useState("");
+  const [assignSubmitting, setAssignSubmitting] = useState(false);
+  const [assignResult, setAssignResult] = useState<{ ok: boolean; message: string } | null>(null);
 
   // Lookup state
   const [lookupId, setLookupId] = useState("");
@@ -761,26 +762,43 @@ function AdminCreditsPanel() {
   const [looking, setLooking] = useState(false);
   const [lookupError, setLookupError] = useState("");
 
+  // Deduct state
+  const [deductUserId, setDeductUserId] = useState("");
+  const [balance, setBalance] = useState<number | null>(null);
+  const [checking, setChecking] = useState(false);
+  const [checkError, setCheckError] = useState("");
+  const [deductAmt, setDeductAmt] = useState("");
+  const [deductNote, setDeductNote] = useState("");
+  const [deductSubmitting, setDeductSubmitting] = useState(false);
+  const [deductResult, setDeductResult] = useState<{ ok: boolean; message: string } | null>(null);
+
+  // Collapsible
+  const [openSection, setOpenSection] = useState<"assign" | "lookup" | "deduct" | null>("assign");
+  const toggle = (s: "assign" | "lookup" | "deduct") =>
+    setOpenSection((prev) => (prev === s ? null : s));
+
+  const CURRENCIES = ["USD", "EUR", "GBP", "RWF", "KES", "NGN", "ZAR", "UGX", "TZS"];
+
   const handleAssign = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userId.trim() || !credits) return;
-    setSubmitting(true);
-    setResult(null);
+    if (!assignUserId.trim() || !assignCredits) return;
+    setAssignSubmitting(true);
+    setAssignResult(null);
     try {
       const { data } = await axios.post("/api/admin/credits/assign", {
-        userId: userId.trim(),
-        credits: parseInt(credits),
+        userId: assignUserId.trim(),
+        credits: parseInt(assignCredits),
         paymentAmount: paymentAmount || undefined,
         currency,
-        note: note || undefined,
+        note: assignNote || undefined,
       });
-      setResult({ ok: true, message: `Successfully assigned ${credits} credits. New balance: ${data.newBalance}` });
-      setUserId(""); setCredits(""); setPaymentAmount(""); setNote("");
+      setAssignResult({ ok: true, message: `Assigned ${assignCredits} credits. New balance: ${data.newBalance}` });
+      setAssignUserId(""); setAssignCredits(""); setPaymentAmount(""); setAssignNote("");
     } catch (err: unknown) {
       const msg = axios.isAxiosError(err) ? (err.response?.data?.error || "Failed") : "Failed";
-      setResult({ ok: false, message: msg });
+      setAssignResult({ ok: false, message: msg });
     } finally {
-      setSubmitting(false);
+      setAssignSubmitting(false);
     }
   };
 
@@ -800,192 +818,16 @@ function AdminCreditsPanel() {
     }
   };
 
-  const CURRENCIES = ["USD", "EUR", "GBP", "RWF", "KES", "NGN", "ZAR", "UGX", "TZS"];
-
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-      {/* Assign Credits Form */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center text-green-600">
-            <Coins size={15} />
-          </div>
-          <h2 className="font-semibold text-gray-900 text-sm">Assign Credits</h2>
-        </div>
-        <form onSubmit={handleAssign} className="px-5 py-5 space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">User Account ID <span className="text-red-500">*</span></label>
-            <p className="text-xs text-gray-400 mb-1">The user can find their ID in Profile → Account.</p>
-            <input
-              value={userId}
-              onChange={(e) => setUserId(e.target.value)}
-              placeholder="user_2abc123def..."
-              required
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Credits to Assign <span className="text-red-500">*</span></label>
-              <input
-                type="number"
-                min={1}
-                value={credits}
-                onChange={(e) => setCredits(e.target.value)}
-                placeholder="e.g. 50"
-                required
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Payment Amount</label>
-              <input
-                type="number"
-                min={0}
-                step={0.01}
-                value={paymentAmount}
-                onChange={(e) => setPaymentAmount(e.target.value)}
-                placeholder="e.g. 50.00"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Payment Currency</label>
-            <select
-              value={currency}
-              onChange={(e) => setCurrency(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
-            >
-              {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Note (optional)</label>
-            <input
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="e.g. Monthly subscription payment"
-              className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
-
-          {result && (
-            <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${result.ok ? "bg-green-50 border border-green-200 text-green-700" : "bg-red-50 border border-red-200 text-red-700"}`}>
-              {result.ok ? <CheckCircle size={15} className="mt-0.5 flex-shrink-0" /> : <AlertCircle size={15} className="mt-0.5 flex-shrink-0" />}
-              {result.message}
-            </div>
-          )}
-
-          <div className="pt-1">
-            <p className="text-xs text-gray-400 mb-3">1 credit = $1. Credits are non-refundable once assigned.</p>
-            <button
-              type="submit"
-              disabled={submitting}
-              className="w-full flex items-center justify-center gap-2 py-2.5 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
-            >
-              {submitting ? <Loader2 size={14} className="animate-spin" /> : <Coins size={14} />}
-              {submitting ? "Assigning…" : "Assign Credits"}
-            </button>
-          </div>
-        </form>
-      </div>
-
-      {/* Credit Lookup */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-        <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-blue-600">
-            <Search size={15} />
-          </div>
-          <h2 className="font-semibold text-gray-900 text-sm">Lookup User Credits</h2>
-        </div>
-        <div className="px-5 py-5">
-          <form onSubmit={handleLookup} className="flex gap-2 mb-4">
-            <input
-              value={lookupId}
-              onChange={(e) => setLookupId(e.target.value)}
-              placeholder="Paste User Account ID…"
-              className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="submit"
-              disabled={looking}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
-            >
-              {looking ? <Loader2 size={13} className="animate-spin" /> : <Search size={13} />}
-              Lookup
-            </button>
-          </form>
-
-          {lookupError && (
-            <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 mb-4">
-              <AlertCircle size={14} />
-              {lookupError}
-            </div>
-          )}
-
-          {lookupData && (
-            <>
-              <div className="flex items-center justify-between mb-3 p-3 bg-gray-50 rounded-lg">
-                <span className="text-sm text-gray-600 font-medium">Current Balance</span>
-                <span className="text-xl font-bold text-gray-900">{lookupData.credits} credits</span>
-              </div>
-              {lookupData.transactions.length > 0 ? (
-                <div>
-                  <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Recent Transactions</p>
-                  <div className="divide-y divide-gray-100 border border-gray-200 rounded-lg overflow-hidden max-h-72 overflow-y-auto">
-                    {lookupData.transactions.map((tx, i) => (
-                      <div key={i} className="flex items-center justify-between px-3 py-2 bg-white text-xs">
-                        <div className="flex items-center gap-2">
-                          <span className={`px-1.5 py-0.5 rounded-full font-medium ${tx.credits > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
-                            {tx.credits > 0 ? `+${tx.credits}` : tx.credits}
-                          </span>
-                          <span className="text-gray-600 capitalize">{tx.type}</span>
-                          {tx.paymentAmount && <span className="text-gray-400">({tx.paymentAmount} {tx.currency})</span>}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-gray-400">
-                          <span>→ {tx.balanceAfter}</span>
-                          <Clock size={10} />
-                          <span>{new Date(tx.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <p className="text-xs text-gray-400">No transactions yet for this account.</p>
-              )}
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Deduct Credits */}
-      <AdminDeductPanel />
-    </div>
-  );
-}
-
-function AdminDeductPanel() {
-  const [userId, setUserId] = useState("");
-  const [balance, setBalance] = useState<number | null>(null);
-  const [checking, setChecking] = useState(false);
-  const [checkError, setCheckError] = useState("");
-  const [credits, setCredits] = useState("");
-  const [note, setNote] = useState("");
-  const [submitting, setSubmitting] = useState(false);
-  const [result, setResult] = useState<{ ok: boolean; message: string } | null>(null);
-
   const handleCheck = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userId.trim()) return;
+    if (!deductUserId.trim()) return;
     setChecking(true);
     setCheckError("");
     setBalance(null);
-    setCredits("");
-    setResult(null);
+    setDeductAmt("");
+    setDeductResult(null);
     try {
-      const { data } = await axios.get(`/api/admin/credits/assign?userId=${encodeURIComponent(userId.trim())}`);
+      const { data } = await axios.get(`/api/admin/credits/assign?userId=${encodeURIComponent(deductUserId.trim())}`);
       setBalance(data.credits as number);
     } catch {
       setCheckError("Could not load balance. Check the User ID and try again.");
@@ -996,129 +838,295 @@ function AdminDeductPanel() {
 
   const handleDeduct = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!userId.trim() || !credits || balance === null) return;
-    setSubmitting(true);
-    setResult(null);
+    if (!deductUserId.trim() || !deductAmt || balance === null) return;
+    setDeductSubmitting(true);
+    setDeductResult(null);
     try {
       const { data } = await axios.post("/api/admin/credits/deduct", {
-        userId: userId.trim(),
-        credits: parseInt(credits),
-        note: note || undefined,
+        userId: deductUserId.trim(),
+        credits: parseInt(deductAmt),
+        note: deductNote || undefined,
       });
-      setResult({ ok: true, message: `Dismissed ${data.deducted} credits. New balance: ${data.newBalance}` });
+      setDeductResult({ ok: true, message: `Dismissed ${data.deducted} credits. New balance: ${data.newBalance}` });
       setBalance(data.newBalance as number);
-      setCredits("");
-      setNote("");
+      setDeductAmt("");
+      setDeductNote("");
     } catch (err: unknown) {
       const msg = axios.isAxiosError(err) ? (err.response?.data?.error || "Failed") : "Failed";
-      setResult({ ok: false, message: msg });
+      setDeductResult({ ok: false, message: msg });
     } finally {
-      setSubmitting(false);
+      setDeductSubmitting(false);
     }
   };
 
   const maxDeduct = balance ?? 0;
 
   return (
-    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-      <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2.5">
-        <div className="w-7 h-7 rounded-lg bg-red-50 flex items-center justify-center text-red-500">
-          <AlertCircle size={15} />
-        </div>
-        <h2 className="font-semibold text-gray-900 text-sm">Dismiss Credits</h2>
-      </div>
-      <div className="px-5 py-5 space-y-4">
-        {/* Step 1: Enter ID and check balance */}
-        <form onSubmit={handleCheck} className="space-y-3">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              User Account ID <span className="text-red-500">*</span>
-            </label>
-            <p className="text-xs text-gray-400 mb-1">The user can find their ID in Profile → Account.</p>
-            <div className="flex gap-2">
-              <input
-                value={userId}
-                onChange={(e) => { setUserId(e.target.value); setBalance(null); setResult(null); }}
-                placeholder="user_2abc123def..."
-                required
-                className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-400"
-              />
-              <button
-                type="submit"
-                disabled={checking || !userId.trim()}
-                className="inline-flex items-center gap-1.5 px-3 py-2 bg-gray-900 hover:bg-black disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors whitespace-nowrap"
-              >
-                {checking ? <Loader2 size={12} className="animate-spin" /> : <Search size={12} />}
-                {checking ? "Checking…" : "Check Balance"}
-              </button>
+    <div className="space-y-1.5 max-w-xl">
+
+      {/* ── Assign Credits ──────────────────────────── */}
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <button
+          type="button"
+          onClick={() => toggle("assign")}
+          className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 transition-colors text-left"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
+              <Coins size={14} className="text-green-600" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 text-sm leading-tight">Assign Credits</p>
+              <p className="text-xs text-gray-400 leading-tight mt-0.5">Add credits to a user account</p>
             </div>
           </div>
-          {checkError && (
-            <div className="flex items-center gap-2 p-2.5 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700">
-              <AlertCircle size={13} />
-              {checkError}
+          <ChevronDown size={14} className={`text-gray-400 transition-transform flex-shrink-0 ${openSection === "assign" ? "rotate-180" : ""}`} />
+        </button>
+        {openSection === "assign" && (
+          <form onSubmit={handleAssign} className="px-5 pb-5 pt-3 border-t border-gray-100 space-y-3">
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">User Account ID <span className="text-red-500">*</span></label>
+              <input
+                value={assignUserId}
+                onChange={(e) => setAssignUserId(e.target.value)}
+                placeholder="user_2abc123def..."
+                required
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <p className="text-xs text-gray-400 mt-1">User can find this in Profile → Account.</p>
             </div>
-          )}
-        </form>
-
-        {/* Step 2: Balance shown + dismiss form */}
-        {balance !== null && (
-          <form onSubmit={handleDeduct} className="space-y-4 pt-2 border-t border-gray-100">
-            <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-              <span className="text-sm text-gray-600 font-medium">Current Balance</span>
-              <span className={`text-xl font-bold ${balance === 0 ? "text-red-500" : "text-gray-900"}`}>
-                {balance} credits
-              </span>
-            </div>
-
-            {balance === 0 ? (
-              <p className="text-xs text-gray-400 text-center py-2">This user has no credits to dismiss.</p>
-            ) : (
-              <>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Credits to Dismiss <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={maxDeduct}
-                    value={credits}
-                    onChange={(e) => setCredits(e.target.value)}
-                    placeholder={`1 – ${maxDeduct}`}
-                    required
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
-                  />
-                  <p className="text-xs text-gray-400 mt-1">Max {maxDeduct} (user cannot go below zero)</p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Reason (optional)</label>
-                  <input
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                    placeholder="e.g. Correction, duplicate assignment"
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
-                  />
-                </div>
-                {result && (
-                  <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${result.ok ? "bg-green-50 border border-green-200 text-green-700" : "bg-red-50 border border-red-200 text-red-700"}`}>
-                    {result.ok ? <CheckCircle size={15} className="mt-0.5 flex-shrink-0" /> : <AlertCircle size={15} className="mt-0.5 flex-shrink-0" />}
-                    {result.message}
-                  </div>
-                )}
-                <button
-                  type="submit"
-                  disabled={submitting || !credits || parseInt(credits) < 1 || parseInt(credits) > maxDeduct}
-                  className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
+            <div className="grid grid-cols-3 gap-2">
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Credits <span className="text-red-500">*</span></label>
+                <input
+                  type="number" min={1} value={assignCredits}
+                  onChange={(e) => setAssignCredits(e.target.value)}
+                  placeholder="50" required
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Amount</label>
+                <input
+                  type="number" min={0} step={0.01} value={paymentAmount}
+                  onChange={(e) => setPaymentAmount(e.target.value)}
+                  placeholder="0.00"
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Currency</label>
+                <select
+                  value={currency} onChange={(e) => setCurrency(e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
-                  {submitting ? <Loader2 size={14} className="animate-spin" /> : <AlertCircle size={14} />}
-                  {submitting ? "Dismissing…" : "Dismiss Credits"}
-                </button>
-              </>
+                  {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Note</label>
+              <input
+                value={assignNote} onChange={(e) => setAssignNote(e.target.value)}
+                placeholder="e.g. Monthly subscription payment"
+                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+            </div>
+            {assignResult && (
+              <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${assignResult.ok ? "bg-green-50 border border-green-200 text-green-700" : "bg-red-50 border border-red-200 text-red-700"}`}>
+                {assignResult.ok ? <CheckCircle size={14} className="mt-0.5 flex-shrink-0" /> : <AlertCircle size={14} className="mt-0.5 flex-shrink-0" />}
+                {assignResult.message}
+              </div>
             )}
+            <div className="flex items-center justify-between gap-3 pt-0.5">
+              <p className="text-xs text-gray-400">1 credit = $1</p>
+              <button
+                type="submit" disabled={assignSubmitting}
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
+              >
+                {assignSubmitting ? <Loader2 size={13} className="animate-spin" /> : <Coins size={13} />}
+                {assignSubmitting ? "Assigning…" : "Assign Credits"}
+              </button>
+            </div>
           </form>
         )}
       </div>
+
+      {/* ── Lookup Credits ──────────────────────────── */}
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <button
+          type="button"
+          onClick={() => toggle("lookup")}
+          className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 transition-colors text-left"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
+              <Search size={14} className="text-blue-600" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 text-sm leading-tight">Lookup User Credits</p>
+              <p className="text-xs text-gray-400 leading-tight mt-0.5">Check balance and transaction history</p>
+            </div>
+          </div>
+          <ChevronDown size={14} className={`text-gray-400 transition-transform flex-shrink-0 ${openSection === "lookup" ? "rotate-180" : ""}`} />
+        </button>
+        {openSection === "lookup" && (
+          <div className="px-5 pb-5 pt-3 border-t border-gray-100">
+            <form onSubmit={handleLookup} className="flex gap-2 mb-3">
+              <input
+                value={lookupId}
+                onChange={(e) => setLookupId(e.target.value)}
+                placeholder="Paste User Account ID…"
+                className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="submit" disabled={looking}
+                className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
+              >
+                {looking ? <Loader2 size={13} className="animate-spin" /> : <Search size={13} />}
+                Lookup
+              </button>
+            </form>
+            {lookupError && (
+              <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 mb-3">
+                <AlertCircle size={14} /> {lookupError}
+              </div>
+            )}
+            {lookupData && (
+              <>
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg mb-3">
+                  <span className="text-sm text-gray-600 font-medium">Current Balance</span>
+                  <span className="text-xl font-bold text-gray-900">{lookupData.credits} credits</span>
+                </div>
+                {lookupData.transactions.length > 0 ? (
+                  <div>
+                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Recent Transactions</p>
+                    <div className="divide-y divide-gray-100 border border-gray-200 rounded-lg overflow-hidden max-h-56 overflow-y-auto">
+                      {lookupData.transactions.map((tx, i) => (
+                        <div key={i} className="flex items-center justify-between px-3 py-2 bg-white text-xs">
+                          <div className="flex items-center gap-2">
+                            <span className={`px-1.5 py-0.5 rounded-full font-medium ${tx.credits > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                              {tx.credits > 0 ? `+${tx.credits}` : tx.credits}
+                            </span>
+                            <span className="text-gray-600 capitalize">{tx.type}</span>
+                            {tx.paymentAmount && <span className="text-gray-400">({tx.paymentAmount} {tx.currency})</span>}
+                          </div>
+                          <div className="flex items-center gap-1.5 text-gray-400">
+                            <span>→ {tx.balanceAfter}</span>
+                            <Clock size={10} />
+                            <span>{new Date(tx.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-xs text-gray-400">No transactions yet for this account.</p>
+                )}
+              </>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* ── Dismiss Credits ─────────────────────────── */}
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        <button
+          type="button"
+          onClick={() => toggle("deduct")}
+          className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 transition-colors text-left"
+        >
+          <div className="flex items-center gap-3">
+            <div className="w-7 h-7 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
+              <AlertCircle size={14} className="text-red-500" />
+            </div>
+            <div>
+              <p className="font-semibold text-gray-900 text-sm leading-tight">Dismiss Credits</p>
+              <p className="text-xs text-gray-400 leading-tight mt-0.5">Remove credits from a user account</p>
+            </div>
+          </div>
+          <ChevronDown size={14} className={`text-gray-400 transition-transform flex-shrink-0 ${openSection === "deduct" ? "rotate-180" : ""}`} />
+        </button>
+        {openSection === "deduct" && (
+          <div className="px-5 pb-5 pt-3 border-t border-gray-100 space-y-3">
+            <form onSubmit={handleCheck} className="space-y-2">
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">User Account ID <span className="text-red-500">*</span></label>
+              <div className="flex gap-2">
+                <input
+                  value={deductUserId}
+                  onChange={(e) => { setDeductUserId(e.target.value); setBalance(null); setDeductResult(null); }}
+                  placeholder="user_2abc123def..."
+                  required
+                  className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-400"
+                />
+                <button
+                  type="submit" disabled={checking || !deductUserId.trim()}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 bg-gray-900 hover:bg-black disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors whitespace-nowrap"
+                >
+                  {checking ? <Loader2 size={12} className="animate-spin" /> : <Search size={12} />}
+                  {checking ? "Checking…" : "Check Balance"}
+                </button>
+              </div>
+              {checkError && (
+                <div className="flex items-center gap-2 p-2.5 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700">
+                  <AlertCircle size={13} /> {checkError}
+                </div>
+              )}
+            </form>
+            {balance !== null && (
+              <form onSubmit={handleDeduct} className="space-y-3 pt-2 border-t border-gray-100">
+                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <span className="text-sm text-gray-600 font-medium">Current Balance</span>
+                  <span className={`text-xl font-bold ${balance === 0 ? "text-red-500" : "text-gray-900"}`}>
+                    {balance} credits
+                  </span>
+                </div>
+                {balance === 0 ? (
+                  <p className="text-xs text-gray-400 text-center py-1">This user has no credits to dismiss.</p>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Credits to Dismiss <span className="text-red-500">*</span></label>
+                        <input
+                          type="number" min={1} max={maxDeduct} value={deductAmt}
+                          onChange={(e) => setDeductAmt(e.target.value)}
+                          placeholder={`1 – ${maxDeduct}`} required
+                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                        />
+                        <p className="text-xs text-gray-400 mt-1">Max {maxDeduct}</p>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Reason</label>
+                        <input
+                          value={deductNote} onChange={(e) => setDeductNote(e.target.value)}
+                          placeholder="e.g. Correction"
+                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                        />
+                      </div>
+                    </div>
+                    {deductResult && (
+                      <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${deductResult.ok ? "bg-green-50 border border-green-200 text-green-700" : "bg-red-50 border border-red-200 text-red-700"}`}>
+                        {deductResult.ok ? <CheckCircle size={14} className="mt-0.5 flex-shrink-0" /> : <AlertCircle size={14} className="mt-0.5 flex-shrink-0" />}
+                        {deductResult.message}
+                      </div>
+                    )}
+                    <button
+                      type="submit"
+                      disabled={deductSubmitting || !deductAmt || parseInt(deductAmt) < 1 || parseInt(deductAmt) > maxDeduct}
+                      className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
+                    >
+                      {deductSubmitting ? <Loader2 size={14} className="animate-spin" /> : <AlertCircle size={14} />}
+                      {deductSubmitting ? "Dismissing…" : "Dismiss Credits"}
+                    </button>
+                  </>
+                )}
+              </form>
+            )}
+          </div>
+        )}
+      </div>
+
     </div>
   );
 }
