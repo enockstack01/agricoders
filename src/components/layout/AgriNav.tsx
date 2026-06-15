@@ -23,7 +23,7 @@ export default function AgriNav() {
 
           <nav className="hidden md:flex items-center gap-1">
             <a
-              href="#services"
+              href="/#services"
               className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all no-underline"
             >
               Services
@@ -72,7 +72,7 @@ export default function AgriNav() {
         <div className="md:hidden border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 pb-4 pt-3 transition-colors">
           <div className="flex flex-col gap-1 mb-3">
             <a
-              href="#services"
+              href="/#services"
               onClick={() => setOpen(false)}
               className="block px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg no-underline"
             >
