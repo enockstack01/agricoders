@@ -73,6 +73,22 @@ const SERVICES = [
 export default function AgricodersPage() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      <style>{`
+        .agri-snap-card {
+          transition: box-shadow 0.3s, transform 0.3s;
+        }
+        .agri-snap-card:hover {
+          box-shadow: 0 20px 60px rgba(0,0,0,0.14) !important;
+          transform: translateY(-6px);
+        }
+        .agri-dark-card {
+          transition: background 0.3s, transform 0.3s;
+        }
+        .agri-dark-card:hover {
+          background: rgba(255,255,255,0.12) !important;
+          transform: translateY(-4px);
+        }
+      `}</style>
 
       <AgriNav />
 
@@ -159,23 +175,12 @@ export default function AgricodersPage() {
               return (
                 <div key={s.title} className="col-md-6 mb-1">
                   <div
-                    className="h-100 d-flex flex-column transition-all duration-300"
+                    className="agri-snap-card h-100 d-flex flex-column"
                     style={{
                       background: "white",
                       borderRadius: 28,
                       padding: "40px 36px",
                       boxShadow: "0 2px 20px rgba(0,0,0,0.07)",
-                      cursor: "default",
-                    }}
-                    onMouseEnter={(e) => {
-                      const el = e.currentTarget as HTMLDivElement;
-                      el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)";
-                      el.style.transform = "translateY(-6px)";
-                    }}
-                    onMouseLeave={(e) => {
-                      const el = e.currentTarget as HTMLDivElement;
-                      el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)";
-                      el.style.transform = "translateY(0)";
                     }}
                   >
                     <div
@@ -270,22 +275,12 @@ export default function AgricodersPage() {
                   return (
                     <div key={item.title} className="col-6 mb-1">
                       <div
-                        className="h-100 transition-all duration-300"
+                        className="agri-dark-card h-100"
                         style={{
                           background: "rgba(255,255,255,0.07)",
                           border: "1px solid rgba(255,255,255,0.12)",
                           borderRadius: 24,
                           padding: "28px 24px",
-                        }}
-                        onMouseEnter={(e) => {
-                          const el = e.currentTarget as HTMLDivElement;
-                          el.style.background = "rgba(255,255,255,0.12)";
-                          el.style.transform = "translateY(-4px)";
-                        }}
-                        onMouseLeave={(e) => {
-                          const el = e.currentTarget as HTMLDivElement;
-                          el.style.background = "rgba(255,255,255,0.07)";
-                          el.style.transform = "translateY(0)";
                         }}
                       >
                         <div
