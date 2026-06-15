@@ -231,7 +231,7 @@ export default function AgricodersPage() {
       <section className="py-24" style={{ background: "#111827" }}>
         <div className="container">
           {/* Top statement */}
-          <div className="row justify-content-center mb-16">
+          <div className="row justify-content-center mb-14">
             <div className="col-lg-8 text-center">
               <p
                 className="text-xs font-bold uppercase tracking-widest mb-4"
@@ -244,16 +244,16 @@ export default function AgricodersPage() {
                 <span style={{ color: "#4ade80" }}>the right precision tools</span>
               </h2>
               <p className="text-gray-400 leading-relaxed mx-auto" style={{ maxWidth: 600, fontSize: 16 }}>
-                The difference between a thriving farm and an underperforming one is often not effort — it is information.
+                The difference between a thriving farm and an underperforming one is often not effort. It is information.
                 Without precise, location-aware intelligence, farmers work hard in the wrong places, at the wrong times,
                 with the wrong resources. Precision tools change that.
               </p>
             </div>
           </div>
 
-          {/* Main content: left text + right cards */}
-          <div className="row g-5 align-items-center">
-            <div className="col-lg-5 mb-4 mb-lg-0">
+          {/* What we build — intro text */}
+          <div className="row justify-content-center mb-12">
+            <div className="col-lg-8">
               <p
                 className="text-xs font-bold uppercase tracking-widest mb-3"
                 style={{ color: "#4ade80", letterSpacing: "0.12em" }}
@@ -265,12 +265,12 @@ export default function AgricodersPage() {
               </h3>
               <p className="text-gray-400 leading-relaxed mb-4" style={{ fontSize: 15 }}>
                 We develop geospatial planning tools for agriculture that help farmers prioritize where
-                to focus their efforts — so every investment of time, labour, and input achieves the
+                to focus their efforts, so every investment of time, labour, and input achieves the
                 maximum possible productivity and profitability.
               </p>
               <p className="text-gray-400 leading-relaxed mb-6" style={{ fontSize: 15 }}>
                 Our tools analyse field-level spatial data, soil conditions, crop suitability, and
-                productivity patterns to surface clear, actionable priorities — not guesswork.
+                productivity patterns to surface clear, actionable priorities, not guesswork.
               </p>
               <div className="d-flex flex-column gap-3">
                 {[
@@ -285,57 +285,56 @@ export default function AgricodersPage() {
                 ))}
               </div>
             </div>
+          </div>
 
-            <div className="col-lg-7">
-              <div className="row g-3">
-                {[
-                  {
-                    Icon: Map,
-                    title: "Field-level spatial planning",
-                    desc: "Map every plot, zone, and boundary with precision. Know exactly which areas to prioritise for planting, irrigation, and intervention.",
-                  },
-                  {
-                    Icon: Crosshair,
-                    title: "Focus where it matters most",
-                    desc: "Our tools surface the highest-impact areas so farmers concentrate effort where returns are greatest — not spread thin across everything.",
-                  },
-                  {
-                    Icon: TrendingUp,
-                    title: "Maximum productivity & profitability",
-                    desc: "By aligning inputs with spatial data, farms achieve higher yields, lower waste, and stronger margins — efficiently and sustainably.",
-                  },
-                  {
-                    Icon: Leaf,
-                    title: "Built for African agriculture",
-                    desc: "Designed around the realities of smallholder and commercial farming across Africa — variable soils, mixed crops, and limited margins for error.",
-                  },
-                ].map((item) => {
-                  const ItemIcon = item.Icon;
-                  return (
-                    <div key={item.title} className="col-6 mb-1">
-                      <div
-                        className="agri-dark-card h-100"
-                        style={{
-                          background: "rgba(255,255,255,0.07)",
-                          border: "1px solid rgba(255,255,255,0.12)",
-                          borderRadius: 24,
-                          padding: "28px 24px",
-                        }}
-                      >
-                        <div
-                          className="d-flex align-items-center justify-content-center mb-4"
-                          style={{ width: 52, height: 52, background: "rgba(22,163,74,0.25)", borderRadius: 16 }}
-                        >
-                          <ItemIcon size={22} style={{ color: "#4ade80" }} />
-                        </div>
-                        <p className="text-white font-bold mb-2" style={{ fontSize: 15, lineHeight: 1.3 }}>{item.title}</p>
-                        <p className="leading-relaxed mb-0" style={{ fontSize: 13, color: "#9ca3af" }}>{item.desc}</p>
-                      </div>
+          {/* Full-width cards — same size as services section */}
+          <div className="row g-4">
+            {[
+              {
+                Icon: Map,
+                title: "Field-level spatial planning",
+                desc: "Map every plot, zone, and boundary with precision. Know exactly which areas to prioritise for planting, irrigation, and intervention.",
+              },
+              {
+                Icon: Crosshair,
+                title: "Focus where it matters most",
+                desc: "Our tools surface the highest-impact areas so farmers concentrate effort where returns are greatest, not spread thin across everything.",
+              },
+              {
+                Icon: TrendingUp,
+                title: "Maximum productivity & profitability",
+                desc: "By aligning inputs with spatial data, farms achieve higher yields, lower waste, and stronger margins, efficiently and sustainably.",
+              },
+              {
+                Icon: Leaf,
+                title: "Built for African agriculture",
+                desc: "Designed around the realities of smallholder and commercial farming across Africa: variable soils, mixed crops, and limited margins for error.",
+              },
+            ].map((item) => {
+              const ItemIcon = item.Icon;
+              return (
+                <div key={item.title} className="col-md-6 mb-1">
+                  <div
+                    className="agri-dark-card h-100"
+                    style={{
+                      background: "rgba(255,255,255,0.07)",
+                      border: "1px solid rgba(255,255,255,0.12)",
+                      borderRadius: 28,
+                      padding: "40px 36px",
+                    }}
+                  >
+                    <div
+                      className="d-flex align-items-center justify-content-center mb-5"
+                      style={{ width: 68, height: 68, background: "rgba(22,163,74,0.25)", borderRadius: 22, flexShrink: 0 }}
+                    >
+                      <ItemIcon size={30} style={{ color: "#4ade80" }} />
                     </div>
-                  );
-                })}
-              </div>
-            </div>
+                    <h3 className="text-white font-bold mb-3" style={{ fontSize: 19, lineHeight: 1.3 }}>{item.title}</h3>
+                    <p className="leading-relaxed mb-0" style={{ fontSize: 15, color: "#9ca3af" }}>{item.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
