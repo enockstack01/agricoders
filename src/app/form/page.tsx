@@ -278,8 +278,8 @@ function FormPageContent() {
     );
   }
 
-  // Credit gate — user must have at least 5 credits to create a plan
-  if (credits !== null && credits < REQUIRED_CREDITS) {
+  // Credit gate — only applies when creating a new plan (not editing an existing one)
+  if (!editId && credits !== null && credits < REQUIRED_CREDITS) {
     return <CreditGate credits={credits} required={REQUIRED_CREDITS} onBack={() => router.push("/dashboard")} />;
   }
 
