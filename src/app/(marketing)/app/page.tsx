@@ -19,12 +19,8 @@ import {
   Zap,
   Award,
   Users,
-  Link2,
-  Share2,
-  GitBranch,
   Mail,
   MapPin,
-  Sprout,
 } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
@@ -769,48 +765,45 @@ export default function Home() {
                 </div>
                 <span className="font-bold text-white">Logistack Plan</span>
               </div>
-              <p className="text-sm leading-relaxed mb-3" style={{ color: "#6b7280", maxWidth: 280 }}>
-                Logistack Plan generates professional business plans and financial models using
-                AI and Python charts.
+              <p className="text-sm leading-relaxed mb-3" style={{ color: "#6b7280", maxWidth: 300 }}>
+                Logistack Ltd — AI-powered business planning and financial modelling for agribusinesses and entrepreneurs.
               </p>
-              <div className="d-flex align-items-center gap-1 mb-3">
-                <MapPin size={13} style={{ color: "#4ade80", flexShrink: 0 }} />
-                <span className="text-xs" style={{ color: "#6b7280" }}>
-                  Kigali, KG 9 Ave, Deco Center, Kigali, Rwanda
-                </span>
-              </div>
-              <div className="d-flex align-items-center gap-2 mb-3">
-                {[
-                  { label: "LinkedIn", Icon: Link2, href: "https://linkedin.com" },
-                  { label: "Twitter", Icon: Share2, href: "https://twitter.com" },
-                  { label: "GitHub", Icon: GitBranch, href: "https://github.com" },
-                  { label: "Email", Icon: Mail, href: "mailto:agricoders@gmail.com" },
-                ].map(({ label, Icon, href }) => (
-                  <a
-                    key={label}
-                    href={href}
-                    aria-label={label}
-                    target={href.startsWith("http") ? "_blank" : undefined}
-                    rel="noreferrer"
-                    className="d-flex align-items-center justify-content-center rounded-2 no-underline"
-                    style={{
-                      width: 30,
-                      height: 30,
-                      background: "rgba(255,255,255,0.05)",
-                      color: "#6b7280",
-                    }}
-                  >
-                    <Icon size={14} />
+              <div className="d-flex flex-column gap-2 mb-3">
+                <div className="d-flex align-items-start gap-2">
+                  <MapPin size={13} style={{ color: "#4ade80", flexShrink: 0, marginTop: 2 }} />
+                  <span className="text-xs" style={{ color: "#6b7280" }}>
+                    Deco Center — NYARUTARAMA, Kigali, Rwanda
+                  </span>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <Mail size={13} style={{ color: "#4ade80", flexShrink: 0 }} />
+                  <a href="mailto:logistackltd@gmail.com" className="text-xs no-underline" style={{ color: "#6b7280" }}>
+                    logistackltd@gmail.com
                   </a>
-                ))}
+                </div>
+                <div className="d-flex align-items-start gap-2">
+                  <span className="text-xs" style={{ color: "#4ade80", flexShrink: 0, marginTop: 1 }}>☎</span>
+                  <div className="d-flex flex-column gap-0.5">
+                    <a href="tel:+250796847804" className="text-xs no-underline" style={{ color: "#6b7280" }}>+250 796 847 804</a>
+                    <a href="tel:+250783826653" className="text-xs no-underline" style={{ color: "#6b7280" }}>+250 783 826 653</a>
+                  </div>
+                </div>
+                <div className="d-flex align-items-center gap-2">
+                  <span className="text-xs" style={{ color: "#4ade80", flexShrink: 0 }}>WhatsApp</span>
+                  <a href="https://wa.me/250796847804" target="_blank" rel="noreferrer" className="text-xs no-underline" style={{ color: "#6b7280" }}>
+                    +250 796 847 804
+                  </a>
+                </div>
               </div>
-              <div className="d-flex align-items-center gap-2 text-xs" style={{ color: "#6b7280" }}>
-                <span
-                  className="rounded-circle"
-                  style={{ width: 7, height: 7, background: "#4ade80", display: "inline-block" }}
-                />
-                All systems operational
-              </div>
+              <a
+                href="https://logistack.space/"
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs no-underline"
+                style={{ color: "#4ade80" }}
+              >
+                logistack.space ↗
+              </a>
             </div>
 
             <div className="col-6 col-md-3 col-lg-2 offset-md-1 offset-lg-2">
@@ -825,6 +818,7 @@ export default function Home() {
                   { label: "Dashboard", href: "/dashboard" },
                   { label: "New Business Plan", href: "/form" },
                   { label: "Financial Model", href: "/form" },
+                  { label: "logistack.space", href: "https://logistack.space/" },
                   { label: "Agricoders Portal", href: "/" },
                 ].map((link) => (
                   <li key={link.label} className="mb-2">
@@ -845,8 +839,8 @@ export default function Home() {
               </h3>
               <ul className="list-unstyled">
                 {[
-                  { label: "Contact", href: "mailto:agricoders@gmail.com" },
-                  { label: "Support", href: "mailto:agricoders@gmail.com" },
+                  { label: "Contact", href: "mailto:logistackltd@gmail.com" },
+                  { label: "Support", href: "mailto:logistackltd@gmail.com" },
                   { label: "Privacy Policy", href: "/privacy" },
                   { label: "Terms of Service", href: "/terms" },
                 ].map((link) => (
@@ -865,7 +859,7 @@ export default function Home() {
           <div className="container py-3">
             <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-2">
               <span className="text-xs" style={{ color: "#4b5563" }}>
-                &copy; {new Date().getFullYear()} Logistack Plan by Agricoders. All rights reserved.
+                &copy; {new Date().getFullYear()} Logistack Ltd. All rights reserved.
               </span>
               <div className="d-flex align-items-center gap-3 text-xs" style={{ color: "#4b5563" }}>
                 <a href="/privacy" className="no-underline" style={{ color: "#4b5563" }}>Privacy</a>

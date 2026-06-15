@@ -18,27 +18,13 @@ function SystemCard({ app }: { app: AppEntry }) {
   const icon = ICON_MAP[app.id] ?? <Sparkles size={26} color="white" />;
 
   return (
-    <div
+    <div className="sys-card h-100 d-flex flex-column"
       style={{
         background: "white",
         borderRadius: 28,
         padding: "40px 36px",
         boxShadow: "0 2px 20px rgba(0,0,0,0.07)",
         border: "1.5px solid rgba(0,0,0,0.05)",
-        transition: "box-shadow 0.3s, transform 0.3s",
-        display: "flex",
-        flexDirection: "column",
-        height: "100%",
-      }}
-      onMouseEnter={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)";
-        el.style.transform = "translateY(-6px)";
-      }}
-      onMouseLeave={(e) => {
-        const el = e.currentTarget as HTMLDivElement;
-        el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)";
-        el.style.transform = "translateY(0)";
       }}
     >
       <div
@@ -96,6 +82,16 @@ function SystemCard({ app }: { app: AppEntry }) {
 export default function SystemsPage() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
+      <style>{`
+        .sys-card {
+          transition: box-shadow 0.3s, transform 0.3s;
+        }
+        .sys-card:hover {
+          box-shadow: 0 20px 60px rgba(0,0,0,0.14) !important;
+          transform: translateY(-6px);
+        }
+      `}</style>
+
       <AgriNav />
 
       <section className="py-20 text-center bg-white">
