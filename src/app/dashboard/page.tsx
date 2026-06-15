@@ -136,14 +136,22 @@ function CreditsModal({ required, balance, onClose }: { required: number; balanc
         ) : (
           <>
             <div className="flex items-start gap-3 mb-5">
-              <div className="w-10 h-10 rounded-full bg-amber-100 flex items-center justify-center flex-shrink-0">
-                <Coins size={20} className="text-amber-600" />
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${required === 0 ? "bg-green-100" : "bg-amber-100"}`}>
+                <Coins size={20} className={required === 0 ? "text-green-600" : "text-amber-600"} />
               </div>
               <div>
-                <h3 className="font-semibold text-gray-900 text-sm">Insufficient Credits</h3>
+                <h3 className="font-semibold text-gray-900 text-sm">
+                  {required === 0 ? "Request Credits" : "Insufficient Credits"}
+                </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  You need <strong>{required}</strong> credits but have{" "}
-                  <strong className="text-red-600">{balance}</strong>. Request more from your admin below.
+                  {required === 0 ? (
+                    "Select the documents you need and submit a credit request. The admin will review and approve it."
+                  ) : (
+                    <>
+                      You need <strong>{required}</strong> credits but have{" "}
+                      <strong className="text-red-600">{balance}</strong>. Request more from your admin below.
+                    </>
+                  )}
                 </p>
               </div>
             </div>
@@ -398,7 +406,7 @@ export default function Dashboard() {
             Manage your business plans and financial models
           </p>
         </div>
-        <div className="flex items-center gap-3 self-start sm:self-auto">
+        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
           {/* Credit balance badge */}
           <Link
             href="/profile"
@@ -414,6 +422,14 @@ export default function Dashboard() {
             <Coins size={14} />
             {credits === null ? "…" : `${credits} credit${credits !== 1 ? "s" : ""}`}
           </Link>
+          {/* Request Credits button */}
+          <button
+            onClick={() => setCreditModal({ required: 0, balance: credits ?? 0 })}
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 text-gray-700 hover:bg-gray-50 text-sm font-medium transition-colors"
+          >
+            <Send size={14} className="text-green-600" />
+            Request Credits
+          </button>
           <Link
             href="/form"
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors"
