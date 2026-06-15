@@ -40,7 +40,12 @@ export async function GET() {
         email: u.emailAddresses[0]?.emailAddress ?? "—",
         role: (u.publicMetadata?.role as string) ?? "user",
         submissionCount: stats?.count ?? 0,
-        lastActive: stats?.lastCreated ?? u.lastSignInAt ?? u.createdAt,
+        lastActive: (() => {
+          const times: number[] = [];
+          if (stats?.lastCreated) times.push(new Date(stats.lastCreated).getTime());
+          if (u.lastSignInAt) times.push(u.lastSignInAt);
+          return times.length ? Math.max(...times) : (u.createdAt ?? Date.now());
+        })(),
         createdAt: u.createdAt,
         imageUrl: u.imageUrl,
         credits: creditMap.get(u.id) ?? 0,
