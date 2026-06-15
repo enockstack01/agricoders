@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { connectDB } from "@/lib/mongodb";
 import { UserCredit } from "@/models/UserCredit";
 import { CreditTransaction } from "@/models/CreditTransaction";
+import { createNotification } from "@/lib/notifications";
 
 export async function POST(req: NextRequest) {
   const { userId: adminId } = await auth();
@@ -49,6 +50,13 @@ export async function POST(req: NextRequest) {
     balanceAfter: updated!.credits,
     note: note?.trim() || "Admin credit deduction",
   }).catch(() => {});
+
+  createNotification(
+    userId,
+    "credits_deducted",
+    `${deduct} credits removed from your account`,
+    `An admin has removed ${deduct} credits from your account. Your new balance is ${updated!.credits} credits.`
+  ).catch(() => {});
 
   return NextResponse.json({ ok: true, newBalance: updated!.credits, deducted: deduct });
 }

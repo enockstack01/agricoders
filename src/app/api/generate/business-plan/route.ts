@@ -8,6 +8,7 @@ import { generateBusinessPlanDocx } from "@/lib/generate-docx";
 import { generateCharts } from "@/lib/chartGenerator";
 import { generateAINarrative } from "@/lib/aiNarrative";
 import { deductCredits, refundCredits, CREDITS_NEW_GENERATION, CREDITS_REGENERATION } from "@/lib/credits";
+import { createNotification } from "@/lib/notifications";
 
 export const maxDuration = 120;
 
@@ -101,6 +102,14 @@ export async function GET(req: NextRequest) {
     ).catch((e) => console.error("[business-plan] Failed to persist:", e));
 
     const companyName = submissionObj.companyInfo?.companyName || "BusinessPlan";
+
+    createNotification(
+      userId,
+      "document_ready",
+      "Business Plan ready to download",
+      `Your Business Plan for "${companyName}" has been generated and is ready to download. ${deduction.balanceAfter} credits remaining.`
+    ).catch(() => {});
+
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {

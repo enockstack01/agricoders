@@ -26,6 +26,7 @@ import {
   MapPin,
   Sprout,
 } from "lucide-react";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const FEATURES = [
   {
@@ -73,7 +74,7 @@ export default function Home() {
     <div className="min-h-screen bg-white flex flex-col">
 
       {/* Navigation */}
-      <header className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
+      <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm transition-colors">
         <div className="container-xl px-4">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center gap-3 flex-shrink-0">
@@ -83,7 +84,7 @@ export default function Home() {
               >
                 <Layers size={17} color="white" />
               </div>
-              <span className="font-bold text-gray-900 text-[15px] tracking-tight">Logistack Plan</span>
+              <span className="font-bold text-gray-900 dark:text-white text-[15px] tracking-tight">Logistack Plan</span>
             </div>
 
             <nav className="hidden md:flex items-center gap-1">
@@ -95,7 +96,7 @@ export default function Home() {
                 <a
                   key={link.label}
                   href={link.href}
-                  className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 rounded-lg hover:bg-gray-50 transition-all no-underline"
+                  className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all no-underline"
                 >
                   {link.label}
                 </a>
@@ -103,8 +104,9 @@ export default function Home() {
             </nav>
 
             <div className="hidden md:flex items-center gap-2">
+              <ThemeToggle compact />
               <SignInButton mode="modal">
-                <button className="px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all border-0 bg-transparent">
+                <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-all border-0 bg-transparent">
                   Sign In
                 </button>
               </SignInButton>
@@ -119,17 +121,20 @@ export default function Home() {
               </SignUpButton>
             </div>
 
-            <button
-              className="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-50 transition-colors border-0 bg-transparent"
-              onClick={() => setMobileOpen((v) => !v)}
-            >
-              {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-            </button>
+            <div className="flex items-center gap-1 md:hidden">
+              <ThemeToggle compact />
+              <button
+                className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors border-0 bg-transparent"
+                onClick={() => setMobileOpen((v) => !v)}
+              >
+                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
+              </button>
+            </div>
           </div>
         </div>
 
         {mobileOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white px-4 pb-4 pt-3">
+          <div className="md:hidden border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 pb-4 pt-3 transition-colors">
             <div className="flex flex-col gap-1 mb-3">
               {[
                 { label: "How it works", href: "#how-it-works" },
@@ -140,7 +145,7 @@ export default function Home() {
                   key={link.label}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="block px-3 py-2.5 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg no-underline"
+                  className="block px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg no-underline"
                 >
                   {link.label}
                 </a>

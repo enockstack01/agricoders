@@ -16,6 +16,8 @@ import {
   Layers,
   UserCircle,
 } from "lucide-react";
+import NotificationBell from "@/components/ui/NotificationBell";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const YEAR = new Date().getFullYear();
 
@@ -51,19 +53,19 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
 
   const roleBadge =
     role === "super_admin"
-      ? { label: "Super Admin", cls: "bg-purple-100 text-purple-700 border-purple-200" }
+      ? { label: "Super Admin", cls: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800" }
       : role === "admin"
-      ? { label: "Admin", cls: "bg-blue-100 text-blue-700 border-blue-200" }
+      ? { label: "Admin", cls: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800" }
       : null;
 
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-gray-100">
+      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-gray-100 dark:border-gray-800">
         <div className="w-8 h-8 rounded-lg bg-green-600 flex items-center justify-center flex-shrink-0">
           <Layers size={16} className="text-white" />
         </div>
-        <span className="font-bold text-gray-900 text-base tracking-tight">Logistack Plan</span>
+        <span className="font-bold text-gray-900 dark:text-white text-base tracking-tight">Logistack Plan</span>
       </div>
 
       {/* Nav */}
@@ -77,11 +79,13 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
               onClick={() => setSidebarOpen(false)}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 active
-                  ? "bg-green-50 text-green-700"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400"
+                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
               }`}
             >
-              <span className={active ? "text-green-600" : "text-gray-400"}>{item.icon}</span>
+              <span className={active ? "text-green-600 dark:text-green-400" : "text-gray-400 dark:text-gray-500"}>
+                {item.icon}
+              </span>
               {item.label}
             </Link>
           );
@@ -90,7 +94,7 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
 
       {/* Bottom: role badge */}
       {roleBadge && (
-        <div className="px-4 py-3 border-t border-gray-100">
+        <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800">
           <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border ${roleBadge.cls}`}>
             <Shield size={11} />
             {roleBadge.label}
@@ -101,20 +105,20 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
   );
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden">
+    <div className="flex h-screen bg-gray-50 dark:bg-gray-950 overflow-hidden">
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex flex-col w-60 bg-white border-r border-gray-200 flex-shrink-0">
+      <aside className="hidden lg:flex flex-col w-60 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-shrink-0">
         <SidebarContent />
       </aside>
 
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div className="lg:hidden fixed inset-0 z-40 flex">
-          <div className="fixed inset-0 bg-black/40" onClick={() => setSidebarOpen(false)} />
-          <aside className="relative w-72 max-w-[85vw] bg-white shadow-xl z-50 flex flex-col">
+          <div className="fixed inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
+          <aside className="relative w-72 max-w-[85vw] bg-white dark:bg-gray-900 shadow-xl z-50 flex flex-col">
             <button
               onClick={() => setSidebarOpen(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"
+              className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
             >
               <X size={18} />
             </button>
@@ -126,12 +130,12 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
       {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Top bar */}
-        <header className="bg-white border-b border-gray-200 px-4 lg:px-6 h-14 flex items-center justify-between flex-shrink-0">
+        <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 lg:px-6 h-14 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-3 min-w-0">
             {/* Mobile menu toggle */}
             <button
               onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 flex-shrink-0"
+              className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 flex-shrink-0"
             >
               <Menu size={20} />
             </button>
@@ -141,29 +145,35 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
               <nav className="flex items-center gap-1 text-sm min-w-0" aria-label="breadcrumb">
                 {breadcrumb.map((b, i) => (
                   <span key={i} className="flex items-center gap-1 min-w-0">
-                    {i > 0 && <ChevronRight size={14} className="text-gray-300 flex-shrink-0" />}
+                    {i > 0 && <ChevronRight size={14} className="text-gray-300 dark:text-gray-600 flex-shrink-0" />}
                     {b.href ? (
-                      <Link href={b.href} className="text-gray-500 hover:text-gray-700 truncate">{b.label}</Link>
+                      <Link href={b.href} className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 truncate">
+                        {b.label}
+                      </Link>
                     ) : (
-                      <span className="text-gray-900 font-medium truncate">{b.label}</span>
+                      <span className="text-gray-900 dark:text-white font-medium truncate">{b.label}</span>
                     )}
                   </span>
                 ))}
               </nav>
             ) : title ? (
-              <h1 className="text-sm font-semibold text-gray-900 truncate">{title}</h1>
+              <h1 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{title}</h1>
             ) : null}
           </div>
 
-          <div className="flex items-center gap-3 flex-shrink-0">
+          <div className="flex items-center gap-1 flex-shrink-0">
             <Link
               href="/form"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors"
+              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors mr-1"
             >
               <PlusCircle size={14} />
               New Plan
             </Link>
-            <UserButton />
+            <ThemeToggle />
+            <NotificationBell />
+            <div className="ml-1">
+              <UserButton />
+            </div>
           </div>
         </header>
 

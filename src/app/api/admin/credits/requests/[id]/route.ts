@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { connectDB } from "@/lib/mongodb";
 import { CreditRequest } from "@/models/CreditRequest";
 import { addCredits } from "@/lib/credits";
+import { createNotification } from "@/lib/notifications";
 
 export async function PATCH(
   req: NextRequest,
@@ -51,6 +52,19 @@ export async function PATCH(
       request.creditsRequested,
       `Approved request: ${docLabels}`
     );
+    createNotification(
+      request.userId,
+      "credits_approved",
+      "Credit request approved",
+      `Your request for ${request.creditsRequested} credits (${docLabels}) has been approved. Your new balance is ${newBalance} credits.`
+    ).catch(() => {});
+  } else {
+    createNotification(
+      request.userId,
+      "credits_rejected",
+      "Credit request rejected",
+      `Your credit request for ${request.creditsRequested} credits was not approved.${adminNote ? ` Admin note: ${adminNote}` : ""}`
+    ).catch(() => {});
   }
 
   return NextResponse.json({ ok: true, status: request.status, newBalance });

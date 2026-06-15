@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
+/* Class-based dark mode — applies dark: utilities when .dark is on any ancestor */
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #f4f4f5;
 }
 
 @theme inline {
@@ -16,4 +24,50 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ── Marketing page dark-mode helpers ───────────────────────────────────────
+   Applied to light-background sections on the landing pages.
+   Use className="mkt-bg-white" (or mkt-card) instead of inline style
+   for sections that should respond to dark mode.                            */
+.mkt-bg-white {
+  background: #ffffff;
+}
+.dark .mkt-bg-white {
+  background: #0f172a;
+}
+
+.mkt-bg-light {
+  background: #f9fafb;
+}
+.dark .mkt-bg-light {
+  background: #111827;
+}
+
+.mkt-card {
+  background: white;
+}
+.dark .mkt-card {
+  background: #1e293b;
+}
+
+.mkt-text-dark {
+  color: #111827;
+}
+.dark .mkt-text-dark {
+  color: #f1f5f9;
+}
+
+.mkt-text-muted {
+  color: #6b7280;
+}
+.dark .mkt-text-muted {
+  color: #94a3b8;
+}
+
+.mkt-border {
+  border-color: #e5e7eb;
+}
+.dark .mkt-border {
+  border-color: #334155;
 }
