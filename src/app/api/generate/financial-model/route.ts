@@ -6,6 +6,7 @@ import { GeneratedDocument } from "@/models/GeneratedDocument";
 import { computeFinancials } from "@/lib/calculations";
 import { generateFinancialModelXlsx } from "@/lib/generate-xlsx";
 import { deductCredits, refundCredits, CREDITS_NEW_GENERATION, CREDITS_REGENERATION } from "@/lib/credits";
+import { createNotification } from "@/lib/notifications";
 
 export const maxDuration = 120;
 
@@ -78,6 +79,14 @@ export async function GET(req: NextRequest) {
     ).catch((e) => console.error("[financial-model] Failed to persist:", e));
 
     const companyName = submission.companyInfo?.companyName || "FinancialModel";
+
+    createNotification(
+      userId,
+      "document_ready",
+      "Financial Model ready to download",
+      `Your Financial Model for "${companyName}" has been generated and is ready to download. ${deduction.balanceAfter} credits remaining.`
+    ).catch(() => {});
+
     return new NextResponse(new Uint8Array(buffer), {
       status: 200,
       headers: {

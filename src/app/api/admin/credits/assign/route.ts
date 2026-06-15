@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { connectDB } from "@/lib/mongodb";
 import { UserCredit } from "@/models/UserCredit";
 import { CreditTransaction } from "@/models/CreditTransaction";
+import { createNotification } from "@/lib/notifications";
 
 // POST /api/admin/credits/assign
 // Body: { userId, credits, paymentAmount, currency, note }
@@ -51,6 +52,13 @@ export async function POST(req: NextRequest) {
       currency: currency || "USD",
       note: note || `Assigned by admin`,
     });
+
+    createNotification(
+      userId,
+      "credits_assigned",
+      `${creditsNum} credits added to your account`,
+      `An admin has added ${creditsNum} credits to your account. Your new balance is ${updated.credits} credits.${note ? ` Note: ${note}` : ""}`
+    ).catch(() => {});
 
     return NextResponse.json({ ok: true, newBalance: updated.credits });
   } catch (err) {
