@@ -22,14 +22,26 @@ export async function GET() {
   }
 }
 
-// PATCH /api/notifications — mark all unread as read
-export async function PATCH(_req: NextRequest) {
+// PATCH /api/notifications
+// Body { id, read } → toggle one notification
+// Body {}           → mark all unread as read
+export async function PATCH(req: NextRequest) {
   try {
     const { userId } = await auth();
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     await connectDB();
-    await Notification.updateMany({ userId, read: false }, { $set: { read: true } });
+
+    const body = await req.json().catch(() => ({})) as { id?: string; read?: boolean };
+
+    if (body.id) {
+      await Notification.updateOne(
+        { _id: body.id, userId },
+        { $set: { read: body.read ?? true } }
+      );
+    } else {
+      await Notification.updateMany({ userId, read: false }, { $set: { read: true } });
+    }
 
     return NextResponse.json({ ok: true });
   } catch (err) {

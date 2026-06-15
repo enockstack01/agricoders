@@ -123,29 +123,32 @@ export default function StepCompanyInfo({ formData, update }: Props) {
             Currency <span className="text-red-500">*</span>
           </label>
           <p className="text-xs text-gray-400 mb-1">All monetary values in the business plan will be displayed in this currency.</p>
-          <div className="flex gap-2">
-            <select
-              value={COMMON_CURRENCIES.includes(ci.currency) ? ci.currency : "__custom__"}
-              onChange={(e) => {
-                if (e.target.value !== "__custom__") set("currency", e.target.value);
-              }}
-              className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white flex-1"
-            >
-              {COMMON_CURRENCIES.map((c) => (
-                <option key={c} value={c}>{c}</option>
-              ))}
-              <option value="__custom__">Other</option>
-            </select>
-            {!COMMON_CURRENCIES.includes(ci.currency) || ci.currency === "" ? (
-              <input
-                value={ci.currency}
-                onChange={(e) => set("currency", e.target.value.toUpperCase())}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-24"
-                placeholder="XXX"
-                maxLength={5}
-              />
-            ) : null}
-          </div>
+          <select
+            value={COMMON_CURRENCIES.includes(ci.currency) ? ci.currency : "__custom__"}
+            onChange={(e) => {
+              if (e.target.value === "__custom__") {
+                set("currency", ""); // clear so the text input appears
+              } else {
+                set("currency", e.target.value);
+              }
+            }}
+            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white mb-2"
+          >
+            {COMMON_CURRENCIES.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+            <option value="__custom__">Other (enter below)</option>
+          </select>
+          {!COMMON_CURRENCIES.includes(ci.currency) && (
+            <input
+              value={ci.currency}
+              onChange={(e) => set("currency", e.target.value.toUpperCase())}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              placeholder="Enter currency code, e.g. MXN, JPY, BRL"
+              maxLength={5}
+              autoFocus
+            />
+          )}
         </div>
       </GridRow>
       <GridRow cols={2}>

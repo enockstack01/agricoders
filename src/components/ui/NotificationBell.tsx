@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Bell, Coins, FileText, X, CheckCheck } from "lucide-react";
+import { Bell, Coins, FileText, X, CheckCheck, Circle, CheckCircle2 } from "lucide-react";
 import axios from "axios";
 
 interface Notif {
@@ -52,16 +52,27 @@ export default function NotificationBell() {
     return () => clearInterval(iv);
   }, [fetchNotifs]);
 
-  const handleOpen = async () => {
-    const willOpen = !open;
-    setOpen(willOpen);
-    if (willOpen && unread > 0) {
-      try {
-        await axios.patch("/api/notifications");
-        setNotifs((prev) => prev.map((n) => ({ ...n, read: true })));
-        setUnread(0);
-      } catch { /* non-fatal */ }
+  const toggleOne = async (id: string, currentRead: boolean) => {
+    const nextRead = !currentRead;
+    setNotifs((prev) => prev.map((n) => n._id === id ? { ...n, read: nextRead } : n));
+    setUnread((prev) => nextRead ? Math.max(0, prev - 1) : prev + 1);
+    try {
+      await axios.patch("/api/notifications", { id, read: nextRead });
+    } catch {
+      // revert on failure
+      setNotifs((prev) => prev.map((n) => n._id === id ? { ...n, read: currentRead } : n));
+      setUnread((prev) => nextRead ? prev + 1 : Math.max(0, prev - 1));
     }
+  };
+
+  const markAllRead = async () => {
+    const hasUnread = notifs.some((n) => !n.read);
+    if (!hasUnread) return;
+    setNotifs((prev) => prev.map((n) => ({ ...n, read: true })));
+    setUnread(0);
+    try {
+      await axios.patch("/api/notifications");
+    } catch { /* non-fatal */ }
   };
 
   useEffect(() => {
@@ -84,7 +95,7 @@ export default function NotificationBell() {
     <div className="relative">
       <button
         ref={btnRef}
-        onClick={handleOpen}
+        onClick={() => setOpen((v) => !v)}
         aria-label="Notifications"
         className="relative p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-colors"
       >
@@ -103,14 +114,28 @@ export default function NotificationBell() {
         >
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 dark:border-gray-800">
-            <span className="text-sm font-semibold text-gray-900 dark:text-white">Notifications</span>
             <div className="flex items-center gap-2">
-              {notifs.length > 0 && (
-                <span className="text-xs text-gray-400 dark:text-gray-500">{notifs.length} total</span>
+              <span className="text-sm font-semibold text-gray-900 dark:text-white">Notifications</span>
+              {unread > 0 && (
+                <span className="min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {unread}
+                </span>
+              )}
+            </div>
+            <div className="flex items-center gap-1">
+              {notifs.some((n) => !n.read) && (
+                <button
+                  onClick={markAllRead}
+                  title="Mark all as read"
+                  className="flex items-center gap-1 px-2 py-1 rounded-lg text-xs text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200 transition-colors"
+                >
+                  <CheckCheck size={12} />
+                  All read
+                </button>
               )}
               <button
                 onClick={() => setOpen(false)}
-                className="p-0.5 rounded hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 dark:text-gray-500"
+                className="p-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 dark:text-gray-500 transition-colors"
               >
                 <X size={14} />
               </button>
@@ -128,7 +153,7 @@ export default function NotificationBell() {
               {notifs.map((n) => (
                 <div
                   key={n._id}
-                  className={`px-4 py-3 flex gap-3 transition-colors ${
+                  className={`group px-4 py-3 flex gap-3 transition-colors ${
                     !n.read
                       ? "bg-blue-50/60 dark:bg-blue-900/10"
                       : "hover:bg-gray-50 dark:hover:bg-gray-800/50"
@@ -142,8 +167,23 @@ export default function NotificationBell() {
                     <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed mt-0.5">{n.body}</p>
                     <p className="text-[10px] text-gray-400 dark:text-gray-600 mt-1">{timeAgo(n.createdAt)}</p>
                   </div>
+                  {/* Read/unread toggle */}
+                  <button
+                    onClick={() => toggleOne(n._id, n.read)}
+                    title={n.read ? "Mark as unread" : "Mark as read"}
+                    className="flex-shrink-0 mt-1 opacity-0 group-hover:opacity-100 transition-opacity p-0.5 rounded text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                  >
+                    {n.read
+                      ? <Circle size={13} />
+                      : <CheckCircle2 size={13} className="text-blue-500" />
+                    }
+                  </button>
                   {!n.read && (
-                    <span className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0 mt-1.5" />
+                    <span
+                      onClick={() => toggleOne(n._id, n.read)}
+                      title="Mark as read"
+                      className="w-2 h-2 rounded-full bg-blue-500 flex-shrink-0 mt-2 cursor-pointer hover:bg-blue-700 transition-colors group-hover:opacity-0"
+                    />
                   )}
                 </div>
               ))}
@@ -152,9 +192,8 @@ export default function NotificationBell() {
 
           {/* Footer */}
           {notifs.length > 0 && (
-            <div className="px-4 py-2.5 border-t border-gray-100 dark:border-gray-800 flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
-              <CheckCheck size={12} />
-              All notifications · last 20 shown
+            <div className="px-4 py-2.5 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-400 dark:text-gray-500">
+              Last 20 shown · hover a notification to toggle read state
             </div>
           )}
         </div>
