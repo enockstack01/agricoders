@@ -15,8 +15,10 @@ import {
   GitBranch,
   Mail,
   MapPin,
-  Award,
-  Users,
+  Map,
+  Crosshair,
+  TrendingUp,
+  Leaf,
 } from "lucide-react";
 import AgriNav from "@/components/layout/AgriNav";
 
@@ -219,56 +221,87 @@ export default function AgricodersPage() {
         </div>
       </section>
 
-      {/* Professional Quality */}
+      {/* Geospatial precision section */}
       <section className="py-24" style={{ background: "#111827" }}>
         <div className="container">
-          <div className="row g-4 align-items-center">
-            <div className="col-lg-6 mb-4 mb-lg-0">
+          {/* Top statement */}
+          <div className="row justify-content-center mb-16">
+            <div className="col-lg-8 text-center">
+              <p
+                className="text-xs font-bold uppercase tracking-widest mb-4"
+                style={{ color: "#4ade80", letterSpacing: "0.14em" }}
+              >
+                Precision Agriculture
+              </p>
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-5 leading-tight">
+                Agriculture cannot be productive without{" "}
+                <span style={{ color: "#4ade80" }}>the right precision tools</span>
+              </h2>
+              <p className="text-gray-400 leading-relaxed mx-auto" style={{ maxWidth: 600, fontSize: 16 }}>
+                The difference between a thriving farm and an underperforming one is often not effort — it is information.
+                Without precise, location-aware intelligence, farmers work hard in the wrong places, at the wrong times,
+                with the wrong resources. Precision tools change that.
+              </p>
+            </div>
+          </div>
+
+          {/* Main content: left text + right cards */}
+          <div className="row g-5 align-items-center">
+            <div className="col-lg-5 mb-4 mb-lg-0">
               <p
                 className="text-xs font-bold uppercase tracking-widest mb-3"
                 style={{ color: "#4ade80", letterSpacing: "0.12em" }}
               >
-                Our Standard
+                What we build
               </p>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-tight">
-                Work that goes beyond what the client expects
-              </h2>
-              <p className="text-gray-400 leading-relaxed mb-6">
-                Every deliverable we produce is built to a professional standard. We go the extra mile
-                to understand your specific context, gather the inputs you need, and produce work
-                that stands on its own without needing a disclaimer.
+              <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-4 leading-tight">
+                Geospatial planning tools that tell farmers exactly where to focus
+              </h3>
+              <p className="text-gray-400 leading-relaxed mb-4" style={{ fontSize: 15 }}>
+                We develop geospatial planning tools for agriculture that help farmers prioritize where
+                to focus their efforts — so every investment of time, labour, and input achieves the
+                maximum possible productivity and profitability.
               </p>
-              <Link
-                href="/app"
-                className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-bold rounded-xl transition-all no-underline"
-                style={{ background: "#16a34a" }}
-              >
-                See Logistack Plan
-                <ArrowRight size={14} />
-              </Link>
+              <p className="text-gray-400 leading-relaxed mb-6" style={{ fontSize: 15 }}>
+                Our tools analyse field-level spatial data, soil conditions, crop suitability, and
+                productivity patterns to surface clear, actionable priorities — not guesswork.
+              </p>
+              <div className="d-flex flex-column gap-3">
+                {[
+                  "Identify your highest-potential land zones first",
+                  "Reduce wasted inputs on low-yield areas",
+                  "Maximise revenue per hectare with spatial intelligence",
+                ].map((point) => (
+                  <div key={point} className="d-flex align-items-start gap-2">
+                    <CheckCircle size={15} style={{ color: "#4ade80", flexShrink: 0, marginTop: 2 }} />
+                    <span style={{ fontSize: 14, color: "#d1d5db" }}>{point}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="col-lg-6">
+
+            <div className="col-lg-7">
               <div className="row g-3">
                 {[
                   {
-                    Icon: Award,
-                    title: "Professional output",
-                    desc: "Our documents and deliverables meet the standard expected from experienced consultants, not the look of something auto-generated.",
+                    Icon: Map,
+                    title: "Field-level spatial planning",
+                    desc: "Map every plot, zone, and boundary with precision. Know exactly which areas to prioritise for planting, irrigation, and intervention.",
                   },
                   {
-                    Icon: Users,
-                    title: "Extra-mile support",
-                    desc: "We work closely with every client to gather the right inputs, answer questions, and ensure the output reflects their actual business.",
+                    Icon: Crosshair,
+                    title: "Focus where it matters most",
+                    desc: "Our tools surface the highest-impact areas so farmers concentrate effort where returns are greatest — not spread thin across everything.",
                   },
                   {
-                    Icon: CheckCircle,
-                    title: "Accurate and complete",
-                    desc: "From financial models to business narratives, everything is internally consistent, data-driven, and ready to present.",
+                    Icon: TrendingUp,
+                    title: "Maximum productivity & profitability",
+                    desc: "By aligning inputs with spatial data, farms achieve higher yields, lower waste, and stronger margins — efficiently and sustainably.",
                   },
                   {
-                    Icon: Layers,
-                    title: "Any business, any sector",
-                    desc: "We adapt our work to your industry, market, and country. No generic outputs. Every engagement is tailored.",
+                    Icon: Leaf,
+                    title: "Built for African agriculture",
+                    desc: "Designed around the realities of smallholder and commercial farming across Africa — variable soils, mixed crops, and limited margins for error.",
                   },
                 ].map((item) => {
                   const ItemIcon = item.Icon;
