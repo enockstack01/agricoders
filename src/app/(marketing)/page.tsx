@@ -19,8 +19,14 @@ import {
   Crosshair,
   TrendingUp,
   Leaf,
+  Sparkles,
 } from "lucide-react";
 import AgriNav from "@/components/layout/AgriNav";
+import { AGRICODERS_APPS } from "@/lib/apps";
+
+const APP_ICONS: Record<string, React.ReactNode> = {
+  logistackplan: <Layers size={26} color="white" />,
+};
 
 export const metadata: Metadata = {
   title: "Agricoders — Geospatial Intelligence, Apps & Agribusiness Planning",
@@ -334,79 +340,113 @@ export default function AgricodersPage() {
         </div>
       </section>
 
-      {/* Logistack Plan spotlight */}
+      {/* Our Apps */}
       <section className="py-24 bg-black">
         <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-lg-10">
-              <div
-                className="rounded-4 p-4 p-sm-5 position-relative overflow-hidden"
-                style={{ border: "1px solid rgba(255,255,255,0.1)" }}
-              >
-                <div
-                  className="position-absolute top-0 start-0 end-0"
-                  style={{
-                    height: 3,
-                    background: "linear-gradient(90deg, #16a34a, #4ade80, #16a34a)",
-                  }}
-                />
-                <div className="row g-4 align-items-start">
-                  <div className="col-auto">
+          <div className="text-center mb-14">
+            <p
+              className="text-xs font-bold uppercase tracking-widest mb-4"
+              style={{ color: "#4ade80", letterSpacing: "0.14em" }}
+            >
+              Agricoders Platform
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-tight">
+              Our Apps
+            </h2>
+            <p className="text-gray-400 mx-auto" style={{ maxWidth: 440, fontSize: 15 }}>
+              Purpose-built tools for agribusinesses and farmers, available on the Agricoders platform.
+            </p>
+          </div>
+
+          <div className="row g-4 justify-content-center mb-8">
+            {AGRICODERS_APPS.map((app) => {
+              const icon = APP_ICONS[app.id] ?? <Sparkles size={26} color="white" />;
+              return (
+                <div key={app.id} className="col-md-6 col-lg-5">
+                  <div
+                    className="rounded-4 p-4 p-sm-5 position-relative overflow-hidden h-100 d-flex flex-column"
+                    style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}
+                  >
                     <div
-                      className="d-flex align-items-center justify-content-center rounded-3 shadow"
-                      style={{ width: 60, height: 60, background: "#16a34a" }}
-                    >
-                      <Layers size={28} color="white" />
+                      className="position-absolute top-0 start-0 end-0"
+                      style={{ height: 3, background: `linear-gradient(90deg, ${app.accentColor}, #4ade80, ${app.accentColor})` }}
+                    />
+                    <div className="d-flex align-items-center gap-3 mb-4">
+                      <div
+                        className="d-flex align-items-center justify-content-center rounded-3"
+                        style={{ width: 52, height: 52, background: app.accentColor, flexShrink: 0 }}
+                      >
+                        {icon}
+                      </div>
+                      <div>
+                        <span
+                          className="text-xs font-semibold"
+                          style={{ color: "#4ade80", letterSpacing: "0.08em", textTransform: "uppercase" }}
+                        >
+                          {app.status === "live" ? "Live Now" : app.status === "beta" ? "Beta" : "Coming Soon"}
+                        </span>
+                        <p className="text-white font-bold mb-0" style={{ fontSize: 18, lineHeight: 1.2 }}>
+                          {app.name}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="col">
-                    <p
-                      className="text-xs font-bold uppercase tracking-widest mb-2"
-                      style={{ color: "#4ade80", letterSpacing: "0.12em" }}
-                    >
-                      Logistack Plan · Live Now
-                    </p>
-                    <h2 className="text-2xl sm:text-3xl font-extrabold text-white mb-4 leading-tight">
-                      Professional Business Planning for Agribusiness
-                    </h2>
-                    <p className="text-gray-400 leading-relaxed mb-5">
-                      Generate a complete, investor-ready Business Plan and a full 19-sheet Financial Model
-                      in under 15 minutes. Built for agribusinesses, startups, and agricultural
-                      entrepreneurs who need professional documents without the consultant price tag.
+                    <p className="text-gray-400 leading-relaxed mb-5" style={{ fontSize: 14 }}>
+                      {app.description}
                     </p>
                     <div className="row g-2 mb-5">
-                      {[
-                        "Written Executive Summary & Market Analysis",
-                        "Complete 19-sheet Excel Financial Model",
-                        "Six embedded professional charts",
-                        "NPV, IRR, payback period (auto-calculated)",
-                        "Investor-ready Word document in under 15 min",
-                        "Any business, any country, any currency",
-                      ].map((f) => (
-                        <div key={f} className="col-12 col-sm-6 d-flex align-items-start gap-2 text-sm text-gray-400">
-                          <CheckCircle
-                            size={13}
-                            style={{ color: "#4ade80", flexShrink: 0, marginTop: 2 }}
-                          />
+                      {app.features.map((f) => (
+                        <div key={f} className="col-12 col-sm-6 d-flex align-items-start gap-2" style={{ fontSize: 13, color: "#9ca3af" }}>
+                          <CheckCircle size={13} style={{ color: "#4ade80", flexShrink: 0, marginTop: 2 }} />
                           {f}
                         </div>
                       ))}
                     </div>
-                    <div className="d-flex flex-wrap align-items-center gap-3">
+                    <div className="mt-auto d-flex flex-wrap align-items-center gap-3">
                       <Link
-                        href="/app"
-                        className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-bold rounded-xl transition-all no-underline"
-                        style={{ background: "#16a34a" }}
+                        href={app.href}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 text-white text-sm font-bold rounded-xl transition-all no-underline"
+                        style={{ background: app.accentColor }}
                       >
-                        Open Logistack Plan
+                        Open {app.name}
                         <ArrowRight size={14} />
                       </Link>
-                      <span className="text-xs text-gray-600">$69/document · $137 complete package</span>
+                      {app.pricing && (
+                        <span style={{ fontSize: 12, color: "#4b5563" }}>{app.pricing}</span>
+                      )}
                     </div>
                   </div>
                 </div>
+              );
+            })}
+
+            {/* Placeholder for upcoming apps */}
+            <div className="col-md-6 col-lg-5">
+              <div
+                className="d-flex flex-column align-items-center justify-content-center h-100 text-center rounded-4 p-5"
+                style={{ border: "2px dashed rgba(255,255,255,0.1)", minHeight: 240 }}
+              >
+                <Sparkles size={36} className="mb-4" style={{ color: "rgba(255,255,255,0.15)" }} />
+                <p className="font-semibold mb-2" style={{ fontSize: 15, color: "#4b5563" }}>More apps coming</p>
+                <p className="mb-0" style={{ fontSize: 13, color: "#374151" }}>
+                  New tools are in development for the Agricoders platform.
+                </p>
               </div>
             </div>
+          </div>
+
+          <div className="text-center">
+            <Link
+              href="/apps"
+              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-xl no-underline transition-all"
+              style={{
+                background: "rgba(255,255,255,0.07)",
+                border: "1px solid rgba(255,255,255,0.15)",
+                color: "white",
+              }}
+            >
+              View all apps
+              <ChevronRight size={15} style={{ color: "#9ca3af" }} />
+            </Link>
           </div>
         </div>
       </section>
@@ -420,17 +460,17 @@ export default function AgricodersPage() {
                 Ready to build your agribusiness with precision?
               </h2>
               <p className="text-white mb-9 leading-relaxed" style={{ opacity: 0.85 }}>
-                Start with Logistack Plan or get in touch to discuss how Agricoders can support
+                Explore our apps or get in touch to discuss how Agricoders can support
                 your agribusiness journey.
               </p>
               <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
                 <Link
-                  href="/app"
+                  href="/apps"
                   className="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-white font-bold rounded-xl hover:opacity-90 transition-all text-sm no-underline"
                   style={{ color: "#15803d" }}
                 >
                   <Layers size={16} />
-                  Open Logistack Plan
+                  Explore Our Apps
                 </Link>
                 <a
                   href="mailto:agricoders@gmail.com"
@@ -537,10 +577,10 @@ export default function AgricodersPage() {
               </h3>
               <ul className="list-unstyled">
                 {[
+                  { label: "Our Apps", href: "/apps" },
                   { label: "Logistack Plan", href: "/app" },
                   { label: "Contact", href: "mailto:agricoders@gmail.com" },
                   { label: "Privacy Policy", href: "/privacy" },
-                  { label: "Terms of Service", href: "/terms" },
                 ].map((link) => (
                   <li key={link.label} className="mb-2">
                     <a

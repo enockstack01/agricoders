@@ -29,21 +29,21 @@ export default function AgriNav() {
               Services
             </a>
             <Link
-              href="/app"
+              href="/apps"
               className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all no-underline"
             >
-              Logistack Plan
+              Apps
             </Link>
           </nav>
 
           <div className="hidden md:flex items-center gap-2">
             <ThemeToggle compact />
             <Link
-              href="/app"
+              href="/apps"
               className="inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-all border border-gray-200 dark:border-gray-700 no-underline"
             >
               <Layers size={13} style={{ color: "#16a34a" }} />
-              Logistack Plan
+              Our Apps
             </Link>
             <Link
               href="/sign-up"
@@ -79,11 +79,11 @@ export default function AgriNav() {
               Services
             </a>
             <Link
-              href="/app"
+              href="/apps"
               onClick={() => setOpen(false)}
               className="block px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg no-underline"
             >
-              Logistack Plan
+              Apps
             </Link>
           </div>
           <div className="flex flex-col gap-2 pt-3 border-t border-gray-100 dark:border-gray-800">
