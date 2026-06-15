@@ -43,7 +43,7 @@ export default function AgriNav() {
               className="inline-flex items-center gap-1.5 px-3.5 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-all border border-gray-200 dark:border-gray-700 no-underline"
             >
               <Layers size={13} style={{ color: "#16a34a" }} />
-              Our Apps
+              Our Systems
             </Link>
             <Link
               href="/sign-up"

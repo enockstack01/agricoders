@@ -230,39 +230,24 @@ export default function AgricodersPage() {
       {/* Geospatial precision section */}
       <section className="py-24" style={{ background: "#111827" }}>
         <div className="container">
-          {/* Top statement */}
+          {/* All section text before cards */}
           <div className="row justify-content-center mb-14">
-            <div className="col-lg-8 text-center">
+            <div className="col-lg-8">
               <p
-                className="text-xs font-bold uppercase tracking-widest mb-4"
+                className="text-xs font-bold uppercase tracking-widest mb-4 text-center"
                 style={{ color: "#4ade80", letterSpacing: "0.14em" }}
               >
                 Precision Agriculture
               </p>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-5 leading-tight">
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-5 leading-tight text-center">
                 Agriculture cannot be productive without{" "}
                 <span style={{ color: "#4ade80" }}>the right precision tools</span>
               </h2>
-              <p className="text-gray-400 leading-relaxed mx-auto" style={{ maxWidth: 600, fontSize: 16 }}>
+              <p className="text-gray-400 leading-relaxed mb-6 text-center" style={{ fontSize: 16 }}>
                 The difference between a thriving farm and an underperforming one is often not effort. It is information.
                 Without precise, location-aware intelligence, farmers work hard in the wrong places, at the wrong times,
                 with the wrong resources. Precision tools change that.
               </p>
-            </div>
-          </div>
-
-          {/* What we build — intro text */}
-          <div className="row justify-content-center mb-12">
-            <div className="col-lg-8">
-              <p
-                className="text-xs font-bold uppercase tracking-widest mb-3"
-                style={{ color: "#4ade80", letterSpacing: "0.12em" }}
-              >
-                What we build
-              </p>
-              <h3 className="text-2xl sm:text-3xl font-extrabold text-white mb-4 leading-tight">
-                Geospatial planning tools that tell farmers exactly where to focus
-              </h3>
               <p className="text-gray-400 leading-relaxed mb-4" style={{ fontSize: 15 }}>
                 We develop geospatial planning tools for agriculture that help farmers prioritize where
                 to focus their efforts, so every investment of time, labour, and input achieves the
@@ -287,7 +272,7 @@ export default function AgricodersPage() {
             </div>
           </div>
 
-          {/* Full-width cards — same size as services section */}
+          {/* Full-width cards */}
           <div className="row g-4">
             {[
               {
@@ -339,7 +324,7 @@ export default function AgricodersPage() {
         </div>
       </section>
 
-      {/* Our Apps */}
+      {/* Our Systems */}
       <section className="py-24 bg-black">
         <div className="container">
           <div className="text-center mb-14">
@@ -347,17 +332,17 @@ export default function AgricodersPage() {
               className="text-xs font-bold uppercase tracking-widest mb-4"
               style={{ color: "#4ade80", letterSpacing: "0.14em" }}
             >
-              Agricoders Platform
+              Agricoders
             </p>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 leading-tight">
-              Our Apps
+              Our Systems
             </h2>
             <p className="text-gray-400 mx-auto" style={{ maxWidth: 440, fontSize: 15 }}>
-              Purpose-built tools for agribusinesses and farmers, available on the Agricoders platform.
+              Tools and platforms we have built for agribusinesses, farmers, and entrepreneurs.
             </p>
           </div>
 
-          <div className="row g-4 justify-content-center mb-8">
+          <div className="row g-4 justify-content-center">
             {AGRICODERS_APPS.map((app) => {
               const icon = APP_ICONS[app.id] ?? <Sparkles size={26} color="white" />;
               return (
@@ -377,30 +362,14 @@ export default function AgricodersPage() {
                       >
                         {icon}
                       </div>
-                      <div>
-                        <span
-                          className="text-xs font-semibold"
-                          style={{ color: "#4ade80", letterSpacing: "0.08em", textTransform: "uppercase" }}
-                        >
-                          {app.status === "live" ? "Live Now" : app.status === "beta" ? "Beta" : "Coming Soon"}
-                        </span>
-                        <p className="text-white font-bold mb-0" style={{ fontSize: 18, lineHeight: 1.2 }}>
-                          {app.name}
-                        </p>
-                      </div>
+                      <p className="text-white font-bold mb-0" style={{ fontSize: 18, lineHeight: 1.2 }}>
+                        {app.name}
+                      </p>
                     </div>
-                    <p className="text-gray-400 leading-relaxed mb-5" style={{ fontSize: 14 }}>
+                    <p className="text-gray-400 leading-relaxed mb-6" style={{ fontSize: 14 }}>
                       {app.description}
                     </p>
-                    <div className="row g-2 mb-5">
-                      {app.features.map((f) => (
-                        <div key={f} className="col-12 col-sm-6 d-flex align-items-start gap-2" style={{ fontSize: 13, color: "#9ca3af" }}>
-                          <CheckCircle size={13} style={{ color: "#4ade80", flexShrink: 0, marginTop: 2 }} />
-                          {f}
-                        </div>
-                      ))}
-                    </div>
-                    <div className="mt-auto d-flex flex-wrap align-items-center gap-3">
+                    <div className="mt-auto">
                       <Link
                         href={app.href}
                         className="inline-flex items-center gap-2 px-5 py-2.5 text-white text-sm font-bold rounded-xl transition-all no-underline"
@@ -409,43 +378,24 @@ export default function AgricodersPage() {
                         Open {app.name}
                         <ArrowRight size={14} />
                       </Link>
-                      {app.pricing && (
-                        <span style={{ fontSize: 12, color: "#4b5563" }}>{app.pricing}</span>
-                      )}
                     </div>
                   </div>
                 </div>
               );
             })}
 
-            {/* Placeholder for upcoming apps */}
             <div className="col-md-6 col-lg-5">
               <div
                 className="d-flex flex-column align-items-center justify-content-center h-100 text-center rounded-4 p-5"
-                style={{ border: "2px dashed rgba(255,255,255,0.1)", minHeight: 240 }}
+                style={{ border: "2px dashed rgba(255,255,255,0.1)", minHeight: 220 }}
               >
-                <Sparkles size={36} className="mb-4" style={{ color: "rgba(255,255,255,0.15)" }} />
-                <p className="font-semibold mb-2" style={{ fontSize: 15, color: "#4b5563" }}>More apps coming</p>
+                <Sparkles size={32} className="mb-4" style={{ color: "rgba(255,255,255,0.15)" }} />
+                <p className="font-semibold mb-2" style={{ fontSize: 15, color: "#4b5563" }}>More systems coming</p>
                 <p className="mb-0" style={{ fontSize: 13, color: "#374151" }}>
-                  New tools are in development for the Agricoders platform.
+                  New tools are in development.
                 </p>
               </div>
             </div>
-          </div>
-
-          <div className="text-center">
-            <Link
-              href="/apps"
-              className="inline-flex items-center gap-2 px-6 py-3 text-sm font-semibold rounded-xl no-underline transition-all"
-              style={{
-                background: "rgba(255,255,255,0.07)",
-                border: "1px solid rgba(255,255,255,0.15)",
-                color: "white",
-              }}
-            >
-              View all apps
-              <ChevronRight size={15} style={{ color: "#9ca3af" }} />
-            </Link>
           </div>
         </div>
       </section>
@@ -459,7 +409,7 @@ export default function AgricodersPage() {
                 Ready to build your agribusiness with precision?
               </h2>
               <p className="text-white mb-9 leading-relaxed" style={{ opacity: 0.85 }}>
-                Explore our apps or get in touch to discuss how Agricoders can support
+                Explore our systems or get in touch to discuss how Agricoders can support
                 your agribusiness journey.
               </p>
               <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
@@ -469,7 +419,7 @@ export default function AgricodersPage() {
                   style={{ color: "#15803d" }}
                 >
                   <Layers size={16} />
-                  Explore Our Apps
+                  Our Systems
                 </Link>
                 <a
                   href="mailto:agricoders@gmail.com"
@@ -576,7 +526,7 @@ export default function AgricodersPage() {
               </h3>
               <ul className="list-unstyled">
                 {[
-                  { label: "Our Apps", href: "/apps" },
+                  { label: "Our Systems", href: "/apps" },
                   { label: "Logistack Plan", href: "/app" },
                   { label: "Contact", href: "mailto:agricoders@gmail.com" },
                   { label: "Privacy Policy", href: "/privacy" },

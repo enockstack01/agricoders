@@ -432,84 +432,82 @@ export default function Home() {
       {/* Professional Quality */}
       <section className="py-24 bg-white">
         <div className="container">
-          <div className="row g-4 align-items-center">
-            <div className="col-lg-6 mb-4 mb-lg-0">
-              <p
-                className="text-xs font-bold uppercase tracking-widest mb-3"
-                style={{ color: "#16a34a", letterSpacing: "0.12em" }}
-              >
-                Our Promise
-              </p>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
-                Your documents won&apos;t look like they were written by AI
-              </h2>
-              <p className="text-gray-500 leading-relaxed mb-5">
-                We don&apos;t produce generic outputs. Our system is built on professional business document
-                structures, industry-specific frameworks, and real financial modelling standards.
-                Every business plan reads like it was written by an experienced consultant.
-              </p>
-              <p className="text-gray-500 leading-relaxed mb-6">
-                We also go the extra mile to support every client. If you need help sourcing the
-                right inputs, understanding your financials, or refining your narrative, our team
-                is here to make sure the final document reflects your actual business.
-              </p>
-              <SignUpButton mode="modal">
-                <button
-                  className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-bold rounded-xl transition-all border-0"
-                  style={{ background: "#16a34a" }}
-                >
-                  Generate My Business Plan
-                  <ArrowRight size={14} />
-                </button>
-              </SignUpButton>
-            </div>
-            <div className="col-lg-6">
-              <div className="row g-3">
-                {[
-                  {
-                    Icon: Award,
-                    title: "Indistinguishable from consultant work",
-                    desc: "Our output meets the quality standard of documents produced by experienced business consultants. Investors and lenders take it seriously.",
-                  },
-                  {
-                    Icon: Users,
-                    title: "Extra-mile client support",
-                    desc: "Our team helps you get the inputs right. From financial figures to market data, we support you through every part of the process.",
-                  },
-                  {
-                    Icon: ShieldCheck,
-                    title: "Internally consistent",
-                    desc: "The business plan narrative and financial model are aligned. Every figure in the document matches the model. No inconsistencies.",
-                  },
-                  {
-                    Icon: Brain,
-                    title: "Market-specific intelligence",
-                    desc: "Content is generated for your specific industry, country, and business context. Not a generic template with your name inserted.",
-                  },
-                ].map((item) => {
-                  const ItemIcon = item.Icon;
-                  return (
-                    <div key={item.title} className="col-6">
-                      <div
-                        className="h-100"
-                        style={{ background: "white", borderRadius: 24, padding: "28px 24px", boxShadow: "0 2px 16px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
-                        onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 16px 48px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-4px)"; }}
-                        onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 16px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
-                      >
-                        <div
-                          className="d-flex align-items-center justify-content-center mb-3"
-                          style={{ width: 52, height: 52, background: "rgba(22,163,74,0.1)", borderRadius: 16 }}
-                        >
-                          <ItemIcon size={22} style={{ color: "#16a34a" }} />
-                        </div>
-                        <p style={{ fontSize: 15, fontWeight: 600, color: "#111827", marginBottom: 6 }}>{item.title}</p>
-                        <p style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.6, marginBottom: 0 }}>{item.desc}</p>
-                      </div>
+          <div className="text-center mb-14">
+            <p
+              className="text-xs font-bold uppercase tracking-widest mb-3"
+              style={{ color: "#16a34a", letterSpacing: "0.12em" }}
+            >
+              Our Promise
+            </p>
+            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
+              Your documents won&apos;t look like they were written by AI
+            </h2>
+            <p className="text-gray-500 leading-relaxed mx-auto mb-3" style={{ maxWidth: 560 }}>
+              We don&apos;t produce generic outputs. Our system is built on professional business document
+              structures, industry-specific frameworks, and real financial modelling standards.
+              Every business plan reads like it was written by an experienced consultant.
+            </p>
+            <p className="text-gray-500 leading-relaxed mx-auto mb-8" style={{ maxWidth: 560 }}>
+              We also go the extra mile to support every client. If you need help sourcing the
+              right inputs, understanding your financials, or refining your narrative, our team
+              is here to make sure the final document reflects your actual business.
+            </p>
+          </div>
+          <div className="row g-4">
+            {[
+              {
+                Icon: Award,
+                title: "Indistinguishable from consultant work",
+                desc: "Our output meets the quality standard of documents produced by experienced business consultants. Investors and lenders take it seriously.",
+              },
+              {
+                Icon: Users,
+                title: "Extra-mile client support",
+                desc: "Our team helps you get the inputs right. From financial figures to market data, we support you through every part of the process.",
+              },
+              {
+                Icon: ShieldCheck,
+                title: "Internally consistent",
+                desc: "The business plan narrative and financial model are aligned. Every figure in the document matches the model. No inconsistencies.",
+              },
+              {
+                Icon: Brain,
+                title: "Market-specific intelligence",
+                desc: "Content is generated for your specific industry, country, and business context. Not a generic template with your name inserted.",
+              },
+            ].map((item) => {
+              const ItemIcon = item.Icon;
+              return (
+                <div key={item.title} className="col-md-6">
+                  <div
+                    className="h-100 d-flex flex-column"
+                    style={{ background: "white", borderRadius: 24, padding: "36px 32px", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
+                    onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
+                    onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
+                  >
+                    <div
+                      className="d-flex align-items-center justify-content-center mb-4"
+                      style={{ width: 60, height: 60, background: "#16a34a", borderRadius: 20, flexShrink: 0 }}
+                    >
+                      <ItemIcon size={26} color="white" />
                     </div>
-                  );
-                })}
-              </div>
-            </div>
+                    <h3 style={{ fontSize: 17, fontWeight: 700, color: "#111827", marginBottom: 10 }}>{item.title}</h3>
+                    <p style={{ fontSize: 14, color: "#6b7280", lineHeight: 1.65, marginBottom: 0 }}>{item.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div className="text-center mt-10">
+            <SignUpButton mode="modal">
+              <button
+                className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-bold rounded-xl transition-all border-0"
+                style={{ background: "#16a34a" }}
+              >
+                Generate My Business Plan
+                <ArrowRight size={14} />
+              </button>
+            </SignUpButton>
           </div>
         </div>
       </section>
