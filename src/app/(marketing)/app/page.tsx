@@ -29,32 +29,32 @@ import {
 
 const FEATURES = [
   {
-    icon: <Brain size={20} />,
+    icon: <Brain size={28} />,
     title: "Professional Narrative",
     desc: "Executive Summary, Industry Analysis, Market Context, and Conclusion — fully tailored to your business, industry, and location. Written to professional consulting standards.",
   },
   {
-    icon: <BarChart2 size={20} />,
+    icon: <BarChart2 size={28} />,
     title: "Six Professional Charts",
     desc: "Revenue forecasts, cash flow, income summaries, and break-even charts — auto-generated and embedded into your Word document.",
   },
   {
-    icon: <TrendingUp size={20} />,
+    icon: <TrendingUp size={28} />,
     title: "Complete Financial Model",
     desc: "A 19-sheet Excel workbook covering CAPEX, OPEX, revenue, cash flow, NPV, IRR, payback period, balance sheet, and loan amortisation.",
   },
   {
-    icon: <FileText size={20} />,
+    icon: <FileText size={28} />,
     title: "Investor-Ready Business Plan",
     desc: "A professionally structured Word document covering every section investors and lenders expect, formatted and ready for immediate submission.",
   },
   {
-    icon: <Globe size={20} />,
+    icon: <Globe size={28} />,
     title: "Any Business, Any Market",
     desc: "From agribusiness to technology and hospitality. Supports every global currency and adapts analysis to your specific market and country.",
   },
   {
-    icon: <Award size={20} />,
+    icon: <Award size={28} />,
     title: "Expert Support Included",
     desc: "We go the extra mile to support every client with any inputs they need. Our team is available to help you get the details right, from financial figures to market data.",
   },
@@ -272,19 +272,21 @@ export default function Home() {
           <div className="row g-4">
             <div className="col-md-6">
               <div
-                className="border rounded-4 p-4 h-100"
-                style={{ borderWidth: 2, borderColor: "#e5e7eb" }}
+                className="h-100 d-flex flex-column"
+                style={{ background: "white", borderRadius: 28, padding: "40px 36px", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
+                onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
+                onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
               >
                 <div className="d-flex align-items-center gap-3 mb-5">
                   <div
-                    className="d-flex align-items-center justify-content-center rounded-3"
-                    style={{ width: 48, height: 48, background: "#111827" }}
+                    className="d-flex align-items-center justify-content-center flex-shrink-0"
+                    style={{ width: 64, height: 64, background: "#111827", borderRadius: 20 }}
                   >
-                    <FileText size={22} color="white" />
+                    <FileText size={28} color="white" />
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 mb-0">Business Plan</p>
-                    <p className="text-xs text-gray-400 mb-0">Microsoft Word (.docx)</p>
+                    <p style={{ fontSize: 18, fontWeight: 700, color: "#111827", marginBottom: 2 }}>Business Plan</p>
+                    <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 0 }}>Microsoft Word (.docx)</p>
                   </div>
                 </div>
                 <ul className="list-unstyled">
@@ -297,8 +299,8 @@ export default function Home() {
                     "Six Embedded Professional Charts",
                     "APA-Cited Reference List",
                   ].map((item) => (
-                    <li key={item} className="d-flex align-items-center gap-2 mb-2 text-sm text-gray-600">
-                      <CheckCircle size={13} style={{ color: "#16a34a", flexShrink: 0 }} />
+                    <li key={item} className="d-flex align-items-center gap-2 mb-3" style={{ fontSize: 15, color: "#4b5563" }}>
+                      <CheckCircle size={15} style={{ color: "#16a34a", flexShrink: 0 }} />
                       {item}
                     </li>
                   ))}
@@ -307,19 +309,21 @@ export default function Home() {
             </div>
             <div className="col-md-6">
               <div
-                className="border rounded-4 p-4 h-100"
-                style={{ borderWidth: 2, borderColor: "#e5e7eb" }}
+                className="h-100 d-flex flex-column"
+                style={{ background: "white", borderRadius: 28, padding: "40px 36px", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
+                onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
+                onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
               >
                 <div className="d-flex align-items-center gap-3 mb-5">
                   <div
-                    className="d-flex align-items-center justify-content-center rounded-3"
-                    style={{ width: 48, height: 48, background: "#16a34a" }}
+                    className="d-flex align-items-center justify-content-center flex-shrink-0"
+                    style={{ width: 64, height: 64, background: "#16a34a", borderRadius: 20 }}
                   >
-                    <BarChart2 size={22} color="white" />
+                    <BarChart2 size={28} color="white" />
                   </div>
                   <div>
-                    <p className="font-bold text-gray-900 mb-0">Financial Model</p>
-                    <p className="text-xs text-gray-400 mb-0">Excel Workbook (.xlsx, 19 sheets)</p>
+                    <p style={{ fontSize: 18, fontWeight: 700, color: "#111827", marginBottom: 2 }}>Financial Model</p>
+                    <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 0 }}>Excel Workbook (.xlsx, 19 sheets)</p>
                   </div>
                 </div>
                 <ul className="list-unstyled">
@@ -332,8 +336,8 @@ export default function Home() {
                     "Income Statement & P&L",
                     "NPV, IRR, Payback Period & Balance Sheet",
                   ].map((item) => (
-                    <li key={item} className="d-flex align-items-center gap-2 mb-2 text-sm text-gray-600">
-                      <CheckCircle size={13} style={{ color: "#16a34a", flexShrink: 0 }} />
+                    <li key={item} className="d-flex align-items-center gap-2 mb-3" style={{ fontSize: 15, color: "#4b5563" }}>
+                      <CheckCircle size={15} style={{ color: "#16a34a", flexShrink: 0 }} />
                       {item}
                     </li>
                   ))}
@@ -482,24 +486,19 @@ export default function Home() {
                   return (
                     <div key={item.title} className="col-6">
                       <div
-                        className="rounded-3 p-3 h-100"
-                        style={{
-                          background: "#f9fafb",
-                          border: "1px solid #e5e7eb",
-                        }}
+                        className="h-100"
+                        style={{ background: "white", borderRadius: 24, padding: "28px 24px", boxShadow: "0 2px 16px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
+                        onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 16px 48px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-4px)"; }}
+                        onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 16px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
                       >
                         <div
-                          className="d-flex align-items-center justify-content-center rounded-2 mb-3"
-                          style={{
-                            width: 34,
-                            height: 34,
-                            background: "rgba(22,163,74,0.1)",
-                          }}
+                          className="d-flex align-items-center justify-content-center mb-3"
+                          style={{ width: 52, height: 52, background: "rgba(22,163,74,0.1)", borderRadius: 16 }}
                         >
-                          <ItemIcon size={15} style={{ color: "#16a34a" }} />
+                          <ItemIcon size={22} style={{ color: "#16a34a" }} />
                         </div>
-                        <p className="font-semibold text-gray-900 text-xs mb-1">{item.title}</p>
-                        <p className="text-gray-500 text-xs leading-relaxed mb-0">{item.desc}</p>
+                        <p style={{ fontSize: 15, fontWeight: 600, color: "#111827", marginBottom: 6 }}>{item.title}</p>
+                        <p style={{ fontSize: 13, color: "#6b7280", lineHeight: 1.6, marginBottom: 0 }}>{item.desc}</p>
                       </div>
                     </div>
                   );
@@ -526,17 +525,19 @@ export default function Home() {
             {FEATURES.map((feat) => (
               <div key={feat.title} className="col-md-6 col-lg-4">
                 <div
-                  className="bg-white rounded-3 p-4 h-100"
-                  style={{ border: "1px solid #e5e7eb" }}
+                  className="h-100 d-flex flex-column"
+                  style={{ background: "white", borderRadius: 24, padding: "36px 32px", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
+                  onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
+                  onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
                 >
                   <div
-                    className="d-flex align-items-center justify-content-center rounded-2 mb-4 text-white"
-                    style={{ width: 40, height: 40, background: "#16a34a" }}
+                    className="d-flex align-items-center justify-content-center mb-4"
+                    style={{ width: 60, height: 60, background: "#16a34a", borderRadius: 20, color: "white", flexShrink: 0 }}
                   >
                     {feat.icon}
                   </div>
-                  <h3 className="font-bold text-gray-900 mb-2 text-sm">{feat.title}</h3>
-                  <p className="text-xs text-gray-500 leading-relaxed mb-0">{feat.desc}</p>
+                  <h3 style={{ fontSize: 17, fontWeight: 700, color: "#111827", marginBottom: 10 }}>{feat.title}</h3>
+                  <p style={{ fontSize: 14, color: "#6b7280", lineHeight: 1.65, marginBottom: 0 }}>{feat.desc}</p>
                 </div>
               </div>
             ))}
@@ -561,42 +562,36 @@ export default function Home() {
           <div className="row g-3">
             {[
               {
-                icon: <Brain size={18} />,
+                icon: <Brain size={26} />,
                 title: "Context-Aware Analysis",
                 desc: "The AI reads your industry, location, and financial inputs to generate narrative that accurately reflects your specific business.",
               },
               {
-                icon: <Zap size={18} />,
+                icon: <Zap size={26} />,
                 title: "Real-Time Financial Intelligence",
                 desc: "NPV, IRR, payback period, break-even, and cash flow, all computed automatically with live Excel formulas.",
               },
               {
-                icon: <ShieldCheck size={18} />,
+                icon: <ShieldCheck size={26} />,
                 title: "Research-Backed Content",
                 desc: "Sections include market statistics, industry benchmarks, and data-driven analysis with APA-cited references.",
               },
             ].map((item) => (
               <div key={item.title} className="col-md-4">
                 <div
-                  className="rounded-3 p-4 h-100"
-                  style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.08)",
-                  }}
+                  className="h-100"
+                  style={{ background: "rgba(255,255,255,0.07)", borderRadius: 28, padding: "36px 32px", transition: "background 0.3s, transform 0.3s" }}
+                  onMouseEnter={(e) => { const el = e.currentTarget; el.style.background = "rgba(255,255,255,0.12)"; el.style.transform = "translateY(-5px)"; }}
+                  onMouseLeave={(e) => { const el = e.currentTarget; el.style.background = "rgba(255,255,255,0.07)"; el.style.transform = "translateY(0)"; }}
                 >
                   <div
-                    className="d-flex align-items-center justify-content-center rounded-2 mb-4"
-                    style={{
-                      width: 36,
-                      height: 36,
-                      background: "rgba(22,163,74,0.2)",
-                      color: "#4ade80",
-                    }}
+                    className="d-flex align-items-center justify-content-center mb-4"
+                    style={{ width: 60, height: 60, background: "rgba(22,163,74,0.25)", borderRadius: 20, color: "#4ade80" }}
                   >
                     {item.icon}
                   </div>
-                  <h3 className="text-white font-semibold text-sm mb-2">{item.title}</h3>
-                  <p className="text-gray-400 text-xs leading-relaxed mb-0">{item.desc}</p>
+                  <h3 style={{ color: "white", fontWeight: 600, fontSize: 17, marginBottom: 10 }}>{item.title}</h3>
+                  <p style={{ color: "#9ca3af", fontSize: 14, lineHeight: 1.65, marginBottom: 0 }}>{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -620,22 +615,23 @@ export default function Home() {
 
             <div className="col-md-5">
               <div
-                className="rounded-4 p-4 p-md-5 h-100 d-flex flex-column"
-                style={{ border: "2px solid #e5e7eb" }}
+                className="h-100 d-flex flex-column"
+                style={{ background: "white", borderRadius: 28, padding: "40px 36px", boxShadow: "0 2px 24px rgba(0,0,0,0.08)", transition: "box-shadow 0.3s, transform 0.3s" }}
+                onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
+                onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 24px rgba(0,0,0,0.08)"; el.style.transform = "translateY(0)"; }}
               >
                 <p
-                  className="text-xs font-bold uppercase tracking-widest mb-4"
-                  style={{ color: "#6b7280", letterSpacing: "0.1em" }}
+                  style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#6b7280", marginBottom: 16 }}
                 >
                   Per Document
                 </p>
                 <div className="mb-2">
-                  <span className="text-5xl font-black text-gray-900">$69</span>
+                  <span style={{ fontSize: 52, fontWeight: 900, color: "#111827", lineHeight: 1 }}>$69</span>
                 </div>
-                <p className="text-sm text-gray-500 mb-5">
+                <p style={{ fontSize: 15, color: "#6b7280", marginBottom: 24 }}>
                   One document, either a{" "}
-                  <strong className="text-gray-800">Business Plan</strong> or a{" "}
-                  <strong className="text-gray-800">Financial Model</strong>.
+                  <strong style={{ color: "#111827" }}>Business Plan</strong> or a{" "}
+                  <strong style={{ color: "#111827" }}>Financial Model</strong>.
                 </p>
                 <ul className="list-unstyled mb-5 flex-grow-1">
                   {[
@@ -644,16 +640,16 @@ export default function Home() {
                     "Six embedded professional charts",
                     "Delivered in minutes",
                   ].map((f) => (
-                    <li key={f} className="d-flex align-items-center gap-2 mb-2 text-sm text-gray-600">
-                      <CheckCircle size={13} style={{ color: "#16a34a", flexShrink: 0 }} />
+                    <li key={f} className="d-flex align-items-center gap-2 mb-3" style={{ fontSize: 15, color: "#4b5563" }}>
+                      <CheckCircle size={15} style={{ color: "#16a34a", flexShrink: 0 }} />
                       {f}
                     </li>
                   ))}
                 </ul>
                 <SignUpButton mode="modal">
                   <button
-                    className="w-full py-3 text-white text-sm font-bold rounded-xl transition-all border-0"
-                    style={{ background: "#111827" }}
+                    className="w-full font-bold border-0 transition-all"
+                    style={{ background: "#111827", color: "white", borderRadius: 14, padding: "14px 0", fontSize: 15 }}
                   >
                     Get Started
                   </button>
@@ -663,33 +659,35 @@ export default function Home() {
 
             <div className="col-md-5 position-relative">
               <div
-                className="rounded-4 p-4 p-md-5 h-100 d-flex flex-column shadow-lg"
-                style={{ border: "2px solid #16a34a" }}
+                className="h-100 d-flex flex-column"
+                style={{ background: "white", borderRadius: 28, padding: "40px 36px", boxShadow: "0 8px 40px rgba(22,163,74,0.22)", border: "2px solid #16a34a", transition: "box-shadow 0.3s, transform 0.3s" }}
+                onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 24px 70px rgba(22,163,74,0.32)"; el.style.transform = "translateY(-6px)"; }}
+                onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 8px 40px rgba(22,163,74,0.22)"; el.style.transform = "translateY(0)"; }}
               >
                 <span
-                  className="position-absolute text-xs font-bold text-white px-4 py-1 rounded-full"
+                  className="position-absolute font-bold text-white px-4 py-1 rounded-full"
                   style={{
                     top: -14,
                     left: "50%",
                     transform: "translateX(-50%)",
                     background: "#16a34a",
                     whiteSpace: "nowrap",
+                    fontSize: 12,
                   }}
                 >
                   Best Value
                 </span>
                 <p
-                  className="text-xs font-bold uppercase tracking-widest mb-4"
-                  style={{ color: "#16a34a", letterSpacing: "0.1em" }}
+                  style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#16a34a", marginBottom: 16 }}
                 >
                   Complete Package
                 </p>
                 <div className="mb-2">
-                  <span className="text-5xl font-black text-gray-900">$137</span>
+                  <span style={{ fontSize: 52, fontWeight: 900, color: "#111827", lineHeight: 1 }}>$137</span>
                 </div>
-                <p className="text-sm text-gray-500 mb-5">
+                <p style={{ fontSize: 15, color: "#6b7280", marginBottom: 24 }}>
                   Full{" "}
-                  <strong className="text-gray-800">Business Plan + Financial Model</strong>. We develop it
+                  <strong style={{ color: "#111827" }}>Business Plan + Financial Model</strong>. We develop it
                   entirely, or you use our system yourself.
                 </p>
                 <ul className="list-unstyled mb-5 flex-grow-1">
@@ -701,16 +699,16 @@ export default function Home() {
                     "Investor-ready in under 15 minutes",
                     "Self-serve or we build it for you",
                   ].map((f) => (
-                    <li key={f} className="d-flex align-items-center gap-2 mb-2 text-sm text-gray-600">
-                      <CheckCircle size={13} style={{ color: "#16a34a", flexShrink: 0 }} />
+                    <li key={f} className="d-flex align-items-center gap-2 mb-3" style={{ fontSize: 15, color: "#4b5563" }}>
+                      <CheckCircle size={15} style={{ color: "#16a34a", flexShrink: 0 }} />
                       {f}
                     </li>
                   ))}
                 </ul>
                 <SignUpButton mode="modal">
                   <button
-                    className="w-full py-3 text-white text-sm font-bold rounded-xl transition-all border-0"
-                    style={{ background: "#16a34a" }}
+                    className="w-full font-bold border-0 transition-all"
+                    style={{ background: "#16a34a", color: "white", borderRadius: 14, padding: "14px 0", fontSize: 15 }}
                   >
                     Get the Complete Package
                   </button>

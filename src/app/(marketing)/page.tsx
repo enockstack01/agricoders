@@ -157,26 +157,39 @@ export default function AgricodersPage() {
               const Icon = s.Icon;
               const hasCta = "cta" in s && s.cta;
               return (
-                <div key={s.title} className="col-md-6">
+                <div key={s.title} className="col-md-6 mb-1">
                   <div
-                    className="border rounded-4 p-4 h-100 d-flex flex-column transition-all"
+                    className="h-100 d-flex flex-column transition-all duration-300"
                     style={{
-                      borderColor: "#e5e7eb",
-                      borderWidth: 2,
+                      background: "white",
+                      borderRadius: 28,
+                      padding: "40px 36px",
+                      boxShadow: "0 2px 20px rgba(0,0,0,0.07)",
+                      cursor: "default",
+                    }}
+                    onMouseEnter={(e) => {
+                      const el = e.currentTarget as HTMLDivElement;
+                      el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)";
+                      el.style.transform = "translateY(-6px)";
+                    }}
+                    onMouseLeave={(e) => {
+                      const el = e.currentTarget as HTMLDivElement;
+                      el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)";
+                      el.style.transform = "translateY(0)";
                     }}
                   >
                     <div
-                      className="d-flex align-items-center justify-content-center rounded-3 mb-4"
-                      style={{ width: 48, height: 48, background: "#16a34a" }}
+                      className="d-flex align-items-center justify-content-center mb-6"
+                      style={{ width: 68, height: 68, background: "#16a34a", borderRadius: 22, flexShrink: 0 }}
                     >
-                      <Icon size={22} color="white" />
+                      <Icon size={30} color="white" />
                     </div>
-                    <h3 className="font-bold text-gray-900 mb-3 fs-6">{s.title}</h3>
-                    <p className="text-sm text-gray-500 leading-relaxed mb-4">{s.desc}</p>
-                    <ul className="list-unstyled mb-4">
+                    <h3 className="font-bold text-gray-900 mb-3" style={{ fontSize: 19, lineHeight: 1.3 }}>{s.title}</h3>
+                    <p className="text-gray-500 leading-relaxed mb-5" style={{ fontSize: 15 }}>{s.desc}</p>
+                    <ul className="list-unstyled mb-5">
                       {s.features.map((f) => (
-                        <li key={f} className="d-flex align-items-center gap-2 mb-2 text-sm text-gray-500">
-                          <CheckCircle size={12} style={{ color: "#16a34a", flexShrink: 0 }} />
+                        <li key={f} className="d-flex align-items-start gap-2 mb-2.5" style={{ fontSize: 14, color: "#6b7280" }}>
+                          <CheckCircle size={14} style={{ color: "#16a34a", flexShrink: 0, marginTop: 2 }} />
                           {f}
                         </li>
                       ))}
@@ -185,11 +198,11 @@ export default function AgricodersPage() {
                       <div className="mt-auto">
                         <a
                           href={(s as typeof s & { cta: { label: string; href: string } }).cta.href}
-                          className="inline-flex items-center gap-1.5 px-4 py-2 text-white text-sm font-semibold rounded-lg transition-colors no-underline"
-                          style={{ background: "#16a34a" }}
+                          className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl transition-colors no-underline"
+                          style={{ background: "#16a34a", fontSize: 14 }}
                         >
                           {(s as typeof s & { cta: { label: string; href: string } }).cta.label}
-                          <ArrowRight size={13} />
+                          <ArrowRight size={14} />
                         </a>
                       </div>
                     )}
@@ -255,19 +268,34 @@ export default function AgricodersPage() {
                 ].map((item) => {
                   const ItemIcon = item.Icon;
                   return (
-                    <div key={item.title} className="col-6">
+                    <div key={item.title} className="col-6 mb-1">
                       <div
-                        className="rounded-3 p-3 h-100"
-                        style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.08)" }}
+                        className="h-100 transition-all duration-300"
+                        style={{
+                          background: "rgba(255,255,255,0.07)",
+                          border: "1px solid rgba(255,255,255,0.12)",
+                          borderRadius: 24,
+                          padding: "28px 24px",
+                        }}
+                        onMouseEnter={(e) => {
+                          const el = e.currentTarget as HTMLDivElement;
+                          el.style.background = "rgba(255,255,255,0.12)";
+                          el.style.transform = "translateY(-4px)";
+                        }}
+                        onMouseLeave={(e) => {
+                          const el = e.currentTarget as HTMLDivElement;
+                          el.style.background = "rgba(255,255,255,0.07)";
+                          el.style.transform = "translateY(0)";
+                        }}
                       >
                         <div
-                          className="d-flex align-items-center justify-content-center rounded-2 mb-3"
-                          style={{ width: 34, height: 34, background: "rgba(22,163,74,0.2)" }}
+                          className="d-flex align-items-center justify-content-center mb-4"
+                          style={{ width: 52, height: 52, background: "rgba(22,163,74,0.25)", borderRadius: 16 }}
                         >
-                          <ItemIcon size={15} style={{ color: "#4ade80" }} />
+                          <ItemIcon size={22} style={{ color: "#4ade80" }} />
                         </div>
-                        <p className="text-white font-semibold text-xs mb-1">{item.title}</p>
-                        <p className="text-gray-400 text-xs leading-relaxed mb-0">{item.desc}</p>
+                        <p className="text-white font-bold mb-2" style={{ fontSize: 15, lineHeight: 1.3 }}>{item.title}</p>
+                        <p className="leading-relaxed mb-0" style={{ fontSize: 13, color: "#9ca3af" }}>{item.desc}</p>
                       </div>
                     </div>
                   );
