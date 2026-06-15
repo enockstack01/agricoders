@@ -616,37 +616,34 @@ export default function Home() {
               produced and fully yours.
             </p>
           </div>
-          <div className="row g-4 justify-content-center">
+          <div className="row g-4 justify-content-center align-items-start">
 
             <div className="col-md-5">
               <div
-                className="h-100 d-flex flex-column"
-                style={{ background: "white", borderRadius: 28, padding: "40px 36px", boxShadow: "0 2px 24px rgba(0,0,0,0.08)", transition: "box-shadow 0.3s, transform 0.3s" }}
+                className="d-flex flex-column"
+                style={{ background: "white", borderRadius: 24, padding: "32px 28px", boxShadow: "0 2px 24px rgba(0,0,0,0.08)", transition: "box-shadow 0.3s, transform 0.3s" }}
                 onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
                 onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 24px rgba(0,0,0,0.08)"; el.style.transform = "translateY(0)"; }}
               >
-                <p
-                  style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#6b7280", marginBottom: 16 }}
-                >
+                <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: "#6b7280", marginBottom: 10 }}>
                   Per Document
                 </p>
-                <div className="mb-2">
-                  <span style={{ fontSize: 52, fontWeight: 900, color: "#111827", lineHeight: 1 }}>$69</span>
+                <div className="d-flex align-items-baseline gap-1 mb-2">
+                  <span style={{ fontSize: 44, fontWeight: 900, color: "#111827", lineHeight: 1 }}>$69</span>
+                  <span style={{ fontSize: 13, color: "#9ca3af" }}>/ document</span>
                 </div>
-                <p style={{ fontSize: 15, color: "#6b7280", marginBottom: 24 }}>
-                  One document, either a{" "}
-                  <strong style={{ color: "#111827" }}>Business Plan</strong> or a{" "}
-                  <strong style={{ color: "#111827" }}>Financial Model</strong>.
+                <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 18, lineHeight: 1.55 }}>
+                  One document — either a <strong style={{ color: "#111827" }}>Business Plan</strong> or a <strong style={{ color: "#111827" }}>Financial Model</strong>.
                 </p>
-                <ul className="list-unstyled mb-5 flex-grow-1">
+                <ul className="list-unstyled mb-4">
                   {[
                     "Written business plan (.docx)",
                     "OR 19-sheet financial model (.xlsx)",
                     "Six embedded professional charts",
                     "Delivered in minutes",
                   ].map((f) => (
-                    <li key={f} className="d-flex align-items-center gap-2 mb-3" style={{ fontSize: 15, color: "#4b5563" }}>
-                      <CheckCircle size={15} style={{ color: "#16a34a", flexShrink: 0 }} />
+                    <li key={f} className="d-flex align-items-center gap-2 mb-2" style={{ fontSize: 14, color: "#374151" }}>
+                      <CheckCircle size={14} style={{ color: "#16a34a", flexShrink: 0 }} />
                       {f}
                     </li>
                   ))}
@@ -654,7 +651,7 @@ export default function Home() {
                 <SignUpButton mode="modal">
                   <button
                     className="w-full font-bold border-0 transition-all"
-                    style={{ background: "#111827", color: "white", borderRadius: 14, padding: "14px 0", fontSize: 15 }}
+                    style={{ background: "#111827", color: "white", borderRadius: 12, padding: "12px 0", fontSize: 14 }}
                   >
                     Get Started
                   </button>
@@ -664,38 +661,28 @@ export default function Home() {
 
             <div className="col-md-5 position-relative">
               <div
-                className="h-100 d-flex flex-column"
-                style={{ background: "white", borderRadius: 28, padding: "40px 36px", boxShadow: "0 8px 40px rgba(22,163,74,0.22)", border: "2px solid #16a34a", transition: "box-shadow 0.3s, transform 0.3s" }}
+                className="d-flex flex-column"
+                style={{ background: "white", borderRadius: 24, padding: "32px 28px", boxShadow: "0 8px 40px rgba(22,163,74,0.22)", border: "2px solid #16a34a", transition: "box-shadow 0.3s, transform 0.3s" }}
                 onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 24px 70px rgba(22,163,74,0.32)"; el.style.transform = "translateY(-6px)"; }}
                 onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 8px 40px rgba(22,163,74,0.22)"; el.style.transform = "translateY(0)"; }}
               >
                 <span
-                  className="position-absolute font-bold text-white px-4 py-1 rounded-full"
-                  style={{
-                    top: -14,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    background: "#16a34a",
-                    whiteSpace: "nowrap",
-                    fontSize: 12,
-                  }}
+                  className="position-absolute font-bold text-white px-3 py-1 rounded-full"
+                  style={{ top: -13, left: "50%", transform: "translateX(-50%)", background: "#16a34a", whiteSpace: "nowrap", fontSize: 11 }}
                 >
                   Best Value
                 </span>
-                <p
-                  style={{ fontSize: 11, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#16a34a", marginBottom: 16 }}
-                >
+                <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: "#16a34a", marginBottom: 10 }}>
                   Complete Package
                 </p>
-                <div className="mb-2">
-                  <span style={{ fontSize: 52, fontWeight: 900, color: "#111827", lineHeight: 1 }}>$137</span>
+                <div className="d-flex align-items-baseline gap-1 mb-2">
+                  <span style={{ fontSize: 44, fontWeight: 900, color: "#111827", lineHeight: 1 }}>$137</span>
+                  <span style={{ fontSize: 13, color: "#9ca3af" }}>/ bundle</span>
                 </div>
-                <p style={{ fontSize: 15, color: "#6b7280", marginBottom: 24 }}>
-                  Full{" "}
-                  <strong style={{ color: "#111827" }}>Business Plan + Financial Model</strong>. We develop it
-                  entirely, or you use our system yourself.
+                <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 18, lineHeight: 1.55 }}>
+                  Full <strong style={{ color: "#111827" }}>Business Plan + Financial Model</strong>. We develop it entirely, or you use our system yourself.
                 </p>
-                <ul className="list-unstyled mb-5 flex-grow-1">
+                <ul className="list-unstyled mb-4">
                   {[
                     "Complete written business plan",
                     "Full 19-sheet financial model",
@@ -704,8 +691,8 @@ export default function Home() {
                     "Investor-ready in under 15 minutes",
                     "Self-serve or we build it for you",
                   ].map((f) => (
-                    <li key={f} className="d-flex align-items-center gap-2 mb-3" style={{ fontSize: 15, color: "#4b5563" }}>
-                      <CheckCircle size={15} style={{ color: "#16a34a", flexShrink: 0 }} />
+                    <li key={f} className="d-flex align-items-center gap-2 mb-2" style={{ fontSize: 14, color: "#374151" }}>
+                      <CheckCircle size={14} style={{ color: "#16a34a", flexShrink: 0 }} />
                       {f}
                     </li>
                   ))}
@@ -713,7 +700,7 @@ export default function Home() {
                 <SignUpButton mode="modal">
                   <button
                     className="w-full font-bold border-0 transition-all"
-                    style={{ background: "#16a34a", color: "white", borderRadius: 14, padding: "14px 0", fontSize: 15 }}
+                    style={{ background: "#16a34a", color: "white", borderRadius: 12, padding: "12px 0", fontSize: 14 }}
                   >
                     Get the Complete Package
                   </button>
