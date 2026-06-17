@@ -30,6 +30,6 @@ export const AGRICODERS_APPS: AppEntry[] = [
       "NPV, IRR & payback period",
       "Any business, country, currency",
     ],
-    pricing: "$69 / document · $137 complete package",
+    pricing: "$20 / document · $40 complete package",
   },
 ];

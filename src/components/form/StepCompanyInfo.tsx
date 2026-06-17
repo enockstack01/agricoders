@@ -167,7 +167,7 @@ export default function StepCompanyInfo({ formData, update }: Props) {
         <label className="block text-sm font-medium text-gray-700 mb-1">Company Logo</label>
         <p className="text-xs text-gray-400 mb-2">Upload your company logo to have it displayed prominently on the cover page of the generated business plan. Accepted formats: PNG, JPG, GIF, WebP. Recommended size: 300×150 px or wider.</p>
         {ci.companyLogo ? (
-          <div className="flex items-center gap-3 p-3 border border-gray-200 rounded-lg bg-gray-50">
+          <div className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={ci.companyLogo} alt="Company logo" className="h-16 object-contain rounded" />
             <div className="flex-1 min-w-0">

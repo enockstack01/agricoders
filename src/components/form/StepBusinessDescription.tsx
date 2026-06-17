@@ -153,7 +153,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
           onClick={() => generateSection("values", (d) => set("values", d as typeof bd.values))} />
       </div>
       {bd.values.map((v, i) => (
-        <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-2 items-start p-3 bg-gray-50 rounded-lg">
+        <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-2 items-start p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
           <input
             value={v.name}
             onChange={(e) => {
@@ -183,7 +183,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
 
       <SectionTitle>Products &amp; Services</SectionTitle>
       {bd.products.map((p, i) => (
-        <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-2 items-start p-3 bg-gray-50 rounded-lg">
+        <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-2 items-start p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
           <input
             value={p.name}
             onChange={(e) => {

@@ -32,7 +32,7 @@ export default function StepCapex({ formData, update }: Props) {
     <div className="space-y-4">
       <p className="text-sm text-gray-500">Capital expenses are one-time investments in equipment and infrastructure. Also used as the initial investment for financial calculations.</p>
 
-      <div className="bg-green-50 border border-green-100 rounded-lg px-4 py-3 text-sm">
+      <div className="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800 rounded-lg px-4 py-3 text-sm dark:text-green-300">
         <strong>Total CAPEX (Initial Investment):</strong> {fmt(total)} RWF
       </div>
 
@@ -49,7 +49,7 @@ export default function StepCapex({ formData, update }: Props) {
           </thead>
           <tbody>
             {capex.map((c, i) => (
-              <tr key={i} className={i % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+              <tr key={i} className={i % 2 === 0 ? "bg-white dark:bg-gray-800" : "bg-gray-50 dark:bg-gray-700"}>
                 <td className="px-2 py-1.5">
                   <input
                     value={c.item}
@@ -82,9 +82,9 @@ export default function StepCapex({ formData, update }: Props) {
                 </td>
               </tr>
             ))}
-            <tr className="bg-green-50 font-semibold">
+            <tr className="bg-green-50 dark:bg-green-900/10 font-semibold">
               <td colSpan={3} className="px-3 py-2 text-right">Total</td>
-              <td className="px-3 py-2 text-right text-green-700">{fmt(total)}</td>
+              <td className="px-3 py-2 text-right text-green-700 dark:text-green-400">{fmt(total)}</td>
               <td></td>
             </tr>
           </tbody>
