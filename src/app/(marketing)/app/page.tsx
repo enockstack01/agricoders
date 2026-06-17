@@ -623,7 +623,7 @@ export default function Home() {
                   Per Document
                 </p>
                 <div className="d-flex align-items-baseline gap-1 mb-2">
-                  <span style={{ fontSize: 44, fontWeight: 900, color: "#111827", lineHeight: 1 }}>$69</span>
+                  <span style={{ fontSize: 44, fontWeight: 900, color: "#111827", lineHeight: 1 }}>$20</span>
                   <span style={{ fontSize: 13, color: "#9ca3af" }}>/ document</span>
                 </div>
                 <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 18, lineHeight: 1.55 }}>
@@ -670,7 +670,7 @@ export default function Home() {
                   Complete Package
                 </p>
                 <div className="d-flex align-items-baseline gap-1 mb-2">
-                  <span style={{ fontSize: 44, fontWeight: 900, color: "#111827", lineHeight: 1 }}>$137</span>
+                  <span style={{ fontSize: 44, fontWeight: 900, color: "#111827", lineHeight: 1 }}>$40</span>
                   <span style={{ fontSize: 13, color: "#9ca3af" }}>/ bundle</span>
                 </div>
                 <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 18, lineHeight: 1.55 }}>

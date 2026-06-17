@@ -80,7 +80,7 @@ export default function StepRevenue({ formData, update }: Props) {
       </p>
 
       {allOfferings.length > 0 && (
-        <div className="bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 flex flex-wrap gap-2 items-center">
+        <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 flex flex-wrap gap-2 items-center">
           <span className="text-xs text-gray-500 font-medium">Defined offerings:</span>
           {productNames.map((p) => (
             <span key={p.name} className="inline-flex items-center gap-1 text-xs bg-green-100 text-green-700 rounded-full px-2.5 py-0.5 border border-green-200">
@@ -95,14 +95,14 @@ export default function StepRevenue({ formData, update }: Props) {
         </div>
       )}
 
-      <div className="bg-green-50 border border-green-100 rounded-lg px-4 py-3 text-sm font-medium text-green-800">
+      <div className="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800 rounded-lg px-4 py-3 text-sm font-medium text-green-800 dark:text-green-300">
         Estimated Year 1 Total Revenue: {fmt(totalY1)} {cur}
       </div>
 
       {packages.map((p, i) => {
         const linkedIsService = isServiceOffering(p.product);
         return (
-          <div key={i} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+          <div key={i} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Revenue Stream #{i + 1}</span>

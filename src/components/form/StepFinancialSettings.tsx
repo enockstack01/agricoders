@@ -120,7 +120,7 @@ export default function StepFinancialSettings({ formData, update }: Props) {
         />
       </GridRow>
 
-      <div className="bg-amber-50 border border-amber-100 rounded-lg p-4 text-sm text-amber-800">
+      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 rounded-lg p-4 text-sm text-amber-800 dark:text-amber-300">
         <strong>Note:</strong> Income tax on salaries is computed using progressive brackets. Adjust the payroll contribution rates above to match your country's statutory requirements. The Corporate Income Tax (CIT) rate applies only to positive net income before tax.
       </div>
     </div>

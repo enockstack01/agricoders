@@ -82,7 +82,7 @@ export default function StepMarketAnalysis({ formData, update }: Props) {
           })} />
       </div>
       {ma.targetSegments.map((s, i) => (
-        <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-2 p-3 bg-gray-50 rounded-lg items-start">
+        <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg items-start">
           <input
             value={s.name}
             onChange={(e) => {
@@ -119,7 +119,7 @@ export default function StepMarketAnalysis({ formData, update }: Props) {
           })} />
       </div>
       {ma.competitors.map((c, i) => (
-        <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-2 p-3 bg-gray-50 rounded-lg items-start">
+        <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-2 p-3 bg-gray-50 dark:bg-gray-800 rounded-lg items-start">
           <input
             value={c.name}
             onChange={(e) => {

@@ -32,13 +32,13 @@ export default function StepTeam({ formData, update }: Props) {
     <div className="space-y-4">
       <p className="text-sm text-gray-500">Define your management team, their roles, counts, and monthly salaries. Payroll taxes and benefits will be calculated automatically.</p>
 
-      <div className="bg-green-50 border border-green-100 rounded-lg px-4 py-3 text-sm">
+      <div className="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800 rounded-lg px-4 py-3 text-sm dark:text-green-300">
         <strong>Total Annual Payroll:</strong> {fmt(totalAnnualSalary)} RWF
         <span className="text-gray-500 ml-2">({staff.reduce((s, m) => s + m.count, 0)} staff members)</span>
       </div>
 
       {staff.map((m, i) => (
-        <div key={i} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+        <div key={i} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800">
           <div className="flex justify-between items-start mb-3">
             <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Staff #{i + 1}</span>
             <RemoveButton onClick={() => removeMember(i)} />
@@ -92,7 +92,7 @@ export default function StepTeam({ formData, update }: Props) {
       <AddButton onClick={addMember} label="Add staff member" />
 
       <SectionTitle>Payroll Tax Rates (Pre-configured)</SectionTitle>
-      <div className="bg-gray-50 rounded-lg p-4 text-sm space-y-1 text-gray-600">
+      <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 text-sm space-y-1 text-gray-600 dark:text-gray-300">
         <p>• <strong>RSSB Pension:</strong> {(formData.financial.rssbRate * 100).toFixed(1)}% of gross salary</p>
         <p>• <strong>Employee Health Insurance:</strong> {(formData.financial.healthInsuranceRate * 100).toFixed(1)}% of gross salary</p>
         <p>• <strong>Maternity:</strong> {(formData.financial.maternityRate * 100).toFixed(1)}% of gross salary</p>
