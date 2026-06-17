@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Bell, Coins, FileText, X, CheckCheck, Circle, CheckCircle2 } from "lucide-react";
+import { Bell, Coins, FileText, X, CheckCheck, Circle, CheckCircle2, ClipboardList } from "lucide-react";
 import axios from "axios";
 
 interface Notif {
@@ -13,11 +13,12 @@ interface Notif {
 }
 
 const TYPE_ICON: Record<string, React.ReactNode> = {
-  credits_approved:  <Coins size={13} className="text-green-500" />,
-  credits_rejected:  <X size={13} className="text-red-500" />,
-  credits_assigned:  <Coins size={13} className="text-blue-500" />,
-  credits_deducted:  <Coins size={13} className="text-amber-500" />,
-  document_ready:    <FileText size={13} className="text-purple-500" />,
+  credits_approved:        <Coins size={13} className="text-green-500" />,
+  credits_rejected:        <X size={13} className="text-red-500" />,
+  credits_assigned:        <Coins size={13} className="text-blue-500" />,
+  credits_deducted:        <Coins size={13} className="text-amber-500" />,
+  document_ready:          <FileText size={13} className="text-purple-500" />,
+  credit_request_pending:  <ClipboardList size={13} className="text-orange-500" />,
 };
 
 function timeAgo(iso: string) {
