@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import { connectDB } from "@/lib/mongodb";
 import { CreditRequest } from "@/models/CreditRequest";
+import { notifyAdmins } from "@/lib/notifications";
 
 const CREDITS_PER_DOC = 5;
 
@@ -46,6 +47,13 @@ export async function POST(req: NextRequest) {
     creditsRequested,
     note: note?.trim() || undefined,
   });
+
+  const docLabels = documents.map((d) => `${d.count}x ${d.type}`).join(", ");
+  notifyAdmins(
+    "credit_request_pending",
+    "New credit request",
+    `A user has requested ${creditsRequested} credits (${docLabels}).${note?.trim() ? ` Note: "${note.trim()}"` : ""}`
+  ).catch(() => {});
 
   return NextResponse.json({ ok: true, requestId: request._id.toString(), creditsRequested }, { status: 201 });
 }

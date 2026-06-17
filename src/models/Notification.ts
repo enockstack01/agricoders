@@ -5,7 +5,8 @@ export type NotificationType =
   | "credits_rejected"
   | "credits_assigned"
   | "credits_deducted"
-  | "document_ready";
+  | "document_ready"
+  | "credit_request_pending";
 
 export interface INotification {
   _id: string;
@@ -22,7 +23,7 @@ const NotificationSchema = new Schema(
     userId: { type: String, required: true, index: true },
     type: {
       type: String,
-      enum: ["credits_approved", "credits_rejected", "credits_assigned", "credits_deducted", "document_ready"],
+      enum: ["credits_approved", "credits_rejected", "credits_assigned", "credits_deducted", "document_ready", "credit_request_pending"],
       required: true,
     },
     title: { type: String, required: true },
