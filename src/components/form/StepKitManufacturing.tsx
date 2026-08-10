@@ -33,7 +33,7 @@ export default function StepKitManufacturing({ formData, update }: Props) {
     <div className="space-y-4">
       <p className="text-sm text-gray-500">List the components used to manufacture one IoT Smart Kit batch. Typical batch size is 10 units.</p>
 
-      <div className="grid grid-cols-2 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="bg-green-50 border border-green-100 rounded-lg px-4 py-3 text-sm">
           <strong>Total Cost (batch):</strong><br />{fmt(totalCost)} RWF
         </div>

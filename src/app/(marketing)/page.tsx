@@ -189,7 +189,7 @@ export default function AgricodersPage() {
                     style={{
                       background: "white",
                       borderRadius: 28,
-                      padding: "40px 36px",
+                      padding: "clamp(24px, 6vw, 40px) clamp(20px, 5vw, 36px)",
                       boxShadow: "0 2px 20px rgba(0,0,0,0.07)",
                     }}
                   >
@@ -307,7 +307,7 @@ export default function AgricodersPage() {
                       background: "rgba(255,255,255,0.07)",
                       border: "1px solid rgba(255,255,255,0.12)",
                       borderRadius: 28,
-                      padding: "40px 36px",
+                      padding: "clamp(24px, 6vw, 40px) clamp(20px, 5vw, 36px)",
                     }}
                   >
                     <div

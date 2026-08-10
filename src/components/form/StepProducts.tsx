@@ -163,7 +163,7 @@ export default function StepProducts({ formData, update }: Props) {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="bg-green-50 border border-green-100 rounded-lg px-4 py-3 text-sm">
                       <p className="text-xs text-green-600 font-medium">Batch Total</p>
                       <p className="font-bold text-green-800">{fmt(totalCost)} {cur}</p>

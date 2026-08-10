@@ -23,7 +23,7 @@ function SystemCard({ app }: { app: AppEntry }) {
       style={{
         background: "white",
         borderRadius: 28,
-        padding: "40px 36px",
+        padding: "clamp(24px, 6vw, 40px) clamp(20px, 5vw, 36px)",
         boxShadow: "0 2px 20px rgba(0,0,0,0.07)",
         border: "1.5px solid rgba(0,0,0,0.05)",
       }}
@@ -138,7 +138,7 @@ export default function SystemsPage() {
                   height: "100%",
                   minHeight: 220,
                   borderRadius: 28,
-                  padding: "48px 36px",
+                  padding: "clamp(28px, 7vw, 48px) clamp(20px, 5vw, 36px)",
                   border: "2px dashed #e5e7eb",
                   display: "flex",
                   flexDirection: "column",

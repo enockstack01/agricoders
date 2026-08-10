@@ -274,7 +274,7 @@ export default function Home() {
             <div className="col-md-6">
               <div
                 className="h-100 d-flex flex-column"
-                style={{ background: "white", borderRadius: 28, padding: "40px 36px", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
+                style={{ background: "white", borderRadius: 28, padding: "clamp(24px, 6vw, 40px) clamp(20px, 5vw, 36px)", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
                 onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
                 onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
               >
@@ -311,7 +311,7 @@ export default function Home() {
             <div className="col-md-6">
               <div
                 className="h-100 d-flex flex-column"
-                style={{ background: "white", borderRadius: 28, padding: "40px 36px", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
+                style={{ background: "white", borderRadius: 28, padding: "clamp(24px, 6vw, 40px) clamp(20px, 5vw, 36px)", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
                 onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
                 onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
               >
@@ -477,7 +477,7 @@ export default function Home() {
                 <div key={item.title} className="col-md-6">
                   <div
                     className="h-100 d-flex flex-column"
-                    style={{ background: "white", borderRadius: 24, padding: "36px 32px", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
+                    style={{ background: "white", borderRadius: 24, padding: "clamp(22px, 5.5vw, 36px) clamp(18px, 4.5vw, 32px)", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
                     onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
                     onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
                   >
@@ -525,7 +525,7 @@ export default function Home() {
               <div key={feat.title} className="col-md-6 col-lg-4">
                 <div
                   className="h-100 d-flex flex-column"
-                  style={{ background: "white", borderRadius: 24, padding: "36px 32px", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
+                  style={{ background: "white", borderRadius: 24, padding: "clamp(22px, 5.5vw, 36px) clamp(18px, 4.5vw, 32px)", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
                   onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
                   onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
                 >
@@ -579,7 +579,7 @@ export default function Home() {
               <div key={item.title} className="col-md-4">
                 <div
                   className="h-100"
-                  style={{ background: "rgba(255,255,255,0.07)", borderRadius: 28, padding: "36px 32px", transition: "background 0.3s, transform 0.3s" }}
+                  style={{ background: "rgba(255,255,255,0.07)", borderRadius: 28, padding: "clamp(22px, 5.5vw, 36px) clamp(18px, 4.5vw, 32px)", transition: "background 0.3s, transform 0.3s" }}
                   onMouseEnter={(e) => { const el = e.currentTarget; el.style.background = "rgba(255,255,255,0.12)"; el.style.transform = "translateY(-5px)"; }}
                   onMouseLeave={(e) => { const el = e.currentTarget; el.style.background = "rgba(255,255,255,0.07)"; el.style.transform = "translateY(0)"; }}
                 >
@@ -614,7 +614,7 @@ export default function Home() {
             <div className="col-md-5">
               <div
                 className="d-flex flex-column"
-                style={{ background: "white", borderRadius: 24, padding: "32px 28px", boxShadow: "0 2px 24px rgba(0,0,0,0.08)", transition: "box-shadow 0.3s, transform 0.3s" }}
+                style={{ background: "white", borderRadius: 24, padding: "clamp(20px, 5vw, 32px) clamp(16px, 4vw, 28px)", boxShadow: "0 2px 24px rgba(0,0,0,0.08)", transition: "box-shadow 0.3s, transform 0.3s" }}
                 onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
                 onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 24px rgba(0,0,0,0.08)"; el.style.transform = "translateY(0)"; }}
               >
@@ -622,7 +622,7 @@ export default function Home() {
                   System Generated
                 </p>
                 <div className="d-flex align-items-baseline gap-1 mb-2">
-                  <span style={{ fontSize: 44, fontWeight: 900, color: "#111827", lineHeight: 1 }}>$20</span>
+                  <span style={{ fontSize: "clamp(32px, 8vw, 44px)", fontWeight: 900, color: "#111827", lineHeight: 1 }}>$20</span>
                   <span style={{ fontSize: 13, color: "#9ca3af" }}>per document</span>
                 </div>
                 <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 18, lineHeight: 1.55 }}>
@@ -656,7 +656,7 @@ export default function Home() {
             <div className="col-md-5 position-relative">
               <div
                 className="d-flex flex-column"
-                style={{ background: "white", borderRadius: 24, padding: "32px 28px", boxShadow: "0 8px 40px rgba(22,163,74,0.22)", border: "2px solid #16a34a", transition: "box-shadow 0.3s, transform 0.3s" }}
+                style={{ background: "white", borderRadius: 24, padding: "clamp(20px, 5vw, 32px) clamp(16px, 4vw, 28px)", boxShadow: "0 8px 40px rgba(22,163,74,0.22)", border: "2px solid #16a34a", transition: "box-shadow 0.3s, transform 0.3s" }}
                 onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 24px 70px rgba(22,163,74,0.32)"; el.style.transform = "translateY(-6px)"; }}
                 onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 8px 40px rgba(22,163,74,0.22)"; el.style.transform = "translateY(0)"; }}
               >
@@ -670,7 +670,7 @@ export default function Home() {
                   Custom by Expert
                 </p>
                 <div className="d-flex align-items-baseline gap-1 mb-2">
-                  <span style={{ fontSize: 44, fontWeight: 900, color: "#111827", lineHeight: 1 }}>$69</span>
+                  <span style={{ fontSize: "clamp(32px, 8vw, 44px)", fontWeight: 900, color: "#111827", lineHeight: 1 }}>$69</span>
                   <span style={{ fontSize: 13, color: "#9ca3af" }}>per document</span>
                 </div>
                 <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 18, lineHeight: 1.55 }}>

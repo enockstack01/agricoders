@@ -895,7 +895,7 @@ function AdminCreditsPanel() {
               />
               <p className="text-xs text-gray-400 mt-1">User can find this in Profile → Account.</p>
             </div>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Credits <span className="text-red-500">*</span></label>
                 <input
@@ -1085,7 +1085,7 @@ function AdminCreditsPanel() {
                   <p className="text-xs text-gray-400 text-center py-1">This user has no credits to dismiss.</p>
                 ) : (
                   <>
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <div>
                         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Credits to Dismiss <span className="text-red-500">*</span></label>
                         <input
