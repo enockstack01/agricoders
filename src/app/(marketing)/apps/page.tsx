@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Layers, ArrowRight, Sprout, Sparkles } from "lucide-react";
+import { Layers, ArrowRight, Sprout, Sparkles, PawPrint } from "lucide-react";
 import AgriNav from "@/components/layout/AgriNav";
 import { AGRICODERS_APPS, type AppEntry } from "@/lib/apps";
 
@@ -12,6 +12,7 @@ export const metadata: Metadata = {
 
 const ICON_MAP: Record<string, React.ReactNode> = {
   logistackplan: <Layers size={26} color="white" />,
+  livestockpro: <PawPrint size={26} color="white" />,
 };
 
 function SystemCard({ app }: { app: AppEntry }) {
@@ -52,6 +53,8 @@ function SystemCard({ app }: { app: AppEntry }) {
       {app.status === "live" ? (
         <Link
           href={app.href}
+          target={app.href.startsWith("http") ? "_blank" : undefined}
+          rel={app.href.startsWith("http") ? "noopener noreferrer" : undefined}
           className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl no-underline"
           style={{ background: app.accentColor, fontSize: 14, alignSelf: "flex-start" }}
         >

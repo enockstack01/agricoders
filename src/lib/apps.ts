@@ -32,4 +32,21 @@ export const AGRICODERS_APPS: AppEntry[] = [
     ],
     pricing: "$20 system-generated · $69 custom by expert",
   },
+  {
+    id: "livestockpro",
+    name: "LivestockPro",
+    tagline: "Livestock Management System",
+    description:
+      "Track herds, health records, breeding cycles, feed schedules, and production for your livestock operation in one place.",
+    href: "https://livestockpro.onrender.com/",
+    status: "live",
+    category: "Farm Management",
+    accentColor: "#b45309",
+    features: [
+      "Animal & herd record keeping",
+      "Health and vaccination tracking",
+      "Breeding cycle management",
+      "Feed and production scheduling",
+    ],
+  },
 ];

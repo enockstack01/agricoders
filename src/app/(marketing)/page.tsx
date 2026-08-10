@@ -20,12 +20,14 @@ import {
   TrendingUp,
   Leaf,
   Sparkles,
+  PawPrint,
 } from "lucide-react";
 import AgriNav from "@/components/layout/AgriNav";
 import { AGRICODERS_APPS } from "@/lib/apps";
 
 const APP_ICONS: Record<string, React.ReactNode> = {
   logistackplan: <Layers size={26} color="white" />,
+  livestockpro: <PawPrint size={26} color="white" />,
 };
 
 export const metadata: Metadata = {
@@ -372,6 +374,8 @@ export default function AgricodersPage() {
                     <div className="mt-auto">
                       <Link
                         href={app.href}
+                        target={app.href.startsWith("http") ? "_blank" : undefined}
+                        rel={app.href.startsWith("http") ? "noopener noreferrer" : undefined}
                         className="inline-flex items-center gap-2 px-5 py-2.5 text-white text-sm font-bold rounded-xl transition-all no-underline"
                         style={{ background: app.accentColor }}
                       >
