@@ -93,7 +93,7 @@ export default function AdminPage() {
 
   // Redirect non-admins
   useEffect(() => {
-    if (isLoaded && role === "user") router.replace("/dashboard");
+    if (isLoaded && role === "user") router.replace("/plan/dashboard");
   }, [isLoaded, role, router]);
 
   const loadStats = useCallback(async () => {
@@ -151,7 +151,7 @@ export default function AdminPage() {
 
   if (forbidden) {
     return (
-      <AppShell role={role} title="Admin Panel" breadcrumb={[{ label: "Dashboard", href: "/dashboard" }, { label: "Admin" }]}>
+      <AppShell role={role} title="Admin Panel" breadcrumb={[{ label: "Dashboard", href: "/plan/dashboard" }, { label: "Admin" }]}>
         <div className="flex flex-col items-center justify-center py-20 text-center">
           <AlertTriangle size={40} className="text-amber-400 mb-3" />
           <h2 className="text-lg font-semibold text-gray-800 mb-1">Access Denied</h2>
@@ -181,7 +181,7 @@ export default function AdminPage() {
     <AppShell
       role={role}
       title="Admin Panel"
-      breadcrumb={[{ label: "Dashboard", href: "/dashboard" }, { label: "Admin Panel" }]}
+      breadcrumb={[{ label: "Dashboard", href: "/plan/dashboard" }, { label: "Admin Panel" }]}
     >
       {/* Tab bar */}
       <div className="flex items-center gap-0.5 bg-gray-100 p-1 rounded-xl mb-6 w-full sm:w-auto sm:inline-flex">

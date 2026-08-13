@@ -282,7 +282,7 @@ function FormPageContent() {
 
   // Credit gate — only applies when creating a new plan (not editing an existing one)
   if (!editId && credits !== null && credits < REQUIRED_CREDITS) {
-    return <CreditGate credits={credits} required={REQUIRED_CREDITS} onBack={() => router.push("/dashboard")} />;
+    return <CreditGate credits={credits} required={REQUIRED_CREDITS} onBack={() => router.push("/plan/dashboard")} />;
   }
 
   const stepProps = { formData, update };
@@ -310,7 +310,7 @@ function FormPageContent() {
       <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 sm:px-6 h-14 flex items-center justify-between sticky top-0 z-10">
         <div className="flex items-center gap-3 min-w-0">
           <button
-            onClick={() => router.push("/dashboard")}
+            onClick={() => router.push("/plan/dashboard")}
             className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white text-sm transition-colors flex-shrink-0"
           >
             <ChevronLeft size={16} />

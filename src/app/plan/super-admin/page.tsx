@@ -61,7 +61,7 @@ export default function SuperAdminPage() {
   const [toast, setToast] = useState<{ msg: string; ok: boolean } | null>(null);
 
   useEffect(() => {
-    if (isLoaded && role !== "super_admin") router.replace("/dashboard");
+    if (isLoaded && role !== "super_admin") router.replace("/plan/dashboard");
   }, [isLoaded, role, router]);
 
   const showToast = (msg: string, ok: boolean) => {
@@ -120,7 +120,7 @@ export default function SuperAdminPage() {
     <AppShell
       role={role}
       title="User Management"
-      breadcrumb={[{ label: "Dashboard", href: "/dashboard" }, { label: "Super Admin" }]}
+      breadcrumb={[{ label: "Dashboard", href: "/plan/dashboard" }, { label: "Super Admin" }]}
     >
       {/* Toast */}
       {toast && (

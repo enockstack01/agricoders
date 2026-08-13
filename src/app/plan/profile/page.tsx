@@ -153,7 +153,7 @@ export default function ProfilePage() {
 
   if (!isLoaded || loading) {
     return (
-      <AppShell role={role} title="Profile" breadcrumb={[{ label: "Dashboard", href: "/dashboard" }, { label: "Profile" }]}>
+      <AppShell role={role} title="Profile" breadcrumb={[{ label: "Dashboard", href: "/plan/dashboard" }, { label: "Profile" }]}>
         <div className="flex items-center justify-center py-16 gap-2 text-gray-400">
           <Loader2 size={18} className="animate-spin" />
           <span className="text-sm">Loading profile…</span>
@@ -163,7 +163,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <AppShell role={role} title="Profile & Settings" breadcrumb={[{ label: "Dashboard", href: "/dashboard" }, { label: "Profile" }]}>
+    <AppShell role={role} title="Profile & Settings" breadcrumb={[{ label: "Dashboard", href: "/plan/dashboard" }, { label: "Profile" }]}>
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>

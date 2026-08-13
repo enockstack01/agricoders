@@ -23,6 +23,7 @@ import {
   PawPrint,
 } from "lucide-react";
 import AgriNav from "@/components/layout/AgriNav";
+import Reveal from "@/components/ui/Reveal";
 import { AGRICODERS_APPS } from "@/lib/apps";
 
 const APP_ICONS: Record<string, React.ReactNode> = {
@@ -76,7 +77,7 @@ const SERVICES = [
       "19-sheet Excel financial models",
       "Professional narrative generation",
     ],
-    cta: { label: "Try Logistack Plan", href: "/app" },
+    cta: { label: "Try Logistack Plan", href: "/plan" },
   },
 ] as const;
 
@@ -106,64 +107,81 @@ export default function AgricodersPage() {
       <section className="bg-black px-4 py-28 sm:py-36 text-center relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none">
           <div
-            className="absolute top-0 left-1/2 rounded-full blur-3xl"
+            className="mkt-float absolute top-0 left-1/2 rounded-full blur-3xl"
             style={{
-              transform: "translateX(-50%)",
               width: 700,
               height: 350,
               background: "rgba(22,163,74,0.07)",
+            }}
+          />
+          <div
+            className="mkt-float-slow absolute rounded-full blur-3xl"
+            style={{
+              top: 120,
+              left: "30%",
+              width: 320,
+              height: 200,
+              background: "rgba(74,222,128,0.06)",
             }}
           />
         </div>
         <div className="container position-relative">
           <div className="row justify-content-center">
             <div className="col-lg-10 col-xl-8">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
-                Empowering Farmers with{" "}
-                <span style={{ color: "#4ade80" }}>Intelligence & Technology</span>
-              </h1>
-              <p className="text-lg sm:text-xl text-gray-400 mb-10 leading-relaxed">
-                Agricoders delivers{" "}
-                <strong className="text-white">location intelligence</strong>,{" "}
-                <strong className="text-white">intelligent applications</strong>,{" "}
-                <strong className="text-white">digital marketing</strong>, and{" "}
-                <strong className="text-white">professional business planning</strong>{" "}
-                to help every agribusiness operate with precision and grow with confidence.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
-                <a
-                  href="#services"
-                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-white font-bold rounded-xl transition-all text-sm no-underline"
-                  style={{ background: "#16a34a" }}
-                >
-                  Explore Our Services
-                  <ArrowRight size={16} />
-                </a>
-                <Link
-                  href="/app"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-semibold rounded-xl transition-all text-sm no-underline"
-                  style={{
-                    background: "rgba(255,255,255,0.05)",
-                    border: "1px solid rgba(255,255,255,0.15)",
-                  }}
-                >
-                  Try Logistack Plan
-                  <ChevronRight size={15} className="text-gray-400" />
-                </Link>
-              </div>
-              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500">
-                {[
-                  "Geospatial Intelligence",
-                  "Web & Mobile Apps",
-                  "Digital Marketing",
-                  "Business Planning",
-                ].map((t) => (
-                  <span key={t} className="flex items-center gap-1.5">
-                    <CheckCircle size={12} style={{ color: "#4ade80" }} />
-                    {t}
-                  </span>
-                ))}
-              </div>
+              <Reveal>
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
+                  Empowering Farmers with{" "}
+                  <span style={{ color: "#4ade80" }}>Intelligence & Technology</span>
+                </h1>
+              </Reveal>
+              <Reveal delay={80}>
+                <p className="text-lg sm:text-xl text-gray-400 mb-10 leading-relaxed">
+                  Agricoders delivers{" "}
+                  <strong className="text-white">location intelligence</strong>,{" "}
+                  <strong className="text-white">intelligent applications</strong>,{" "}
+                  <strong className="text-white">digital marketing</strong>, and{" "}
+                  <strong className="text-white">professional business planning</strong>{" "}
+                  to help every agribusiness operate with precision and grow with confidence.
+                </p>
+              </Reveal>
+              <Reveal delay={160}>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
+                  <a
+                    href="#services"
+                    className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-white font-bold rounded-xl transition-all text-sm no-underline hover:-translate-y-0.5 hover:shadow-lg"
+                    style={{ background: "#16a34a" }}
+                  >
+                    Explore Our Services
+                    <ArrowRight size={16} />
+                  </a>
+                  <Link
+                    href="/plan"
+                    className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-semibold rounded-xl transition-all text-sm no-underline hover:-translate-y-0.5"
+                    style={{
+                      background: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.15)",
+                    }}
+                  >
+                    Try Logistack Plan
+                    <ChevronRight size={15} className="text-gray-400" />
+                  </Link>
+                </div>
+              </Reveal>
+              <Reveal delay={240}>
+                <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500">
+                  {[
+                    "Geospatial Intelligence",
+                    "Web & Mobile Apps",
+                    "Digital Marketing",
+                    "Business Planning",
+                  ].map((t) => (
+                    <span key={t} className="flex items-center gap-1.5">
+                      <CheckCircle size={12} style={{ color: "#4ade80" }} />
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </Reveal>
             </div>
           </div>
         </div>
@@ -172,18 +190,18 @@ export default function AgricodersPage() {
       {/* Services */}
       <section id="services" className="bg-white py-24">
         <div className="container">
-          <div className="text-center mb-14">
+          <Reveal className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">What we do</h2>
             <p className="text-gray-500 mx-auto" style={{ maxWidth: 460 }}>
               Four integrated services that cover every digital need of a modern agribusiness.
             </p>
-          </div>
+          </Reveal>
           <div className="row g-4">
-            {SERVICES.map((s) => {
+            {SERVICES.map((s, i) => {
               const Icon = s.Icon;
               const hasCta = "cta" in s && s.cta;
               return (
-                <div key={s.title} className="col-md-6 mb-1">
+                <Reveal key={s.title} delay={i * 90} className="col-md-6 mb-1">
                   <div
                     className="agri-snap-card h-100 d-flex flex-column"
                     style={{
@@ -222,7 +240,7 @@ export default function AgricodersPage() {
                       </div>
                     )}
                   </div>
-                </div>
+                </Reveal>
               );
             })}
           </div>
@@ -234,7 +252,7 @@ export default function AgricodersPage() {
         <div className="container">
           {/* All section text before cards */}
           <div className="row justify-content-center mb-14">
-            <div className="col-lg-8">
+            <Reveal className="col-lg-8">
               <p
                 className="text-xs font-bold uppercase tracking-widest mb-4 text-center"
                 style={{ color: "#4ade80", letterSpacing: "0.14em" }}
@@ -271,7 +289,7 @@ export default function AgricodersPage() {
                   </div>
                 ))}
               </div>
-            </div>
+            </Reveal>
           </div>
 
           {/* Full-width cards */}
@@ -297,10 +315,10 @@ export default function AgricodersPage() {
                 title: "Built for African agriculture",
                 desc: "Designed around the realities of smallholder and commercial farming across Africa: variable soils, mixed crops, and limited margins for error.",
               },
-            ].map((item) => {
+            ].map((item, i) => {
               const ItemIcon = item.Icon;
               return (
-                <div key={item.title} className="col-md-6 mb-1">
+                <Reveal key={item.title} delay={i * 90} className="col-md-6 mb-1">
                   <div
                     className="agri-dark-card h-100"
                     style={{
@@ -319,7 +337,7 @@ export default function AgricodersPage() {
                     <h3 className="text-white font-bold mb-3" style={{ fontSize: 19, lineHeight: 1.3 }}>{item.title}</h3>
                     <p className="leading-relaxed mb-0" style={{ fontSize: 15, color: "#9ca3af" }}>{item.desc}</p>
                   </div>
-                </div>
+                </Reveal>
               );
             })}
           </div>
@@ -329,7 +347,7 @@ export default function AgricodersPage() {
       {/* Our Systems */}
       <section className="py-24 bg-black">
         <div className="container">
-          <div className="text-center mb-14">
+          <Reveal className="text-center mb-14">
             <p
               className="text-xs font-bold uppercase tracking-widest mb-4"
               style={{ color: "#4ade80", letterSpacing: "0.14em" }}
@@ -342,15 +360,15 @@ export default function AgricodersPage() {
             <p className="text-gray-400 mx-auto" style={{ maxWidth: 440, fontSize: 15 }}>
               Tools and platforms we have built for agribusinesses, farmers, and entrepreneurs.
             </p>
-          </div>
+          </Reveal>
 
           <div className="row g-4 justify-content-center">
-            {AGRICODERS_APPS.map((app) => {
+            {AGRICODERS_APPS.map((app, i) => {
               const icon = APP_ICONS[app.id] ?? <Sparkles size={26} color="white" />;
               return (
-                <div key={app.id} className="col-md-6 col-lg-5">
+                <Reveal key={app.id} delay={i * 90} className="col-md-6 col-lg-5">
                   <div
-                    className="rounded-4 p-4 p-sm-5 position-relative overflow-hidden h-100 d-flex flex-column"
+                    className="agri-dark-card rounded-4 p-4 p-sm-5 position-relative overflow-hidden h-100 d-flex flex-column"
                     style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}
                   >
                     <div
@@ -364,9 +382,22 @@ export default function AgricodersPage() {
                       >
                         {icon}
                       </div>
-                      <p className="text-white font-bold mb-0" style={{ fontSize: 18, lineHeight: 1.2 }}>
-                        {app.name}
-                      </p>
+                      <div>
+                        <p className="text-white font-bold mb-1" style={{ fontSize: 18, lineHeight: 1.2 }}>
+                          {app.name}
+                        </p>
+                        {app.status === "live" ? (
+                          <span className="d-inline-flex align-items-center gap-1.5" style={{ fontSize: 11, color: "#4ade80" }}>
+                            <span
+                              className="mkt-pulse-dot rounded-circle"
+                              style={{ width: 6, height: 6, background: "#4ade80", display: "inline-block" }}
+                            />
+                            Live
+                          </span>
+                        ) : (
+                          <span style={{ fontSize: 11, color: "#6b7280" }}>Coming soon</span>
+                        )}
+                      </div>
                     </div>
                     <p className="text-gray-400 leading-relaxed mb-6" style={{ fontSize: 14 }}>
                       {app.description}
@@ -376,7 +407,7 @@ export default function AgricodersPage() {
                         href={app.href}
                         target={app.href.startsWith("http") ? "_blank" : undefined}
                         rel={app.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                        className="inline-flex items-center gap-2 px-5 py-2.5 text-white text-sm font-bold rounded-xl transition-all no-underline"
+                        className="inline-flex items-center gap-2 px-5 py-2.5 text-white text-sm font-bold rounded-xl transition-all no-underline hover:-translate-y-0.5 hover:shadow-lg"
                         style={{ background: app.accentColor }}
                       >
                         Open {app.name}
@@ -384,11 +415,11 @@ export default function AgricodersPage() {
                       </Link>
                     </div>
                   </div>
-                </div>
+                </Reveal>
               );
             })}
 
-            <div className="col-md-6 col-lg-5">
+            <Reveal delay={AGRICODERS_APPS.length * 90} className="col-md-6 col-lg-5">
               <div
                 className="d-flex flex-column align-items-center justify-content-center h-100 text-center rounded-4 p-5"
                 style={{ border: "2px dashed rgba(255,255,255,0.1)", minHeight: 220 }}
@@ -399,7 +430,7 @@ export default function AgricodersPage() {
                   New tools are in development.
                 </p>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -408,7 +439,7 @@ export default function AgricodersPage() {
       <section className="py-24" style={{ background: "#16a34a" }}>
         <div className="container">
           <div className="row justify-content-center text-center">
-            <div className="col-lg-7">
+            <Reveal className="col-lg-7">
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-5 leading-tight">
                 Ready to build your agribusiness with precision?
               </h2>
@@ -419,7 +450,7 @@ export default function AgricodersPage() {
               <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
                 <Link
                   href="/apps"
-                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-white font-bold rounded-xl hover:opacity-90 transition-all text-sm no-underline"
+                  className="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-white font-bold rounded-xl hover:opacity-90 transition-all text-sm no-underline hover:-translate-y-0.5 hover:shadow-lg"
                   style={{ color: "#15803d" }}
                 >
                   <Layers size={16} />
@@ -427,7 +458,7 @@ export default function AgricodersPage() {
                 </Link>
                 <a
                   href="mailto:agricoders@gmail.com"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-xl transition-all text-sm no-underline text-white"
+                  className="inline-flex items-center justify-center gap-2 px-8 py-4 font-semibold rounded-xl transition-all text-sm no-underline text-white hover:-translate-y-0.5"
                   style={{
                     background: "transparent",
                     border: "1px solid rgba(255,255,255,0.4)",
@@ -437,7 +468,7 @@ export default function AgricodersPage() {
                   <ArrowRight size={15} />
                 </a>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
@@ -531,7 +562,7 @@ export default function AgricodersPage() {
               <ul className="list-unstyled">
                 {[
                   { label: "Our Systems", href: "/apps" },
-                  { label: "Logistack Plan", href: "/app" },
+                  { label: "Logistack Plan", href: "/plan" },
                   { label: "Contact", href: "mailto:agricoders@gmail.com" },
                   { label: "Privacy Policy", href: "/privacy" },
                 ].map((link) => (

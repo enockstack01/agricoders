@@ -63,7 +63,7 @@ export default function Home() {
   const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
-    if (isLoaded && isSignedIn) router.push("/dashboard");
+    if (isLoaded && isSignedIn) router.push("/plan/dashboard");
   }, [isLoaded, isSignedIn, router]);
 
   return (
@@ -815,9 +815,9 @@ export default function Home() {
               </h3>
               <ul className="list-unstyled">
                 {[
-                  { label: "Dashboard", href: "/dashboard" },
-                  { label: "New Business Plan", href: "/form" },
-                  { label: "Financial Model", href: "/form" },
+                  { label: "Dashboard", href: "/plan/dashboard" },
+                  { label: "New Business Plan", href: "/plan/form" },
+                  { label: "Financial Model", href: "/plan/form" },
                   { label: "logistack.space", href: "https://logistack.space/" },
                   { label: "Agricoders Portal", href: "/" },
                 ].map((link) => (

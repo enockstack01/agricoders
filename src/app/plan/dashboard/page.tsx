@@ -181,7 +181,7 @@ function CreditsModal({ required, balance, onClose }: { required: number; balanc
             </p>
             <div className="flex gap-2 justify-center">
               <Link
-                href="/profile"
+                href="/plan/profile"
                 onClick={onClose}
                 className="px-4 py-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded-lg border border-gray-200 dark:border-gray-700 transition-colors"
               >
@@ -468,7 +468,7 @@ export default function Dashboard() {
         </div>
         <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
           <Link
-            href="/profile"
+            href="/plan/profile"
             className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
               credits === 0
                 ? "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30"
@@ -489,7 +489,7 @@ export default function Dashboard() {
             Request Credits
           </button>
           <Link
-            href="/form"
+            href="/plan/form"
             className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors"
           >
             <PlusCircle size={16} />
@@ -615,7 +615,7 @@ export default function Dashboard() {
                 </div>
                 <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">No plans yet</p>
                 <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">Create your first business plan to get started</p>
-                <Link href="/form" className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors">
+                <Link href="/plan/form" className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors">
                   <PlusCircle size={13} />
                   Create Business Plan
                 </Link>

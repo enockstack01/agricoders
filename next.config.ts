@@ -4,6 +4,25 @@ const nextConfig: NextConfig = {
   output: "standalone",
   serverExternalPackages: ["mongoose"],
   experimental: {},
+  async redirects() {
+    return [
+      { source: "/app", destination: "/plan", permanent: false },
+      { source: "/dashboard", destination: "/plan/dashboard", permanent: false },
+      { source: "/dashboard/:path*", destination: "/plan/dashboard/:path*", permanent: false },
+      { source: "/form", destination: "/plan/form", permanent: false },
+      { source: "/form/:path*", destination: "/plan/form/:path*", permanent: false },
+      { source: "/admin", destination: "/plan/admin", permanent: false },
+      { source: "/admin/:path*", destination: "/plan/admin/:path*", permanent: false },
+      { source: "/super-admin", destination: "/plan/super-admin", permanent: false },
+      { source: "/super-admin/:path*", destination: "/plan/super-admin/:path*", permanent: false },
+      { source: "/profile", destination: "/plan/profile", permanent: false },
+      { source: "/profile/:path*", destination: "/plan/profile/:path*", permanent: false },
+      { source: "/sign-in", destination: "/plan/sign-in", permanent: false },
+      { source: "/sign-in/:path*", destination: "/plan/sign-in/:path*", permanent: false },
+      { source: "/sign-up", destination: "/plan/sign-up", permanent: false },
+      { source: "/sign-up/:path*", destination: "/plan/sign-up/:path*", permanent: false },
+    ];
+  },
   async headers() {
     return [
       // Public apps discovery endpoint — any origin can call this

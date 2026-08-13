@@ -24,18 +24,18 @@ const NAV_COLS = [
   {
     title: "Product",
     links: [
-      { label: "Dashboard",       href: "/dashboard",  icon: <LayoutDashboard size={13} /> },
-      { label: "New Business Plan",href: "/form",       icon: <FileText size={13} /> },
-      { label: "Financial Model",  href: "/form",       icon: <BarChart2 size={13} /> },
-      { label: "AI Assist",        href: "/form",       icon: <Sparkles size={13} /> },
+      { label: "Dashboard",       href: "/plan/dashboard",  icon: <LayoutDashboard size={13} /> },
+      { label: "New Business Plan",href: "/plan/form",       icon: <FileText size={13} /> },
+      { label: "Financial Model",  href: "/plan/form",       icon: <BarChart2 size={13} /> },
+      { label: "AI Assist",        href: "/plan/form",       icon: <Sparkles size={13} /> },
     ],
   },
   {
     title: "Account",
     links: [
-      { label: "Profile & Settings", href: "/profile",  icon: <UserCircle size={13} /> },
-      { label: "Sign In",            href: "/sign-in",  icon: <ArrowUpRight size={13} /> },
-      { label: "Sign Up",            href: "/sign-up",  icon: <ArrowUpRight size={13} /> },
+      { label: "Profile & Settings", href: "/plan/profile",  icon: <UserCircle size={13} /> },
+      { label: "Sign In",            href: "/plan/sign-in",  icon: <ArrowUpRight size={13} /> },
+      { label: "Sign Up",            href: "/plan/sign-up",  icon: <ArrowUpRight size={13} /> },
     ],
   },
   {
@@ -84,7 +84,7 @@ export default function Footer() {
 
           {/* Brand column */}
           <div className="lg:col-span-1">
-            <Link href="/app" className="flex items-center gap-2.5 mb-4 group">
+            <Link href="/plan" className="flex items-center gap-2.5 mb-4 group">
               <div className="w-8 h-8 rounded-lg bg-green-600 group-hover:bg-green-500 flex items-center justify-center flex-shrink-0 transition-colors">
                 <Layers size={16} className="text-white" />
               </div>

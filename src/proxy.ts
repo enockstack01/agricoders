@@ -3,11 +3,11 @@ import { clerkMiddleware, createRouteMatcher, clerkClient } from "@clerk/nextjs/
 const SUPER_ADMIN_EMAIL = "nshimiyimanaenock4@gmail.com";
 
 const isProtectedRoute = createRouteMatcher([
-  "/dashboard(.*)",
-  "/admin(.*)",
-  "/super-admin(.*)",
-  "/form(.*)",
-  "/profile(.*)",
+  "/plan/dashboard(.*)",
+  "/plan/admin(.*)",
+  "/plan/super-admin(.*)",
+  "/plan/form(.*)",
+  "/plan/profile(.*)",
   "/api/submissions(.*)",
   "/api/generate(.*)",
   "/api/ai(.*)",

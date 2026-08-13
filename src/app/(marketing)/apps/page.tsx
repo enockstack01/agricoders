@@ -1,8 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Layers, ArrowRight, Sprout, Sparkles, PawPrint } from "lucide-react";
+import { Sprout } from "lucide-react";
 import AgriNav from "@/components/layout/AgriNav";
-import { AGRICODERS_APPS, type AppEntry } from "@/lib/apps";
+import Reveal from "@/components/ui/Reveal";
+import SystemsExplorer from "@/components/marketing/SystemsExplorer";
+import { AGRICODERS_APPS } from "@/lib/apps";
 
 export const metadata: Metadata = {
   title: "Our Systems — Agricoders",
@@ -10,97 +12,21 @@ export const metadata: Metadata = {
     "Discover the systems and tools Agricoders has built for agribusinesses and farmers.",
 };
 
-const ICON_MAP: Record<string, React.ReactNode> = {
-  logistackplan: <Layers size={26} color="white" />,
-  livestockpro: <PawPrint size={26} color="white" />,
-};
-
-function SystemCard({ app }: { app: AppEntry }) {
-  const icon = ICON_MAP[app.id] ?? <Sparkles size={26} color="white" />;
-
-  return (
-    <div className="sys-card h-100 d-flex flex-column"
-      style={{
-        background: "white",
-        borderRadius: 28,
-        padding: "clamp(24px, 6vw, 40px) clamp(20px, 5vw, 36px)",
-        boxShadow: "0 2px 20px rgba(0,0,0,0.07)",
-        border: "1.5px solid rgba(0,0,0,0.05)",
-      }}
-    >
-      <div
-        style={{
-          width: 68,
-          height: 68,
-          background: app.accentColor,
-          borderRadius: 22,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          marginBottom: 24,
-          flexShrink: 0,
-        }}
-      >
-        {icon}
-      </div>
-      <h3 style={{ fontSize: 20, fontWeight: 700, color: "#111827", marginBottom: 8, lineHeight: 1.2 }}>
-        {app.name}
-      </h3>
-      <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 8 }}>{app.tagline}</p>
-      <p style={{ fontSize: 14, color: "#9ca3af", lineHeight: 1.65, marginBottom: 28, flexGrow: 1 }}>
-        {app.description}
-      </p>
-      {app.status === "live" ? (
-        <Link
-          href={app.href}
-          target={app.href.startsWith("http") ? "_blank" : undefined}
-          rel={app.href.startsWith("http") ? "noopener noreferrer" : undefined}
-          className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl no-underline"
-          style={{ background: app.accentColor, fontSize: 14, alignSelf: "flex-start" }}
-        >
-          Open {app.name}
-          <ArrowRight size={14} />
-        </Link>
-      ) : (
-        <span
-          style={{
-            display: "inline-flex",
-            alignItems: "center",
-            padding: "10px 20px",
-            background: "#f3f4f6",
-            color: "#9ca3af",
-            fontSize: 14,
-            fontWeight: 600,
-            borderRadius: 12,
-            alignSelf: "flex-start",
-          }}
-        >
-          Coming Soon
-        </span>
-      )}
-    </div>
-  );
-}
-
 export default function SystemsPage() {
   return (
     <div className="min-h-screen flex flex-col bg-white">
-      <style>{`
-        .sys-card {
-          transition: box-shadow 0.3s, transform 0.3s;
-        }
-        .sys-card:hover {
-          box-shadow: 0 20px 60px rgba(0,0,0,0.14) !important;
-          transform: translateY(-6px);
-        }
-      `}</style>
-
       <AgriNav />
 
-      <section className="py-20 text-center bg-white">
-        <div className="container">
+      <section className="py-20 text-center bg-white relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div
+            className="mkt-float-slow absolute rounded-full blur-3xl"
+            style={{ top: -60, left: "50%", transform: "translateX(-50%)", width: 500, height: 260, background: "rgba(22,163,74,0.06)" }}
+          />
+        </div>
+        <div className="container position-relative">
           <div className="row justify-content-center">
-            <div className="col-lg-7">
+            <Reveal className="col-lg-7">
               <p
                 className="text-xs font-bold uppercase tracking-widest mb-4"
                 style={{ color: "#16a34a", letterSpacing: "0.14em" }}
@@ -119,45 +45,13 @@ export default function SystemsPage() {
               >
                 Tools and platforms we have built for agribusinesses, farmers, and entrepreneurs.
               </p>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
       <section className="pb-24">
-        <div className="container">
-          <div className="row g-4 align-items-stretch">
-            {AGRICODERS_APPS.map((app) => (
-              <div key={app.id} className="col-md-6 col-lg-4">
-                <SystemCard app={app} />
-              </div>
-            ))}
-            <div className="col-md-6 col-lg-4">
-              <div
-                style={{
-                  height: "100%",
-                  minHeight: 220,
-                  borderRadius: 28,
-                  padding: "clamp(28px, 7vw, 48px) clamp(20px, 5vw, 36px)",
-                  border: "2px dashed #e5e7eb",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  textAlign: "center",
-                }}
-              >
-                <Sparkles size={32} style={{ color: "#d1d5db", marginBottom: 16 }} />
-                <p style={{ fontSize: 15, fontWeight: 600, color: "#9ca3af", marginBottom: 6 }}>
-                  More systems coming
-                </p>
-                <p style={{ fontSize: 13, color: "#d1d5db", marginBottom: 0 }}>
-                  New tools are under development.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        <SystemsExplorer apps={AGRICODERS_APPS} />
       </section>
 
       <footer className="bg-black border-t py-8" style={{ borderColor: "rgba(255,255,255,0.08)" }}>

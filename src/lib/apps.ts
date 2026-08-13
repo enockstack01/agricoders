@@ -18,7 +18,7 @@ export const AGRICODERS_APPS: AppEntry[] = [
     tagline: "AI Business Plan & Financial Model Generator",
     description:
       "Generate investor-ready business plans and 19-sheet financial models in under 15 minutes. Fully written, formatted, and ready to submit.",
-    href: "/app",
+    href: "/plan",
     status: "live",
     category: "Business Planning",
     accentColor: "#16a34a",
@@ -38,7 +38,7 @@ export const AGRICODERS_APPS: AppEntry[] = [
     tagline: "Livestock Management System",
     description:
       "Track herds, health records, breeding cycles, feed schedules, and production for your livestock operation in one place.",
-    href: "https://livestockpro.onrender.com/",
+    href: "https://livestockpro.agricoders.com/",
     status: "live",
     category: "Farm Management",
     accentColor: "#b45309",

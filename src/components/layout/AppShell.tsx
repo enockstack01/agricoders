@@ -31,11 +31,11 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard",       href: "/dashboard",   icon: <LayoutDashboard size={18} />, roles: ["user", "admin", "super_admin"] },
-  { label: "New Plan",        href: "/form",         icon: <PlusCircle size={18} />,      roles: ["user", "admin", "super_admin"] },
-  { label: "Admin Panel",     href: "/admin",        icon: <BarChart2 size={18} />,       roles: ["admin", "super_admin"] },
-  { label: "User Management", href: "/super-admin",  icon: <Users size={18} />,           roles: ["super_admin"] },
-  { label: "Profile",         href: "/profile",      icon: <UserCircle size={18} />,      roles: ["user", "admin", "super_admin"] },
+  { label: "Dashboard",       href: "/plan/dashboard",   icon: <LayoutDashboard size={18} />, roles: ["user", "admin", "super_admin"] },
+  { label: "New Plan",        href: "/plan/form",         icon: <PlusCircle size={18} />,      roles: ["user", "admin", "super_admin"] },
+  { label: "Admin Panel",     href: "/plan/admin",        icon: <BarChart2 size={18} />,       roles: ["admin", "super_admin"] },
+  { label: "User Management", href: "/plan/super-admin",  icon: <Users size={18} />,           roles: ["super_admin"] },
+  { label: "Profile",         href: "/plan/profile",      icon: <UserCircle size={18} />,      roles: ["user", "admin", "super_admin"] },
 ];
 
 interface Props {
@@ -163,7 +163,7 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
 
           <div className="flex items-center gap-1 flex-shrink-0">
             <Link
-              href="/form"
+              href="/plan/form"
               className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors mr-1"
             >
               <PlusCircle size={14} />

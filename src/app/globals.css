@@ -98,3 +98,84 @@ body {
 .dark .mkt-border {
   border-color: #334155;
 }
+
+/* ── Marketing page interactivity ─────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Scroll-reveal: elements start hidden/offset, then animate in once visible */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Ambient floating motion for hero gradient blobs */
+@keyframes mktFloat {
+  0%, 100% { transform: translate(-50%, 0) scale(1); }
+  50% { transform: translate(-50%, -18px) scale(1.05); }
+}
+.mkt-float {
+  animation: mktFloat 9s ease-in-out infinite;
+}
+.mkt-float-slow {
+  animation: mktFloat 13s ease-in-out infinite;
+  animation-delay: -4s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .mkt-float,
+  .mkt-float-slow {
+    animation: none;
+  }
+}
+
+/* Live status pulse dot */
+@keyframes mktPulseRing {
+  0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.45); }
+  100% { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+}
+.mkt-pulse-dot {
+  animation: mktPulseRing 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Nav underline hover effect */
+.mkt-nav-link {
+  position: relative;
+}
+.mkt-nav-link::after {
+  content: "";
+  position: absolute;
+  left: 14px;
+  right: 14px;
+  bottom: 6px;
+  height: 2px;
+  background: #16a34a;
+  border-radius: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.mkt-nav-link:hover::after,
+.mkt-nav-link.is-active::after {
+  transform: scaleX(1);
+}
