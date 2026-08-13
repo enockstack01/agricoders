@@ -101,12 +101,12 @@ export default function Home() {
 
             <div className="hidden md:flex items-center gap-2">
               <ThemeToggle compact />
-              <SignInButton mode="modal">
+              <SignInButton mode="modal" forceRedirectUrl="/plan/dashboard">
                 <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-all border-0 bg-transparent">
                   Sign In
                 </button>
               </SignInButton>
-              <SignUpButton mode="modal">
+              <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
                 <button
                   className="flex items-center gap-2 px-4 py-2 text-white text-sm font-semibold rounded-xl transition-all shadow-sm border-0"
                   style={{ background: "#16a34a" }}
@@ -148,12 +148,12 @@ export default function Home() {
               ))}
             </div>
             <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
-              <SignInButton mode="modal">
+              <SignInButton mode="modal" forceRedirectUrl="/plan/dashboard">
                 <button className="w-full px-4 py-2.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-xl hover:bg-gray-50 bg-transparent">
                   Sign In
                 </button>
               </SignInButton>
-              <SignUpButton mode="modal">
+              <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
                 <button
                   className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-white text-sm font-semibold rounded-xl border-0"
                   style={{ background: "#16a34a" }}
@@ -196,7 +196,7 @@ export default function Home() {
                 so you can focus on building your business, not writing documents.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
-                <SignUpButton mode="modal">
+                <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
                   <button
                     className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-white font-bold rounded-xl transition-all text-sm border-0"
                     style={{
@@ -208,7 +208,7 @@ export default function Home() {
                     <ArrowRight size={16} />
                   </button>
                 </SignUpButton>
-                <SignInButton mode="modal">
+                <SignInButton mode="modal" forceRedirectUrl="/plan/dashboard">
                   <button
                     className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-semibold rounded-xl transition-all text-sm border-0"
                     style={{
@@ -409,7 +409,7 @@ export default function Home() {
             ))}
           </div>
           <div className="mt-14 text-center">
-            <SignUpButton mode="modal">
+            <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
               <button
                 className="inline-flex items-center gap-2 px-7 py-3.5 text-white font-bold rounded-xl transition-all text-sm border-0"
                 style={{
@@ -495,7 +495,7 @@ export default function Home() {
             })}
           </div>
           <div className="text-center mt-10">
-            <SignUpButton mode="modal">
+            <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
               <button
                 className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-bold rounded-xl transition-all border-0"
                 style={{ background: "#16a34a" }}
@@ -642,7 +642,7 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <SignUpButton mode="modal">
+                <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
                   <button
                     className="w-full font-bold border-0 transition-all"
                     style={{ background: "#111827", color: "white", borderRadius: 12, padding: "12px 0", fontSize: 14 }}
@@ -691,7 +691,7 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <SignUpButton mode="modal">
+                <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
                   <button
                     className="w-full font-bold border-0 transition-all"
                     style={{ background: "#16a34a", color: "white", borderRadius: 12, padding: "12px 0", fontSize: 14 }}
@@ -723,7 +723,7 @@ export default function Home() {
                 business documents in a single session and present with confidence.
               </p>
               <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-                <SignUpButton mode="modal">
+                <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
                   <button
                     className="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-white font-bold rounded-xl hover:opacity-90 transition-all text-sm border-0"
                     style={{ color: "#15803d" }}
@@ -732,7 +732,7 @@ export default function Home() {
                     <ArrowRight size={16} />
                   </button>
                 </SignUpButton>
-                <SignInButton mode="modal">
+                <SignInButton mode="modal" forceRedirectUrl="/plan/dashboard">
                   <button
                     className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-semibold rounded-xl hover:opacity-80 transition-all text-sm border-0"
                     style={{
