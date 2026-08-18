@@ -48,9 +48,12 @@ export default function NotificationBell() {
   }, []);
 
   useEffect(() => {
-    fetchNotifs();
+    const kickoff = setTimeout(fetchNotifs, 0);
     const iv = setInterval(fetchNotifs, 30_000);
-    return () => clearInterval(iv);
+    return () => {
+      clearTimeout(kickoff);
+      clearInterval(iv);
+    };
   }, [fetchNotifs]);
 
   const toggleOne = async (id: string, currentRead: boolean) => {

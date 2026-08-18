@@ -139,12 +139,18 @@ export default function AdminPage() {
     }
   }, []);
 
-  useEffect(() => { loadStats(); }, [loadStats]);
+  useEffect(() => {
+    const t = setTimeout(loadStats, 0);
+    return () => clearTimeout(t);
+  }, [loadStats]);
 
   useEffect(() => {
-    if (tab === "users" && users.length === 0) loadUsers();
-    if (tab === "submissions") loadSubmissions(submissionsPage, submissionsSearch);
-    if (tab === "requests") loadRequests(requestsFilter);
+    const t = setTimeout(() => {
+      if (tab === "users" && users.length === 0) loadUsers();
+      if (tab === "submissions") loadSubmissions(submissionsPage, submissionsSearch);
+      if (tab === "requests") loadRequests(requestsFilter);
+    }, 0);
+    return () => clearTimeout(t);
   }, [tab]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!isLoaded || role === "user") return null;

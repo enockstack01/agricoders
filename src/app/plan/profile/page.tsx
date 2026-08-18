@@ -130,7 +130,11 @@ export default function ProfilePage() {
     finally { setLoading(false); }
   }, []);
 
-  useEffect(() => { if (isLoaded) load(); }, [isLoaded, load]);
+  useEffect(() => {
+    if (!isLoaded) return;
+    const t = setTimeout(load, 0);
+    return () => clearTimeout(t);
+  }, [isLoaded, load]);
 
   const handleSave = async () => {
     setSaving(true);

@@ -17,7 +17,6 @@ import {
   CheckCircle,
   RefreshCw,
   Activity,
-  BarChart2,
 } from "lucide-react";
 
 interface AdminUser {
@@ -89,7 +88,10 @@ export default function SuperAdminPage() {
     }
   }, []);
 
-  useEffect(() => { loadUsers(); loadStats(); }, [loadUsers, loadStats]);
+  useEffect(() => {
+    const t = setTimeout(() => { loadUsers(); loadStats(); }, 0);
+    return () => clearTimeout(t);
+  }, [loadUsers, loadStats]);
 
   const updateRole = async (userId: string, newRole: NavRole) => {
     setUpdating(userId);

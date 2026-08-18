@@ -33,7 +33,7 @@ export default function StepOpex({ formData, update }: Props) {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-gray-500">List all operating expenses. Mark items as <strong>Variable</strong> if they grow with production (they'll appear as Cost of Sales). Fixed items stay constant each year.</p>
+      <p className="text-sm text-gray-500">List all operating expenses. Mark items as <strong>Variable</strong> if they grow with production (they&apos;ll appear as Cost of Sales). Fixed items stay constant each year.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <div className="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800 rounded-lg px-4 py-3 text-sm dark:text-green-300">

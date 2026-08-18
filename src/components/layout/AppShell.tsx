@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { UserButton } from "@clerk/nextjs";
 import {
   LayoutDashboard,
-  FileText,
   Users,
   Shield,
   PlusCircle,
@@ -45,20 +44,23 @@ interface Props {
   breadcrumb?: { label: string; href?: string }[];
 }
 
-export default function AppShell({ role, children, title, breadcrumb }: Props) {
-  const pathname = usePathname();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+interface RoleBadge {
+  label: string;
+  cls: string;
+}
 
-  const visibleNav = NAV_ITEMS.filter((n) => n.roles.includes(role));
-
-  const roleBadge =
-    role === "super_admin"
-      ? { label: "Super Admin", cls: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800" }
-      : role === "admin"
-      ? { label: "Admin", cls: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800" }
-      : null;
-
-  const SidebarContent = () => (
+function SidebarContent({
+  visibleNav,
+  pathname,
+  roleBadge,
+  onNavigate,
+}: {
+  visibleNav: NavItem[];
+  pathname: string;
+  roleBadge: RoleBadge | null;
+  onNavigate: () => void;
+}) {
+  return (
     <div className="flex flex-col h-full">
       {/* Logo */}
       <div className="flex items-center gap-2.5 px-5 py-5 border-b border-gray-100 dark:border-gray-800">
@@ -76,7 +78,7 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
             <Link
               key={item.href}
               href={item.href}
-              onClick={() => setSidebarOpen(false)}
+              onClick={onNavigate}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 active
                   ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400"
@@ -103,12 +105,26 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
       )}
     </div>
   );
+}
+
+export default function AppShell({ role, children, title, breadcrumb }: Props) {
+  const pathname = usePathname();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const visibleNav = NAV_ITEMS.filter((n) => n.roles.includes(role));
+
+  const roleBadge: RoleBadge | null =
+    role === "super_admin"
+      ? { label: "Super Admin", cls: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800" }
+      : role === "admin"
+      ? { label: "Admin", cls: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800" }
+      : null;
 
   return (
     <div className="flex h-screen bg-gray-50 dark:bg-gray-950 overflow-hidden">
       {/* Desktop sidebar */}
       <aside className="hidden lg:flex flex-col w-60 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-shrink-0">
-        <SidebarContent />
+        <SidebarContent visibleNav={visibleNav} pathname={pathname} roleBadge={roleBadge} onNavigate={() => setSidebarOpen(false)} />
       </aside>
 
       {/* Mobile sidebar overlay */}
@@ -122,7 +138,7 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
             >
               <X size={18} />
             </button>
-            <SidebarContent />
+            <SidebarContent visibleNav={visibleNav} pathname={pathname} roleBadge={roleBadge} onNavigate={() => setSidebarOpen(false)} />
           </aside>
         </div>
       )}

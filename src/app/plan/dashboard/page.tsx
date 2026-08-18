@@ -341,7 +341,10 @@ export default function Dashboard() {
       .finally(() => setLoading(false));
   }, [loadMeta, loadCredits]);
 
-  useEffect(() => { load(); }, [load]);
+  useEffect(() => {
+    const t = setTimeout(load, 0);
+    return () => clearTimeout(t);
+  }, [load]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Permanently delete this submission?")) return;

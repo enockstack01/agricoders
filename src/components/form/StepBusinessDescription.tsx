@@ -83,7 +83,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
     <div className="space-y-4">
       {/* AI info banner */}
       <div className="bg-purple-50 border border-purple-100 rounded-lg px-4 py-3 text-sm text-purple-800">
-        <strong>✨ AI Assist</strong> — Click any "Generate with AI" button to auto-fill that section based on your company info from Step 1. You can edit any generated content.
+        <strong>✨ AI Assist</strong> — Click any &quot;Generate with AI&quot; button to auto-fill that section based on your company info from Step 1. You can edit any generated content.
       </div>
 
       <SectionTitle>Vision &amp; Mission</SectionTitle>

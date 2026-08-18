@@ -20,17 +20,18 @@ export default clerkMiddleware(async (auth, req) => {
   const session = await auth();
   if (session.userId) {
     const meta = session.sessionClaims?.public_metadata as { role?: string } | undefined;
-    if (meta?.role !== "super_admin") {
+    // Role is unset only the very first time we see this user — resolve and persist
+    // it once so every later request can read it straight off the session token
+    // instead of paying a Clerk Backend API round-trip on every navigation.
+    if (!meta?.role) {
       const client = await clerkClient();
       const user = await client.users.getUser(session.userId);
       const email = user.emailAddresses.find(
         (e) => e.id === user.primaryEmailAddressId
       )?.emailAddress;
-      if (email === SUPER_ADMIN_EMAIL) {
-        await client.users.updateUserMetadata(session.userId, {
-          publicMetadata: { role: "super_admin" },
-        });
-      }
+      await client.users.updateUserMetadata(session.userId, {
+        publicMetadata: { role: email === SUPER_ADMIN_EMAIL ? "super_admin" : "user" },
+      });
     }
   }
   if (isProtectedRoute(req)) await auth.protect();

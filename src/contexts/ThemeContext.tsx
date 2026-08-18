@@ -14,7 +14,8 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     // The inline <head> script has already applied (or not) the .dark class.
     // Read directly from the DOM so React state matches what's on screen immediately.
     const isDark = document.documentElement.classList.contains("dark");
-    setTheme(isDark ? "dark" : "light");
+    const t = setTimeout(() => setTheme(isDark ? "dark" : "light"), 0);
+    return () => clearTimeout(t);
   }, []);
 
   const applyTheme = (next: Theme) => {

@@ -76,7 +76,7 @@ export default function StepRevenue({ formData, update }: Props) {
       <p className="text-sm text-gray-500">
         Define revenue streams for your products and services.
         For <strong>recurring revenue</strong> (subscriptions, retainers, SaaS), set the monthly price per customer.
-        For <strong>one-time product sales</strong>, enable "Product Sale" and set the selling price per unit.
+        For <strong>one-time product sales</strong>, enable &quot;Product Sale&quot; and set the selling price per unit.
       </p>
 
       {allOfferings.length > 0 && (
