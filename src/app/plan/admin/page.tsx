@@ -14,16 +14,24 @@ import {
   Activity,
   Search,
   ChevronDown,
+  ChevronUp,
   Loader2,
   Shield,
   AlertTriangle,
   RefreshCw,
   Coins,
   CheckCircle,
+  CheckCircle2,
   AlertCircle,
   Clock,
   XCircle,
   Inbox,
+  ShieldAlert,
+  Skull,
+  Database,
+  MapPin,
+  PawPrint,
+  Settings,
 } from "lucide-react";
 
 interface Stats {
@@ -68,7 +76,7 @@ interface CreditRequestItem {
   user: { name: string; email: string; imageUrl: string };
 }
 
-type Tab = "overview" | "users" | "submissions" | "credits" | "requests";
+type Tab = "overview" | "users" | "submissions" | "credits" | "requests" | "onehealth";
 
 export default function AdminPage() {
   const { user, isLoaded } = useUser();
@@ -175,6 +183,7 @@ export default function AdminPage() {
     { key: "submissions", label: "All Plans", icon: <FileText size={15} /> },
     { key: "credits", label: "Credits", icon: <Coins size={15} /> },
     { key: "requests", label: "Requests", icon: <Inbox size={15} />, badge: pendingRequestCount },
+    { key: "onehealth", label: "One Health", icon: <ShieldAlert size={15} /> },
   ];
 
   const filteredUsers = userSearch
@@ -511,6 +520,9 @@ export default function AdminPage() {
           }}
         />
       )}
+
+      {/* ── One Health tab ──────────────────────────────────────────────────── */}
+      {tab === "onehealth" && <OneHealthPanel />}
     </AppShell>
   );
 }
@@ -1133,6 +1145,350 @@ function AdminCreditsPanel() {
         )}
       </div>
 
+    </div>
+  );
+}
+
+// ── One Health Panel ──────────────────────────────────────────────────────────
+
+interface OneHealthSummary {
+  openAlerts: number;
+  zoonoticOpenAlerts: number;
+  severityCounts: Record<string, number>;
+  totalRecordsSynced: number;
+  sync: {
+    status: "ok" | "error" | "not_configured";
+    lastSyncedAt: string | null;
+    lastRunAt: string | null;
+    lastRunError: string | null;
+    recordsFetchedLastRun: number;
+    alertsCreatedLastRun: number;
+  };
+}
+
+interface OneHealthAlert {
+  _id: string;
+  type: "zoonotic_watchlist" | "mortality_spike" | "symptom_cluster";
+  disease?: string;
+  zoonotic: boolean;
+  severity: "low" | "medium" | "high" | "critical";
+  title: string;
+  description: string;
+  farmIds: string[];
+  species: string[];
+  district?: string;
+  status: "open" | "reviewed" | "dismissed";
+  detectedAt: string;
+}
+
+interface OneHealthRecordRow {
+  _id: string;
+  species: string;
+  farmName?: string;
+  farmId?: string;
+  eventType: string;
+  diagnosis?: string;
+  symptoms: string[];
+  recordedAt: string;
+}
+
+const OH_SEVERITY_STYLE: Record<OneHealthAlert["severity"], { badge: "rose" | "amber" | "blue" | "gray"; dot: string }> = {
+  critical: { badge: "rose", dot: "bg-rose-500" },
+  high: { badge: "amber", dot: "bg-amber-500" },
+  medium: { badge: "blue", dot: "bg-blue-500" },
+  low: { badge: "gray", dot: "bg-gray-400" },
+};
+
+const OH_TYPE_LABEL: Record<OneHealthAlert["type"], string> = {
+  zoonotic_watchlist: "Watchlist disease",
+  mortality_spike: "Mortality spike",
+  symptom_cluster: "Outbreak cluster",
+};
+
+function ohFmtDate(iso: string | null | undefined) {
+  if (!iso) return "Never";
+  return new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+}
+
+function OneHealthPanel() {
+  const [summary, setSummary] = useState<OneHealthSummary | null>(null);
+  const [alerts, setAlerts] = useState<OneHealthAlert[]>([]);
+  const [total, setTotal] = useState(0);
+  const [page, setPage] = useState(1);
+  const [statusFilter, setStatusFilter] = useState<"open" | "reviewed" | "dismissed" | "all">("open");
+  const [severityFilter, setSeverityFilter] = useState<"all" | OneHealthAlert["severity"]>("all");
+  const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const [records, setRecords] = useState<OneHealthRecordRow[]>([]);
+  const [loadingRecords, setLoadingRecords] = useState(false);
+  const [updating, setUpdating] = useState<string | null>(null);
+
+  const loadSummary = useCallback(async () => {
+    try {
+      const { data } = await axios.get<OneHealthSummary>("/api/onehealth/summary");
+      setSummary(data);
+    } catch {
+      /* handled by empty state */
+    }
+  }, []);
+
+  const loadAlerts = useCallback(async (p = 1, status = statusFilter, severity = severityFilter) => {
+    setLoading(true);
+    try {
+      const params = new URLSearchParams({ page: String(p), status, severity });
+      const { data } = await axios.get(`/api/onehealth/alerts?${params}`);
+      setAlerts(data.alerts);
+      setTotal(data.total);
+      setPage(p);
+    } finally {
+      setLoading(false);
+    }
+  }, [statusFilter, severityFilter]);
+
+  useEffect(() => {
+    const t = setTimeout(() => {
+      loadSummary();
+      loadAlerts(1, statusFilter, severityFilter);
+    }, 0);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statusFilter, severityFilter]);
+
+  const handleSync = async () => {
+    setSyncing(true);
+    try {
+      await axios.post("/api/onehealth/sync");
+      await loadSummary();
+      await loadAlerts(page, statusFilter, severityFilter);
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  const toggleExpand = async (alert: OneHealthAlert) => {
+    if (expanded === alert._id) {
+      setExpanded(null);
+      return;
+    }
+    setExpanded(alert._id);
+    setLoadingRecords(true);
+    try {
+      const { data } = await axios.get(`/api/onehealth/alerts/${alert._id}`);
+      setRecords(data.records);
+    } finally {
+      setLoadingRecords(false);
+    }
+  };
+
+  const updateStatus = async (id: string, status: OneHealthAlert["status"]) => {
+    setUpdating(id);
+    try {
+      await axios.patch(`/api/onehealth/alerts/${id}`, { status });
+      setAlerts((prev) => prev.map((a) => (a._id === id ? { ...a, status } : a)));
+      loadSummary();
+    } finally {
+      setUpdating(null);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        <p className="text-sm text-gray-500">
+          Disease risk signals synced automatically from LivestockPro every few minutes.
+        </p>
+        <button
+          onClick={handleSync}
+          disabled={syncing}
+          className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
+        >
+          {syncing ? <Loader2 size={15} className="animate-spin" /> : <RefreshCw size={15} />}
+          Sync now
+        </button>
+      </div>
+
+      {summary?.sync.status === "not_configured" && (
+        <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800">
+          <Settings size={16} className="flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold">LivestockPro connection not configured yet</p>
+            <p className="mt-0.5">
+              Set <code className="font-mono">LIVESTOCK_API_URL</code> and <code className="font-mono">LIVESTOCK_API_KEY</code> once
+              LivestockPro exposes the records feed — this dashboard will start syncing automatically.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {summary?.sync.status === "error" && (
+        <div className="flex items-start gap-3 bg-rose-50 border border-rose-200 rounded-xl px-4 py-3 text-sm text-rose-800">
+          <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
+          <div>
+            <p className="font-semibold">Last sync failed</p>
+            <p className="mt-0.5">{summary.sync.lastRunError ?? "Unknown error"}</p>
+          </div>
+        </div>
+      )}
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <StatsCard label="Open alerts" value={summary?.openAlerts ?? "—"} icon={<ShieldAlert size={18} />} accent="rose" />
+        <StatsCard label="Zoonotic risk (open)" value={summary?.zoonoticOpenAlerts ?? "—"} icon={<Skull size={18} />} accent="amber" />
+        <StatsCard label="Records synced" value={summary?.totalRecordsSynced ?? "—"} icon={<Database size={18} />} accent="blue" />
+        <StatsCard
+          label="Last sync"
+          value={summary ? ohFmtDate(summary.sync.lastSyncedAt) : "—"}
+          sub={summary?.sync.status === "ok" ? "Healthy" : summary?.sync.status}
+          icon={<RefreshCw size={18} />}
+          accent="green"
+        />
+      </div>
+
+      {/* Filters */}
+      <div className="flex items-center gap-2 flex-wrap">
+        {(["open", "reviewed", "dismissed", "all"] as const).map((s) => (
+          <button
+            key={s}
+            onClick={() => setStatusFilter(s)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
+              statusFilter === s ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            {s}
+          </button>
+        ))}
+        <span className="w-px h-5 bg-gray-200 mx-1" />
+        {(["all", "critical", "high", "medium", "low"] as const).map((s) => (
+          <button
+            key={s}
+            onClick={() => setSeverityFilter(s)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
+              severityFilter === s ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+            }`}
+          >
+            {s}
+          </button>
+        ))}
+      </div>
+
+      {/* Alert list */}
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        {loading ? (
+          <div className="flex items-center justify-center py-16 text-gray-400">
+            <Loader2 size={20} className="animate-spin" />
+          </div>
+        ) : alerts.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-16 text-center px-4">
+            <ShieldAlert size={28} className="text-gray-300 mb-3" />
+            <p className="text-sm font-medium text-gray-600">No {statusFilter !== "all" ? statusFilter : ""} alerts</p>
+            <p className="text-xs text-gray-400 mt-1">Risk signals detected from LivestockPro data will appear here.</p>
+          </div>
+        ) : (
+          <div className="divide-y divide-gray-100">
+            {alerts.map((a) => {
+              const style = OH_SEVERITY_STYLE[a.severity];
+              const isOpen = expanded === a._id;
+              return (
+                <div key={a._id}>
+                  <button
+                    onClick={() => toggleExpand(a)}
+                    className="w-full flex items-start gap-3 px-4 py-3.5 text-left hover:bg-gray-50 transition-colors"
+                  >
+                    <span className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${style.dot}`} />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <p className="text-sm font-semibold text-gray-900">{a.title}</p>
+                        {a.zoonotic && <Badge variant="rose">Zoonotic</Badge>}
+                        <Badge variant={style.badge}>{a.severity}</Badge>
+                        <Badge variant="gray">{OH_TYPE_LABEL[a.type]}</Badge>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1 leading-relaxed">{a.description}</p>
+                      <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-400 flex-wrap">
+                        {a.district && <span className="flex items-center gap-1"><MapPin size={11} />{a.district}</span>}
+                        <span className="flex items-center gap-1"><PawPrint size={11} />{a.species.join(", ")}</span>
+                        <span>{a.farmIds.length} farm{a.farmIds.length === 1 ? "" : "s"}</span>
+                        <span>Detected {ohFmtDate(a.detectedAt)}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                      {a.status === "open" && (
+                        <>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); updateStatus(a._id, "reviewed"); }}
+                            disabled={updating === a._id}
+                            title="Mark reviewed"
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-50 transition-colors"
+                          >
+                            <CheckCircle2 size={16} />
+                          </button>
+                          <button
+                            onClick={(e) => { e.stopPropagation(); updateStatus(a._id, "dismissed"); }}
+                            disabled={updating === a._id}
+                            title="Dismiss"
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                          >
+                            <XCircle size={16} />
+                          </button>
+                        </>
+                      )}
+                      {isOpen ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
+                    </div>
+                  </button>
+
+                  {isOpen && (
+                    <div className="px-4 pb-4 pl-9">
+                      {loadingRecords ? (
+                        <div className="flex items-center gap-2 text-xs text-gray-400 py-3">
+                          <Loader2 size={13} className="animate-spin" /> Loading records…
+                        </div>
+                      ) : (
+                        <div className="border border-gray-100 rounded-lg overflow-hidden">
+                          {records.map((r) => (
+                            <div key={r._id} className="px-3 py-2 text-xs border-b last:border-b-0 border-gray-100 flex items-center justify-between gap-3 flex-wrap">
+                              <div>
+                                <span className="font-medium text-gray-700">{r.species}</span>
+                                <span className="text-gray-400"> · {r.farmName ?? r.farmId ?? "Unknown farm"}</span>
+                                {r.diagnosis && <span className="text-gray-500"> · {r.diagnosis}</span>}
+                                {r.symptoms?.length > 0 && (
+                                  <span className="text-gray-400"> · {r.symptoms.join(", ")}</span>
+                                )}
+                              </div>
+                              <span className="text-gray-400 flex-shrink-0">{ohFmtDate(r.recordedAt)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {total > 20 && (
+          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 text-xs text-gray-500">
+            <span>Page {page} of {Math.ceil(total / 20)}</span>
+            <div className="flex gap-2">
+              <button
+                disabled={page <= 1}
+                onClick={() => loadAlerts(page - 1)}
+                className="px-2.5 py-1 rounded-md border border-gray-200 disabled:opacity-40"
+              >
+                Prev
+              </button>
+              <button
+                disabled={page >= Math.ceil(total / 20)}
+                onClick={() => loadAlerts(page + 1)}
+                className="px-2.5 py-1 rounded-md border border-gray-200 disabled:opacity-40"
+              >
+                Next
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
