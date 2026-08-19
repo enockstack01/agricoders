@@ -14,6 +14,7 @@ import {
   ChevronRight,
   Layers,
   UserCircle,
+  ShieldAlert,
 } from "lucide-react";
 import NotificationBell from "@/components/ui/NotificationBell";
 import ThemeToggle from "@/components/ui/ThemeToggle";
@@ -33,6 +34,7 @@ const NAV_ITEMS: NavItem[] = [
   { label: "Dashboard",       href: "/plan/dashboard",   icon: <LayoutDashboard size={18} />, roles: ["user", "admin", "super_admin"] },
   { label: "New Plan",        href: "/plan/form",         icon: <PlusCircle size={18} />,      roles: ["user", "admin", "super_admin"] },
   { label: "Admin Panel",     href: "/plan/admin",        icon: <BarChart2 size={18} />,       roles: ["admin", "super_admin"] },
+  { label: "One Health",      href: "/plan/admin/one-health", icon: <ShieldAlert size={18} />, roles: ["admin", "super_admin"] },
   { label: "User Management", href: "/plan/super-admin",  icon: <Users size={18} />,           roles: ["super_admin"] },
   { label: "Profile",         href: "/plan/profile",      icon: <UserCircle size={18} />,      roles: ["user", "admin", "super_admin"] },
 ];

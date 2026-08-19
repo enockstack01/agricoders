@@ -14,6 +14,7 @@ const isProtectedRoute = createRouteMatcher([
   "/api/admin(.*)",
   "/api/super-admin(.*)",
   "/api/profile(.*)",
+  "/api/onehealth(.*)",
 ]);
 
 export default clerkMiddleware(async (auth, req) => {
