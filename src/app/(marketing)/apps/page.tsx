@@ -21,7 +21,7 @@ export default function SystemsPage() {
         <div className="absolute inset-0 pointer-events-none">
           <div
             className="mkt-float-slow absolute rounded-full blur-3xl"
-            style={{ top: -60, left: "50%", transform: "translateX(-50%)", width: 500, height: 260, background: "rgba(22,163,74,0.06)" }}
+            style={{ top: -60, left: "50%", transform: "translateX(-50%)", width: 500, height: 260, background: "rgba(46,125,50,0.06)" }}
           />
         </div>
         <div className="container position-relative">
@@ -29,7 +29,7 @@ export default function SystemsPage() {
             <Reveal className="col-lg-7">
               <p
                 className="text-xs font-bold uppercase tracking-widest mb-4"
-                style={{ color: "#16a34a", letterSpacing: "0.14em" }}
+                style={{ color: "#2E7D32", letterSpacing: "0.14em" }}
               >
                 Agricoders
               </p>
@@ -59,7 +59,7 @@ export default function SystemsPage() {
           <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3">
             <Link href="/" className="d-flex align-items-center gap-2 no-underline">
               <div
-                style={{ width: 28, height: 28, background: "#16a34a", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}
+                style={{ width: 28, height: 28, background: "#2E7D32", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}
               >
                 <Sprout size={13} color="white" />
               </div>

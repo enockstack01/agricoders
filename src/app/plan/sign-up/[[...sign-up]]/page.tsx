@@ -16,7 +16,7 @@ export default function SignUpPage() {
         <div className="flex items-center gap-2.5 mb-3">
           <div
             className="flex items-center justify-center rounded-xl"
-            style={{ width: 40, height: 40, background: "#16a34a" }}
+            style={{ width: 40, height: 40, background: "#2E7D32" }}
           >
             <Layers size={19} color="white" />
           </div>

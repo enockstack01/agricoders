@@ -18,12 +18,25 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+
+  /* Brand palette remapped to LivestockPro's Material Green identity */
+  --color-green-50: #e8f5e9;
+  --color-green-100: #c8e6c9;
+  --color-green-200: #a5d6a7;
+  --color-green-300: #81c784;
+  --color-green-400: #66bb6a;
+  --color-green-500: #4caf50;
+  --color-green-600: #2e7d32;
+  --color-green-700: #1b5e20;
+  --color-green-800: #164719;
+  --color-green-900: #0f3311;
+  --color-green-950: #081c09;
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
 }
 
 /* Black placeholders in light mode, muted in dark mode */
@@ -151,8 +164,8 @@ html {
 
 /* Live status pulse dot */
 @keyframes mktPulseRing {
-  0% { box-shadow: 0 0 0 0 rgba(22, 163, 74, 0.45); }
-  100% { box-shadow: 0 0 0 8px rgba(22, 163, 74, 0); }
+  0% { box-shadow: 0 0 0 0 rgba(46, 125, 50, 0.45); }
+  100% { box-shadow: 0 0 0 8px rgba(46, 125, 50, 0); }
 }
 .mkt-pulse-dot {
   animation: mktPulseRing 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
@@ -169,7 +182,7 @@ html {
   right: 14px;
   bottom: 6px;
   height: 2px;
-  background: #16a34a;
+  background: #2E7D32;
   border-radius: 2px;
   transform: scaleX(0);
   transform-origin: left;

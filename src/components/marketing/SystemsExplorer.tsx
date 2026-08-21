@@ -43,11 +43,11 @@ function SystemCard({ app, delay }: { app: AppEntry; delay: number }) {
           {app.status === "live" ? (
             <span
               className="d-inline-flex align-items-center gap-1.5"
-              style={{ fontSize: 11, fontWeight: 600, color: "#16a34a" }}
+              style={{ fontSize: 11, fontWeight: 600, color: "#2E7D32" }}
             >
               <span
                 className="mkt-pulse-dot rounded-circle"
-                style={{ width: 6, height: 6, background: "#16a34a", display: "inline-block" }}
+                style={{ width: 6, height: 6, background: "#2E7D32", display: "inline-block" }}
               />
               Live
             </span>
@@ -177,7 +177,7 @@ export default function SystemsExplorer({ apps }: { apps: AppEntry[] }) {
                   fontWeight: 600,
                   padding: "7px 16px",
                   borderRadius: 999,
-                  background: category === c ? "#16a34a" : "#f3f4f6",
+                  background: category === c ? "#2E7D32" : "#f3f4f6",
                   color: category === c ? "white" : "#4b5563",
                 }}
               >

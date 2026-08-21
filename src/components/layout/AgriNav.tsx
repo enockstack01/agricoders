@@ -48,12 +48,12 @@ export default function AgriNav() {
             <Link href="/" className="group/logo flex items-center gap-2.5 flex-shrink-0 no-underline">
               <div
                 className="relative flex items-center justify-center rounded-xl transition-transform duration-300 group-hover/logo:scale-105 group-hover/logo:-rotate-3"
-                style={{ width: 34, height: 34, background: "linear-gradient(135deg, #22c55e, #15803d)" }}
+                style={{ width: 34, height: 34, background: "linear-gradient(135deg, #4CAF50, #1B5E20)" }}
               >
                 <Sprout size={16} color="white" />
                 <span
                   className="absolute inset-0 rounded-xl opacity-0 group-hover/logo:opacity-100 transition-opacity duration-300"
-                  style={{ boxShadow: "0 0 0 4px rgba(22,163,74,0.16)" }}
+                  style={{ boxShadow: "0 0 0 4px rgba(46,125,50,0.16)" }}
                 />
               </div>
               <span className="font-bold text-gray-900 dark:text-white text-[15px] tracking-tight">Agricoders</span>
@@ -107,7 +107,7 @@ export default function AgriNav() {
                             {app.status === "live" && (
                               <span
                                 className="mkt-pulse-dot rounded-full flex-shrink-0"
-                                style={{ width: 5, height: 5, background: "#16a34a" }}
+                                style={{ width: 5, height: 5, background: "#2E7D32" }}
                               />
                             )}
                           </div>
@@ -120,7 +120,7 @@ export default function AgriNav() {
                     <Link
                       href="/apps"
                       className="flex items-center justify-between px-3 py-2.5 mt-1 text-sm font-semibold rounded-xl no-underline transition-colors"
-                      style={{ color: "#15803d" }}
+                      style={{ color: "#1B5E20" }}
                     >
                       View all systems
                       <ArrowUpRight size={14} />
@@ -142,8 +142,8 @@ export default function AgriNav() {
                 href="/plan/sign-up"
                 className="inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-bold rounded-xl transition-all no-underline hover:-translate-y-0.5 hover:shadow-lg"
                 style={{
-                  background: "linear-gradient(135deg, #22c55e, #15803d)",
-                  boxShadow: "0 4px 14px rgba(22,163,74,0.35)",
+                  background: "linear-gradient(135deg, #4CAF50, #1B5E20)",
+                  boxShadow: "0 4px 14px rgba(46,125,50,0.35)",
                 }}
               >
                 Get Started
@@ -202,7 +202,7 @@ export default function AgriNav() {
                   {app.status === "live" && (
                     <span
                       className="mkt-pulse-dot rounded-full ml-auto flex-shrink-0"
-                      style={{ width: 5, height: 5, background: "#16a34a" }}
+                      style={{ width: 5, height: 5, background: "#2E7D32" }}
                     />
                   )}
                 </Link>
@@ -221,7 +221,7 @@ export default function AgriNav() {
                 href="/plan/sign-up"
                 onClick={() => setOpen(false)}
                 className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-white text-sm font-semibold rounded-xl no-underline"
-                style={{ background: "linear-gradient(135deg, #22c55e, #15803d)" }}
+                style={{ background: "linear-gradient(135deg, #4CAF50, #1B5E20)" }}
               >
                 Get Started
                 <ArrowRight size={14} />

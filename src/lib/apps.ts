@@ -21,7 +21,7 @@ export const AGRICODERS_APPS: AppEntry[] = [
     href: "/plan",
     status: "live",
     category: "Business Planning",
-    accentColor: "#16a34a",
+    accentColor: "#2E7D32",
     features: [
       "Investor-ready Business Plan (.docx)",
       "19-sheet Excel Financial Model",

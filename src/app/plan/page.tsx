@@ -23,6 +23,7 @@ import {
   MapPin,
 } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
+import PlanIllustration from "@/components/marketing/PlanIllustration";
 
 const FEATURES = [
   {
@@ -76,7 +77,7 @@ export default function Home() {
             <div className="flex items-center gap-3 flex-shrink-0">
               <div
                 className="flex items-center justify-center rounded-xl"
-                style={{ width: 36, height: 36, background: "#16a34a" }}
+                style={{ width: 36, height: 36, background: "#2E7D32" }}
               >
                 <Layers size={17} color="white" />
               </div>
@@ -109,7 +110,7 @@ export default function Home() {
               <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
                 <button
                   className="flex items-center gap-2 px-4 py-2 text-white text-sm font-semibold rounded-xl transition-all shadow-sm border-0"
-                  style={{ background: "#16a34a" }}
+                  style={{ background: "#2E7D32" }}
                 >
                   Get Started
                   <ArrowRight size={14} />
@@ -156,7 +157,7 @@ export default function Home() {
               <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
                 <button
                   className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-white text-sm font-semibold rounded-xl border-0"
-                  style={{ background: "#16a34a" }}
+                  style={{ background: "#2E7D32" }}
                 >
                   Get Started
                   <ArrowRight size={14} />
@@ -178,16 +179,16 @@ export default function Home() {
               transform: "translateX(-50%)",
               width: 600,
               height: 300,
-              background: "rgba(22,163,74,0.10)",
+              background: "rgba(46,125,50,0.10)",
             }}
           />
         </div>
         <div className="container position-relative">
-          <div className="row justify-content-center">
-            <div className="col-lg-10 col-xl-8">
+          <div className="row align-items-center">
+            <div className="col-lg-6 text-center text-lg-start">
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
                 Investor-Ready Business Plans{" "}
-                <span style={{ color: "#4ade80" }}>in Under 15 Minutes</span>
+                <span style={{ color: "#66BB6A" }}>in Under 15 Minutes</span>
               </h1>
               <p className="text-lg sm:text-xl text-gray-400 mb-10 leading-relaxed">
                 Logistack Plan uses Artificial Intelligence to instantly produce a complete{" "}
@@ -195,13 +196,13 @@ export default function Home() {
                 <strong className="text-white">Financial Model</strong>{" "}
                 so you can focus on building your business, not writing documents.
               </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
+              <div className="flex flex-col sm:flex-row gap-3 justify-center justify-content-lg-start mb-10">
                 <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
                   <button
                     className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-white font-bold rounded-xl transition-all text-sm border-0"
                     style={{
-                      background: "#16a34a",
-                      boxShadow: "0 10px 25px rgba(22,163,74,0.35)",
+                      background: "#2E7D32",
+                      boxShadow: "0 10px 25px rgba(46,125,50,0.35)",
                     }}
                   >
                     Generate My Business Plan
@@ -221,13 +222,18 @@ export default function Home() {
                   </button>
                 </SignInButton>
               </div>
-              <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500">
+              <div className="flex flex-wrap items-center justify-center justify-content-lg-start gap-x-6 gap-y-2 text-sm text-gray-500">
                 {["Any industry", "Any country", "Any currency", "Delivered in minutes"].map((t) => (
                   <span key={t} className="flex items-center gap-1.5">
-                    <CheckCircle size={12} style={{ color: "#4ade80" }} />
+                    <CheckCircle size={12} style={{ color: "#66BB6A" }} />
                     {t}
                   </span>
                 ))}
+              </div>
+            </div>
+            <div className="col-lg-6 d-none d-lg-block">
+              <div style={{ maxWidth: 460, marginLeft: "auto" }}>
+                <PlanIllustration />
               </div>
             </div>
           </div>
@@ -235,7 +241,7 @@ export default function Home() {
       </section>
 
       {/* Stats */}
-      <section className="py-10" style={{ background: "#16a34a" }}>
+      <section className="py-10" style={{ background: "#2E7D32" }}>
         <div className="container">
           <div className="row g-4 text-center">
             {[
@@ -248,7 +254,7 @@ export default function Home() {
                 <div className="text-3xl sm:text-4xl font-black text-white mb-1">{s.value}</div>
                 <div
                   className="text-xs font-medium uppercase"
-                  style={{ color: "#bbf7d0", letterSpacing: "0.1em" }}
+                  style={{ color: "#A5D6A7", letterSpacing: "0.1em" }}
                 >
                   {s.label}
                 </div>
@@ -301,7 +307,7 @@ export default function Home() {
                     "APA-Cited Reference List",
                   ].map((item) => (
                     <li key={item} className="d-flex align-items-center gap-2 mb-3" style={{ fontSize: 15, color: "#4b5563" }}>
-                      <CheckCircle size={15} style={{ color: "#16a34a", flexShrink: 0 }} />
+                      <CheckCircle size={15} style={{ color: "#2E7D32", flexShrink: 0 }} />
                       {item}
                     </li>
                   ))}
@@ -318,7 +324,7 @@ export default function Home() {
                 <div className="d-flex align-items-center gap-3 mb-5">
                   <div
                     className="d-flex align-items-center justify-content-center flex-shrink-0"
-                    style={{ width: 64, height: 64, background: "#16a34a", borderRadius: 20 }}
+                    style={{ width: 64, height: 64, background: "#2E7D32", borderRadius: 20 }}
                   >
                     <BarChart2 size={28} color="white" />
                   </div>
@@ -338,7 +344,7 @@ export default function Home() {
                     "NPV, IRR, Payback Period & Balance Sheet",
                   ].map((item) => (
                     <li key={item} className="d-flex align-items-center gap-2 mb-3" style={{ fontSize: 15, color: "#4b5563" }}>
-                      <CheckCircle size={15} style={{ color: "#16a34a", flexShrink: 0 }} />
+                      <CheckCircle size={15} style={{ color: "#2E7D32", flexShrink: 0 }} />
                       {item}
                     </li>
                   ))}
@@ -387,8 +393,8 @@ export default function Home() {
                   style={{
                     width: 56,
                     height: 56,
-                    background: "#16a34a",
-                    boxShadow: "0 10px 30px rgba(22,163,74,0.35)",
+                    background: "#2E7D32",
+                    boxShadow: "0 10px 30px rgba(46,125,50,0.35)",
                   }}
                 >
                   <span className="text-white font-black text-lg">{step.num}</span>
@@ -396,9 +402,9 @@ export default function Home() {
                 <div
                   className="inline-flex items-center gap-1 text-xs font-semibold rounded-full px-3 py-1 mb-3"
                   style={{
-                    color: "#4ade80",
-                    background: "rgba(22,163,74,0.1)",
-                    border: "1px solid rgba(22,163,74,0.25)",
+                    color: "#66BB6A",
+                    background: "rgba(46,125,50,0.1)",
+                    border: "1px solid rgba(46,125,50,0.25)",
                   }}
                 >
                   {step.time}
@@ -413,8 +419,8 @@ export default function Home() {
               <button
                 className="inline-flex items-center gap-2 px-7 py-3.5 text-white font-bold rounded-xl transition-all text-sm border-0"
                 style={{
-                  background: "#16a34a",
-                  boxShadow: "0 10px 25px rgba(22,163,74,0.35)",
+                  background: "#2E7D32",
+                  boxShadow: "0 10px 25px rgba(46,125,50,0.35)",
                 }}
               >
                 Start now
@@ -431,7 +437,7 @@ export default function Home() {
           <div className="text-center mb-14">
             <p
               className="text-xs font-bold uppercase tracking-widest mb-3"
-              style={{ color: "#16a34a", letterSpacing: "0.12em" }}
+              style={{ color: "#2E7D32", letterSpacing: "0.12em" }}
             >
               Our Promise
             </p>
@@ -483,7 +489,7 @@ export default function Home() {
                   >
                     <div
                       className="d-flex align-items-center justify-content-center mb-4"
-                      style={{ width: 60, height: 60, background: "#16a34a", borderRadius: 20, flexShrink: 0 }}
+                      style={{ width: 60, height: 60, background: "#2E7D32", borderRadius: 20, flexShrink: 0 }}
                     >
                       <ItemIcon size={26} color="white" />
                     </div>
@@ -498,7 +504,7 @@ export default function Home() {
             <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
               <button
                 className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-bold rounded-xl transition-all border-0"
-                style={{ background: "#16a34a" }}
+                style={{ background: "#2E7D32" }}
               >
                 Generate My Business Plan
                 <ArrowRight size={14} />
@@ -531,7 +537,7 @@ export default function Home() {
                 >
                   <div
                     className="d-flex align-items-center justify-content-center mb-4"
-                    style={{ width: 60, height: 60, background: "#16a34a", borderRadius: 20, color: "white", flexShrink: 0 }}
+                    style={{ width: 60, height: 60, background: "#2E7D32", borderRadius: 20, color: "white", flexShrink: 0 }}
                   >
                     {feat.icon}
                   </div>
@@ -550,7 +556,7 @@ export default function Home() {
           <div className="text-center mb-14">
             <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
               Not a template tool.{" "}
-              <span style={{ color: "#4ade80" }}>An intelligence engine.</span>
+              <span style={{ color: "#66BB6A" }}>An intelligence engine.</span>
             </h2>
             <p className="text-gray-400 mx-auto leading-relaxed" style={{ maxWidth: 600 }}>
               Our system is built on an advanced AI model that understands your business context,
@@ -585,7 +591,7 @@ export default function Home() {
                 >
                   <div
                     className="d-flex align-items-center justify-content-center mb-4"
-                    style={{ width: 60, height: 60, background: "rgba(22,163,74,0.25)", borderRadius: 20, color: "#4ade80" }}
+                    style={{ width: 60, height: 60, background: "rgba(46,125,50,0.25)", borderRadius: 20, color: "#66BB6A" }}
                   >
                     {item.icon}
                   </div>
@@ -637,7 +643,7 @@ export default function Home() {
                     "Investor-ready in minutes",
                   ].map((f) => (
                     <li key={f} className="d-flex align-items-center gap-2 mb-2" style={{ fontSize: 14, color: "#374151" }}>
-                      <CheckCircle size={14} style={{ color: "#16a34a", flexShrink: 0 }} />
+                      <CheckCircle size={14} style={{ color: "#2E7D32", flexShrink: 0 }} />
                       {f}
                     </li>
                   ))}
@@ -656,17 +662,17 @@ export default function Home() {
             <div className="col-md-5 position-relative">
               <div
                 className="d-flex flex-column"
-                style={{ background: "white", borderRadius: 24, padding: "clamp(20px, 5vw, 32px) clamp(16px, 4vw, 28px)", boxShadow: "0 8px 40px rgba(22,163,74,0.22)", border: "2px solid #16a34a", transition: "box-shadow 0.3s, transform 0.3s" }}
-                onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 24px 70px rgba(22,163,74,0.32)"; el.style.transform = "translateY(-6px)"; }}
-                onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 8px 40px rgba(22,163,74,0.22)"; el.style.transform = "translateY(0)"; }}
+                style={{ background: "white", borderRadius: 24, padding: "clamp(20px, 5vw, 32px) clamp(16px, 4vw, 28px)", boxShadow: "0 8px 40px rgba(46,125,50,0.22)", border: "2px solid #2E7D32", transition: "box-shadow 0.3s, transform 0.3s" }}
+                onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 24px 70px rgba(46,125,50,0.32)"; el.style.transform = "translateY(-6px)"; }}
+                onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 8px 40px rgba(46,125,50,0.22)"; el.style.transform = "translateY(0)"; }}
               >
                 <span
                   className="position-absolute font-bold text-white px-3 py-1 rounded-full"
-                  style={{ top: -13, left: "50%", transform: "translateX(-50%)", background: "#16a34a", whiteSpace: "nowrap", fontSize: 11 }}
+                  style={{ top: -13, left: "50%", transform: "translateX(-50%)", background: "#2E7D32", whiteSpace: "nowrap", fontSize: 11 }}
                 >
                   Best Value
                 </span>
-                <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: "#16a34a", marginBottom: 10 }}>
+                <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: "#2E7D32", marginBottom: 10 }}>
                   Custom by Expert
                 </p>
                 <div className="d-flex align-items-baseline gap-1 mb-2">
@@ -686,7 +692,7 @@ export default function Home() {
                     "Tailored strategic recommendations",
                   ].map((f) => (
                     <li key={f} className="d-flex align-items-center gap-2 mb-2" style={{ fontSize: 14, color: "#374151" }}>
-                      <CheckCircle size={14} style={{ color: "#16a34a", flexShrink: 0 }} />
+                      <CheckCircle size={14} style={{ color: "#2E7D32", flexShrink: 0 }} />
                       {f}
                     </li>
                   ))}
@@ -694,7 +700,7 @@ export default function Home() {
                 <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
                   <button
                     className="w-full font-bold border-0 transition-all"
-                    style={{ background: "#16a34a", color: "white", borderRadius: 12, padding: "12px 0", fontSize: 14 }}
+                    style={{ background: "#2E7D32", color: "white", borderRadius: 12, padding: "12px 0", fontSize: 14 }}
                   >
                     Add Custom Sections
                   </button>
@@ -704,14 +710,14 @@ export default function Home() {
 
           </div>
           <p className="text-center text-xs text-gray-400 mt-8 d-flex align-items-center justify-content-center gap-2">
-            <LineChart size={11} style={{ color: "#16a34a" }} />
+            <LineChart size={11} style={{ color: "#2E7D32" }} />
             Contact your administrator to get credits and start generating
           </p>
         </div>
       </section>
 
       {/* Final CTA */}
-      <section className="py-24" style={{ background: "#16a34a" }}>
+      <section className="py-24" style={{ background: "#2E7D32" }}>
         <div className="container">
           <div className="row justify-content-center text-center">
             <div className="col-lg-8">
@@ -726,7 +732,7 @@ export default function Home() {
                 <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
                   <button
                     className="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-white font-bold rounded-xl hover:opacity-90 transition-all text-sm border-0"
-                    style={{ color: "#15803d" }}
+                    style={{ color: "#1B5E20" }}
                   >
                     Generate My Business Plan
                     <ArrowRight size={16} />
@@ -759,7 +765,7 @@ export default function Home() {
               <div className="d-flex align-items-center gap-2 mb-3">
                 <div
                   className="d-flex align-items-center justify-content-center rounded-2"
-                  style={{ width: 30, height: 30, background: "#16a34a" }}
+                  style={{ width: 30, height: 30, background: "#2E7D32" }}
                 >
                   <Layers size={14} color="white" />
                 </div>
@@ -770,26 +776,26 @@ export default function Home() {
               </p>
               <div className="d-flex flex-column gap-2 mb-3">
                 <div className="d-flex align-items-start gap-2">
-                  <MapPin size={13} style={{ color: "#4ade80", flexShrink: 0, marginTop: 2 }} />
+                  <MapPin size={13} style={{ color: "#66BB6A", flexShrink: 0, marginTop: 2 }} />
                   <span className="text-xs" style={{ color: "#6b7280" }}>
                     Deco Center — NYARUTARAMA, Kigali, Rwanda
                   </span>
                 </div>
                 <div className="d-flex align-items-center gap-2">
-                  <Mail size={13} style={{ color: "#4ade80", flexShrink: 0 }} />
+                  <Mail size={13} style={{ color: "#66BB6A", flexShrink: 0 }} />
                   <a href="mailto:logistackltd@gmail.com" className="text-xs no-underline" style={{ color: "#6b7280" }}>
                     logistackltd@gmail.com
                   </a>
                 </div>
                 <div className="d-flex align-items-start gap-2">
-                  <span className="text-xs" style={{ color: "#4ade80", flexShrink: 0, marginTop: 1 }}>☎</span>
+                  <span className="text-xs" style={{ color: "#66BB6A", flexShrink: 0, marginTop: 1 }}>☎</span>
                   <div className="d-flex flex-column gap-0.5">
                     <a href="tel:+250796847804" className="text-xs no-underline" style={{ color: "#6b7280" }}>+250 796 847 804</a>
                     <a href="tel:+250783826653" className="text-xs no-underline" style={{ color: "#6b7280" }}>+250 783 826 653</a>
                   </div>
                 </div>
                 <div className="d-flex align-items-center gap-2">
-                  <span className="text-xs" style={{ color: "#4ade80", flexShrink: 0 }}>WhatsApp</span>
+                  <span className="text-xs" style={{ color: "#66BB6A", flexShrink: 0 }}>WhatsApp</span>
                   <a href="https://wa.me/250796847804" target="_blank" rel="noreferrer" className="text-xs no-underline" style={{ color: "#6b7280" }}>
                     +250 796 847 804
                   </a>
@@ -800,7 +806,7 @@ export default function Home() {
                 target="_blank"
                 rel="noreferrer"
                 className="text-xs no-underline"
-                style={{ color: "#4ade80" }}
+                style={{ color: "#66BB6A" }}
               >
                 logistack.space ↗
               </a>

@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import AgriNav from "@/components/layout/AgriNav";
 import Reveal from "@/components/ui/Reveal";
+import HeroIllustration from "@/components/marketing/HeroIllustration";
 import { AGRICODERS_APPS } from "@/lib/apps";
 
 const APP_ICONS: Record<string, React.ReactNode> = {
@@ -111,7 +112,7 @@ export default function AgricodersPage() {
             style={{
               width: 700,
               height: 350,
-              background: "rgba(22,163,74,0.07)",
+              background: "rgba(46,125,50,0.07)",
             }}
           />
           <div
@@ -126,12 +127,12 @@ export default function AgricodersPage() {
           />
         </div>
         <div className="container position-relative">
-          <div className="row justify-content-center">
-            <div className="col-lg-10 col-xl-8">
+          <div className="row align-items-center">
+            <div className="col-lg-6 text-center text-lg-start">
               <Reveal>
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
                   Empowering Farmers with{" "}
-                  <span style={{ color: "#4ade80" }}>Intelligence & Technology</span>
+                  <span style={{ color: "#66BB6A" }}>Intelligence & Technology</span>
                 </h1>
               </Reveal>
               <Reveal delay={80}>
@@ -145,11 +146,11 @@ export default function AgricodersPage() {
                 </p>
               </Reveal>
               <Reveal delay={160}>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center mb-12">
+                <div className="flex flex-col sm:flex-row gap-3 justify-center justify-content-lg-start mb-12">
                   <a
                     href="#services"
                     className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-white font-bold rounded-xl transition-all text-sm no-underline hover:-translate-y-0.5 hover:shadow-lg"
-                    style={{ background: "#16a34a" }}
+                    style={{ background: "#2E7D32" }}
                   >
                     Explore Our Services
                     <ArrowRight size={16} />
@@ -168,7 +169,7 @@ export default function AgricodersPage() {
                 </div>
               </Reveal>
               <Reveal delay={240}>
-                <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500">
+                <div className="flex flex-wrap items-center justify-center justify-content-lg-start gap-x-6 gap-y-2 text-sm text-gray-500">
                   {[
                     "Geospatial Intelligence",
                     "Web & Mobile Apps",
@@ -176,10 +177,17 @@ export default function AgricodersPage() {
                     "Business Planning",
                   ].map((t) => (
                     <span key={t} className="flex items-center gap-1.5">
-                      <CheckCircle size={12} style={{ color: "#4ade80" }} />
+                      <CheckCircle size={12} style={{ color: "#66BB6A" }} />
                       {t}
                     </span>
                   ))}
+                </div>
+              </Reveal>
+            </div>
+            <div className="col-lg-6 d-none d-lg-block">
+              <Reveal delay={120}>
+                <div style={{ maxWidth: 460, marginLeft: "auto" }}>
+                  <HeroIllustration />
                 </div>
               </Reveal>
             </div>
@@ -213,7 +221,7 @@ export default function AgricodersPage() {
                   >
                     <div
                       className="d-flex align-items-center justify-content-center mb-6"
-                      style={{ width: 68, height: 68, background: "#16a34a", borderRadius: 22, flexShrink: 0 }}
+                      style={{ width: 68, height: 68, background: "#2E7D32", borderRadius: 22, flexShrink: 0 }}
                     >
                       <Icon size={30} color="white" />
                     </div>
@@ -222,7 +230,7 @@ export default function AgricodersPage() {
                     <ul className="list-unstyled mb-5">
                       {s.features.map((f) => (
                         <li key={f} className="d-flex align-items-start gap-2 mb-2.5" style={{ fontSize: 14, color: "#6b7280" }}>
-                          <CheckCircle size={14} style={{ color: "#16a34a", flexShrink: 0, marginTop: 2 }} />
+                          <CheckCircle size={14} style={{ color: "#2E7D32", flexShrink: 0, marginTop: 2 }} />
                           {f}
                         </li>
                       ))}
@@ -232,7 +240,7 @@ export default function AgricodersPage() {
                         <a
                           href={(s as typeof s & { cta: { label: string; href: string } }).cta.href}
                           className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl transition-colors no-underline"
-                          style={{ background: "#16a34a", fontSize: 14 }}
+                          style={{ background: "#2E7D32", fontSize: 14 }}
                         >
                           {(s as typeof s & { cta: { label: string; href: string } }).cta.label}
                           <ArrowRight size={14} />
@@ -255,13 +263,13 @@ export default function AgricodersPage() {
             <Reveal className="col-lg-8">
               <p
                 className="text-xs font-bold uppercase tracking-widest mb-4 text-center"
-                style={{ color: "#4ade80", letterSpacing: "0.14em" }}
+                style={{ color: "#66BB6A", letterSpacing: "0.14em" }}
               >
                 Precision Agriculture
               </p>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-5 leading-tight text-center">
                 Agriculture cannot be productive without{" "}
-                <span style={{ color: "#4ade80" }}>the right precision tools</span>
+                <span style={{ color: "#66BB6A" }}>the right precision tools</span>
               </h2>
               <p className="text-gray-400 leading-relaxed mb-6 text-center" style={{ fontSize: 16 }}>
                 The difference between a thriving farm and an underperforming one is often not effort. It is information.
@@ -284,7 +292,7 @@ export default function AgricodersPage() {
                   "Maximise revenue per hectare with spatial intelligence",
                 ].map((point) => (
                   <div key={point} className="d-flex align-items-start gap-2">
-                    <CheckCircle size={15} style={{ color: "#4ade80", flexShrink: 0, marginTop: 2 }} />
+                    <CheckCircle size={15} style={{ color: "#66BB6A", flexShrink: 0, marginTop: 2 }} />
                     <span style={{ fontSize: 14, color: "#d1d5db" }}>{point}</span>
                   </div>
                 ))}
@@ -330,9 +338,9 @@ export default function AgricodersPage() {
                   >
                     <div
                       className="d-flex align-items-center justify-content-center mb-5"
-                      style={{ width: 68, height: 68, background: "rgba(22,163,74,0.25)", borderRadius: 22, flexShrink: 0 }}
+                      style={{ width: 68, height: 68, background: "rgba(46,125,50,0.25)", borderRadius: 22, flexShrink: 0 }}
                     >
-                      <ItemIcon size={30} style={{ color: "#4ade80" }} />
+                      <ItemIcon size={30} style={{ color: "#66BB6A" }} />
                     </div>
                     <h3 className="text-white font-bold mb-3" style={{ fontSize: 19, lineHeight: 1.3 }}>{item.title}</h3>
                     <p className="leading-relaxed mb-0" style={{ fontSize: 15, color: "#9ca3af" }}>{item.desc}</p>
@@ -350,7 +358,7 @@ export default function AgricodersPage() {
           <Reveal className="text-center mb-14">
             <p
               className="text-xs font-bold uppercase tracking-widest mb-4"
-              style={{ color: "#4ade80", letterSpacing: "0.14em" }}
+              style={{ color: "#66BB6A", letterSpacing: "0.14em" }}
             >
               Agricoders
             </p>
@@ -373,7 +381,7 @@ export default function AgricodersPage() {
                   >
                     <div
                       className="position-absolute top-0 start-0 end-0"
-                      style={{ height: 3, background: `linear-gradient(90deg, ${app.accentColor}, #4ade80, ${app.accentColor})` }}
+                      style={{ height: 3, background: `linear-gradient(90deg, ${app.accentColor}, #66BB6A, ${app.accentColor})` }}
                     />
                     <div className="d-flex align-items-center gap-3 mb-4">
                       <div
@@ -387,10 +395,10 @@ export default function AgricodersPage() {
                           {app.name}
                         </p>
                         {app.status === "live" ? (
-                          <span className="d-inline-flex align-items-center gap-1.5" style={{ fontSize: 11, color: "#4ade80" }}>
+                          <span className="d-inline-flex align-items-center gap-1.5" style={{ fontSize: 11, color: "#66BB6A" }}>
                             <span
                               className="mkt-pulse-dot rounded-circle"
-                              style={{ width: 6, height: 6, background: "#4ade80", display: "inline-block" }}
+                              style={{ width: 6, height: 6, background: "#66BB6A", display: "inline-block" }}
                             />
                             Live
                           </span>
@@ -436,7 +444,7 @@ export default function AgricodersPage() {
       </section>
 
       {/* CTA */}
-      <section className="py-24" style={{ background: "#16a34a" }}>
+      <section className="py-24" style={{ background: "#2E7D32" }}>
         <div className="container">
           <div className="row justify-content-center text-center">
             <Reveal className="col-lg-7">
@@ -451,7 +459,7 @@ export default function AgricodersPage() {
                 <Link
                   href="/apps"
                   className="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-white font-bold rounded-xl hover:opacity-90 transition-all text-sm no-underline hover:-translate-y-0.5 hover:shadow-lg"
-                  style={{ color: "#15803d" }}
+                  style={{ color: "#1B5E20" }}
                 >
                   <Layers size={16} />
                   Our Systems
@@ -482,7 +490,7 @@ export default function AgricodersPage() {
               <Link href="/" className="d-inline-flex align-items-center gap-2 mb-3 no-underline">
                 <div
                   className="d-flex align-items-center justify-content-center rounded-2"
-                  style={{ width: 30, height: 30, background: "#16a34a" }}
+                  style={{ width: 30, height: 30, background: "#2E7D32" }}
                 >
                   <Sprout size={14} color="white" />
                 </div>
@@ -493,7 +501,7 @@ export default function AgricodersPage() {
                 applications, and professional planning.
               </p>
               <div className="d-flex align-items-center gap-1 mb-3">
-                <MapPin size={13} style={{ color: "#4ade80", flexShrink: 0 }} />
+                <MapPin size={13} style={{ color: "#66BB6A", flexShrink: 0 }} />
                 <span className="text-xs" style={{ color: "#6b7280" }}>
                   Kigali, KG 9 Ave, Deco Center, Kigali, Rwanda
                 </span>
