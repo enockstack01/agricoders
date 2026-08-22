@@ -1,6 +1,6 @@
 "use client";
 import { FormSubmission, CapexItem } from "@/types";
-import { SectionTitle, AddButton, RemoveButton } from "./FormField";
+import { AddButton, RemoveButton, DataTable, DataTableColumn } from "./FormField";
 
 interface Props {
   formData: Omit<FormSubmission, "userId">;
@@ -8,6 +8,9 @@ interface Props {
 }
 
 const fmt = (n: number) => n.toLocaleString("en-US");
+
+const cellInput =
+  "w-full border border-gray-200 dark:border-gray-700 rounded-lg px-2.5 py-2 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors";
 
 export default function StepCapex({ formData, update }: Props) {
   const capex = formData.financial.capex;
@@ -28,6 +31,65 @@ export default function StepCapex({ formData, update }: Props) {
 
   const total = capex.reduce((s, c) => s + c.quantity * c.costPerUnit, 0);
 
+  const columns: DataTableColumn<CapexItem>[] = [
+    {
+      key: "item",
+      header: "Item",
+      render: (c, i) => (
+        <input
+          value={c.item}
+          onChange={(e) => updateItem(i, "item", e.target.value)}
+          className={cellInput}
+          placeholder="Item name"
+        />
+      ),
+    },
+    {
+      key: "quantity",
+      header: "Qty",
+      headClassName: "text-right",
+      cellClassName: "text-right",
+      render: (c, i) => (
+        <input
+          type="number"
+          min={0}
+          value={c.quantity}
+          onChange={(e) => updateItem(i, "quantity", parseInt(e.target.value) || 0)}
+          className={`${cellInput} text-right`}
+        />
+      ),
+    },
+    {
+      key: "costPerUnit",
+      header: "Cost/Unit (RWF)",
+      headClassName: "text-right",
+      cellClassName: "text-right",
+      render: (c, i) => (
+        <input
+          type="number"
+          min={0}
+          value={c.costPerUnit}
+          onChange={(e) => updateItem(i, "costPerUnit", parseInt(e.target.value) || 0)}
+          className={`${cellInput} text-right`}
+        />
+      ),
+    },
+    {
+      key: "total",
+      header: "Total (RWF)",
+      headClassName: "text-right",
+      cellClassName: "text-right font-medium text-gray-700 dark:text-gray-300",
+      render: (c) => fmt(c.quantity * c.costPerUnit),
+    },
+    {
+      key: "remove",
+      header: "",
+      cellClassName: "text-center",
+      hideOnMobile: true,
+      render: (_, i) => <RemoveButton onClick={() => removeItem(i)} />,
+    },
+  ];
+
   return (
     <div className="space-y-4">
       <p className="text-sm text-gray-500">Capital expenses are one-time investments in equipment and infrastructure. Also used as the initial investment for financial calculations.</p>
@@ -36,60 +98,13 @@ export default function StepCapex({ formData, update }: Props) {
         <strong>Total CAPEX (Initial Investment):</strong> {fmt(total)} RWF
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-green-600 text-white">
-              <th className="px-3 py-2 text-left font-semibold">Item</th>
-              <th className="px-3 py-2 text-right font-semibold w-24">Qty</th>
-              <th className="px-3 py-2 text-right font-semibold w-36">Cost/Unit (RWF)</th>
-              <th className="px-3 py-2 text-right font-semibold w-36">Total (RWF)</th>
-              <th className="px-3 py-2 w-16"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {capex.map((c, i) => (
-              <tr key={i} className={i % 2 === 0 ? "bg-white dark:bg-gray-800" : "bg-gray-50 dark:bg-gray-700"}>
-                <td className="px-2 py-1.5">
-                  <input
-                    value={c.item}
-                    onChange={(e) => updateItem(i, "item", e.target.value)}
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm"
-                    placeholder="Item name"
-                  />
-                </td>
-                <td className="px-2 py-1.5">
-                  <input
-                    type="number"
-                    min={0}
-                    value={c.quantity}
-                    onChange={(e) => updateItem(i, "quantity", parseInt(e.target.value) || 0)}
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm text-right"
-                  />
-                </td>
-                <td className="px-2 py-1.5">
-                  <input
-                    type="number"
-                    min={0}
-                    value={c.costPerUnit}
-                    onChange={(e) => updateItem(i, "costPerUnit", parseInt(e.target.value) || 0)}
-                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm text-right"
-                  />
-                </td>
-                <td className="px-3 py-1.5 text-right font-medium text-gray-700">{fmt(c.quantity * c.costPerUnit)}</td>
-                <td className="px-2 py-1.5 text-center">
-                  <RemoveButton onClick={() => removeItem(i)} />
-                </td>
-              </tr>
-            ))}
-            <tr className="bg-green-50 dark:bg-green-900/10 font-semibold">
-              <td colSpan={3} className="px-3 py-2 text-right">Total</td>
-              <td className="px-3 py-2 text-right text-green-700 dark:text-green-400">{fmt(total)}</td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+      <DataTable
+        columns={columns}
+        rows={capex}
+        rowKey={(_, i) => i}
+        emptyMessage="No CAPEX items yet."
+        mobileActions={(_, i) => <RemoveButton onClick={() => removeItem(i)} />}
+      />
 
       <AddButton onClick={addItem} label="Add CAPEX item" />
     </div>

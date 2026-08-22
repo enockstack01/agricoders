@@ -1,7 +1,7 @@
 "use client";
 import { FormSubmission, RevenuePackage } from "@/types";
-import { AddButton, RemoveButton } from "./FormField";
-import { Package, Briefcase, ChevronDown } from "lucide-react";
+import { AddButton, RemoveButton, FormInput, FormSelect, FormCheckbox, GridRow } from "./FormField";
+import { Package, Briefcase } from "lucide-react";
 
 interface Props {
   formData: Omit<FormSubmission, "userId">;
@@ -30,6 +30,13 @@ export default function StepRevenue({ formData, update }: Props) {
     .map((s) => ({ name: s.name, type: "service" as const }))
     .filter((s) => s.name);
   const allOfferings = [...productNames, ...serviceNames];
+
+  const offeringOptions = [
+    { value: "", label: "— select offering —" },
+    ...productNames.map((p) => ({ value: p.name, label: `${p.name} (Product)` })),
+    ...serviceNames.map((s) => ({ value: s.name, label: `${s.name} (Service)` })),
+    { value: "__other__", label: "Other (type below)" },
+  ];
 
   const updatePkg = (i: number, key: keyof RevenuePackage, val: string | number | boolean) => {
     const arr = [...packages];
@@ -81,14 +88,14 @@ export default function StepRevenue({ formData, update }: Props) {
 
       {allOfferings.length > 0 && (
         <div className="bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-3 flex flex-wrap gap-2 items-center">
-          <span className="text-xs text-gray-500 font-medium">Defined offerings:</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400 font-medium">Defined offerings:</span>
           {productNames.map((p) => (
-            <span key={p.name} className="inline-flex items-center gap-1 text-xs bg-green-100 text-green-700 rounded-full px-2.5 py-0.5 border border-green-200">
+            <span key={p.name} className="inline-flex items-center gap-1 text-xs bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full px-2.5 py-0.5 border border-green-200 dark:border-green-800">
               <Package size={10} />{p.name}
             </span>
           ))}
           {serviceNames.map((s) => (
-            <span key={s.name} className="inline-flex items-center gap-1 text-xs bg-blue-100 text-blue-700 rounded-full px-2.5 py-0.5 border border-blue-200">
+            <span key={s.name} className="inline-flex items-center gap-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full px-2.5 py-0.5 border border-blue-200 dark:border-blue-800">
               <Briefcase size={10} />{s.name}
             </span>
           ))}
@@ -105,9 +112,9 @@ export default function StepRevenue({ formData, update }: Props) {
           <div key={i} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800">
             <div className="flex justify-between items-start mb-4">
               <div>
-                <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Revenue Stream #{i + 1}</span>
+                <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Revenue Stream #{i + 1}</span>
                 {linkedIsService && (
-                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-blue-100 text-blue-700 rounded-full px-2 py-0.5">
+                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full px-2 py-0.5">
                     <Briefcase size={10} />Service
                   </span>
                 )}
@@ -115,58 +122,40 @@ export default function StepRevenue({ formData, update }: Props) {
               <div className="flex items-center gap-3">
                 {/* Only show "Product Sale" toggle for manufactured products (not services) */}
                 {!linkedIsService && (
-                  <label className="flex items-center gap-1.5 text-xs text-gray-600 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      checked={isProductSale(p)}
-                      onChange={(e) => updatePkg(i, "isProductSale", e.target.checked)}
-                      className="accent-green-600"
-                    />
-                    Product Sale (one-time)
-                  </label>
+                  <FormCheckbox
+                    label="Product Sale (one-time)"
+                    checked={isProductSale(p)}
+                    onChange={(v) => updatePkg(i, "isProductSale", v)}
+                  />
                 )}
                 <RemoveButton onClick={() => removePkg(i)} />
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <GridRow cols={2}>
               {/* Product/Service selector */}
               <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Product / Service</label>
                 {allOfferings.length > 0 ? (
-                  <div className="relative">
-                    <select
-                      value={p.product}
-                      onChange={(e) => {
-                        updatePkg(i, "product", e.target.value);
-                        // Auto-disable "Product Sale" if selecting a service
-                        if (isServiceOffering(e.target.value)) {
-                          updatePkg(i, "isProductSale", false);
-                        }
-                      }}
-                      className="appearance-none w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer pr-8"
-                    >
-                      <option value="">— select offering —</option>
-                      {productNames.length > 0 && (
-                        <optgroup label="Products">
-                          {productNames.map((pn) => <option key={pn.name} value={pn.name}>{pn.name}</option>)}
-                        </optgroup>
-                      )}
-                      {serviceNames.length > 0 && (
-                        <optgroup label="Services">
-                          {serviceNames.map((sn) => <option key={sn.name} value={sn.name}>{sn.name}</option>)}
-                        </optgroup>
-                      )}
-                      <option value="__other__">Other (type below)</option>
-                    </select>
-                    <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                  </div>
-                ) : null}
+                  <FormSelect
+                    label="Product / Service"
+                    value={p.product}
+                    onChange={(v) => {
+                      updatePkg(i, "product", v);
+                      // Auto-disable "Product Sale" if selecting a service
+                      if (isServiceOffering(v)) {
+                        updatePkg(i, "isProductSale", false);
+                      }
+                    }}
+                    options={offeringOptions}
+                  />
+                ) : (
+                  <label className="block text-xs font-medium text-gray-600 dark:text-gray-400 mb-1">Product / Service</label>
+                )}
                 {(p.product === "__other__" || allOfferings.length === 0) && (
                   <input
                     value={p.product === "__other__" ? "" : p.product}
                     onChange={(e) => updatePkg(i, "product", e.target.value)}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 mt-1"
+                    className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors mt-1"
                     placeholder="e.g. SaaS Platform, Consulting Retainer"
                     autoFocus
                   />
@@ -174,62 +163,54 @@ export default function StepRevenue({ formData, update }: Props) {
               </div>
 
               {/* Package/Tier name */}
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Package / Tier Name</label>
-                <input
-                  value={p.packageName}
-                  onChange={(e) => updatePkg(i, "packageName", e.target.value)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="e.g. Starter, Professional, Enterprise"
-                />
-              </div>
+              <FormInput
+                label="Package / Tier Name"
+                value={p.packageName}
+                onChange={(v) => updatePkg(i, "packageName", v)}
+                placeholder="e.g. Starter, Professional, Enterprise"
+              />
 
               {/* Price field — changes based on sale type */}
               {isProductSale(p) && !linkedIsService ? (
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Selling Price Per Unit ({cur})</label>
-                  <input type="number" min={0} value={getSellingPrice(p)}
-                    onChange={(e) => updatePkg(i, "productSellingPrice", parseFloat(e.target.value) || 0)}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
-                </div>
+                <FormInput
+                  label={`Selling Price Per Unit (${cur})`}
+                  type="number"
+                  value={getSellingPrice(p)}
+                  onChange={(v) => updatePkg(i, "productSellingPrice", parseFloat(v) || 0)}
+                />
               ) : (
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">
-                    {linkedIsService ? "Price Per Unit Per Month / Per Period" : "Price Per Unit Per Month"} ({cur})
-                  </label>
-                  <input type="number" min={0} value={p.pricePerUnitPerMonth}
-                    onChange={(e) => updatePkg(i, "pricePerUnitPerMonth", parseFloat(e.target.value) || 0)}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
-                </div>
+                <FormInput
+                  label={`${linkedIsService ? "Price Per Unit Per Month / Per Period" : "Price Per Unit Per Month"} (${cur})`}
+                  type="number"
+                  value={p.pricePerUnitPerMonth}
+                  onChange={(v) => updatePkg(i, "pricePerUnitPerMonth", parseFloat(v) || 0)}
+                />
               )}
 
               {/* Volume */}
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">
-                  {isProductSale(p) ? "Units Sold (Year 1)" : "Customers / Clients (Year 1)"}
-                </label>
-                <input type="number" min={0} value={p.annualCustomers}
-                  onChange={(e) => updatePkg(i, "annualCustomers", parseInt(e.target.value) || 0)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
-              </div>
+              <FormInput
+                label={isProductSale(p) ? "Units Sold (Year 1)" : "Customers / Clients (Year 1)"}
+                type="number"
+                value={p.annualCustomers}
+                onChange={(v) => updatePkg(i, "annualCustomers", parseInt(v) || 0)}
+              />
 
               {/* Growth */}
-              <div>
-                <label className="block text-xs font-medium text-gray-600 mb-1">Annual Growth Rate (%)</label>
-                <input type="number" min={0} max={200} step={1}
-                  value={Math.round(p.growthRate * 100)}
-                  onChange={(e) => updatePkg(i, "growthRate", (parseInt(e.target.value) || 0) / 100)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                  placeholder="10" />
-              </div>
+              <FormInput
+                label="Annual Growth Rate (%)"
+                type="number"
+                value={Math.round(p.growthRate * 100)}
+                onChange={(v) => updatePkg(i, "growthRate", (parseInt(v) || 0) / 100)}
+                placeholder="10"
+              />
 
               {/* Y1 preview */}
               <div className="flex items-center">
-                <p className="text-xs font-semibold text-green-700">
+                <p className="text-xs font-semibold text-green-700 dark:text-green-400">
                   Y1 Revenue: {fmt(calcY1(p))} {cur}
                 </p>
               </div>
-            </div>
+            </GridRow>
           </div>
         );
       })}

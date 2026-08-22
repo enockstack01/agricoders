@@ -1,6 +1,7 @@
 "use client";
 import { FormSubmission } from "@/types";
 import { computeFinancials } from "@/lib/calculations";
+import { DataTable, DataTableColumn } from "./FormField";
 
 interface Props {
   formData: Omit<FormSubmission, "userId">;
@@ -18,6 +19,38 @@ export default function StepReview({ formData, onSubmit, submitting }: Props) {
 
   const hasProducts = results.productResults.length > 0;
   const lastIdx = results.totalRevenue.length - 1;
+
+  // Year-by-year projection: metrics-as-rows, years-as-columns is naturally a
+  // matrix rather than a simple row list. We treat each metric as a DataTable
+  // "row" and each year as a column — this keeps the primitive's mobile
+  // stacked-card fallback meaningful (metric name + a value per year, listed
+  // vertically) instead of forcing a horizontally-scrolling wall of numbers.
+  type ProjectionRow = { label: string; data: number[] };
+  const projectionRows: ProjectionRow[] = [
+    { label: "Total Revenue", data: results.totalRevenue },
+    { label: "Total OPEX", data: results.totalOpex },
+    { label: "Net Income (After Tax)", data: results.incomeStatement.netIncomeAfterTax },
+    { label: "Cash Balance", data: results.cashFlow.endingBalance },
+  ];
+  const projectionColumns: DataTableColumn<ProjectionRow>[] = [
+    {
+      key: "metric",
+      header: "Metric",
+      cellClassName: "font-medium text-gray-700 dark:text-gray-300",
+      render: (row) => row.label,
+    },
+    ...Array.from({ length: n }, (_, i): DataTableColumn<ProjectionRow> => ({
+      key: `year-${i}`,
+      header: `Year ${i + 1}`,
+      headClassName: "text-right",
+      cellClassName: "text-right",
+      render: (row) => (
+        <span className={(row.data[i] ?? 0) < 0 ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-gray-100"}>
+          {fmt(row.data[i] ?? 0)}
+        </span>
+      ),
+    })),
+  ];
 
   const summaryItems = [
     { label: "Company", value: ci.companyName || "—" },
@@ -66,35 +99,11 @@ export default function StepReview({ formData, onSubmit, submitting }: Props) {
 
       <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
         <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-3 text-sm">{n}-Year Revenue &amp; Income Projection ({cur})</h3>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="bg-gray-100 dark:bg-gray-700">
-                <th className="px-3 py-2 text-left font-semibold text-gray-700 dark:text-gray-200">Metric</th>
-                {Array.from({ length: n }, (_, i) => (
-                  <th key={i} className="px-3 py-2 text-right font-semibold text-gray-700 dark:text-gray-200">Year {i + 1}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {[
-                { label: "Total Revenue", data: results.totalRevenue },
-                { label: "Total OPEX", data: results.totalOpex },
-                { label: "Net Income (After Tax)", data: results.incomeStatement.netIncomeAfterTax },
-                { label: "Cash Balance", data: results.cashFlow.endingBalance },
-              ].map((row) => (
-                <tr key={row.label} className="border-t border-gray-100 dark:border-gray-700">
-                  <td className="px-3 py-2 font-medium text-gray-700 dark:text-gray-300">{row.label}</td>
-                  {Array.from({ length: n }, (_, i) => (
-                    <td key={i} className={`px-3 py-2 text-right text-sm ${(row.data[i] ?? 0) < 0 ? "text-red-600 dark:text-red-400" : "text-gray-900 dark:text-gray-100"}`}>
-                      {fmt(row.data[i] ?? 0)}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <DataTable
+          columns={projectionColumns}
+          rows={projectionRows}
+          rowKey={(row) => row.label}
+        />
       </div>
 
       <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 rounded-lg p-4 text-sm text-amber-700 dark:text-amber-300">

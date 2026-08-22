@@ -1,6 +1,6 @@
 "use client";
 import { FormSubmission, StaffMember } from "@/types";
-import { SectionTitle, AddButton, RemoveButton } from "./FormField";
+import { SectionTitle, AddButton, RemoveButton, FormInput, FormTextArea, GridRow } from "./FormField";
 
 interface Props {
   formData: Omit<FormSubmission, "userId">;
@@ -34,58 +34,46 @@ export default function StepTeam({ formData, update }: Props) {
 
       <div className="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800 rounded-lg px-4 py-3 text-sm dark:text-green-300">
         <strong>Total Annual Payroll:</strong> {fmt(totalAnnualSalary)} RWF
-        <span className="text-gray-500 ml-2">({staff.reduce((s, m) => s + m.count, 0)} staff members)</span>
+        <span className="text-gray-500 dark:text-gray-400 ml-2">({staff.reduce((s, m) => s + m.count, 0)} staff members)</span>
       </div>
 
       {staff.map((m, i) => (
         <div key={i} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800">
           <div className="flex justify-between items-start mb-3">
-            <span className="text-xs font-semibold text-gray-500 uppercase tracking-wide">Staff #{i + 1}</span>
+            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Staff #{i + 1}</span>
             <RemoveButton onClick={() => removeMember(i)} />
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+          <GridRow cols={2}>
+            <FormInput
+              label="Role / Title"
+              value={m.role}
+              onChange={(v) => updateMember(i, "role", v)}
+              placeholder="e.g. Chief Executive Officer (CEO)"
+            />
+            <FormInput
+              label="Number of Employees"
+              type="number"
+              value={m.count}
+              onChange={(v) => updateMember(i, "count", parseInt(v) || 1)}
+            />
             <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Role / Title</label>
-              <input
-                value={m.role}
-                onChange={(e) => updateMember(i, "role", e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="e.g. Chief Executive Officer (CEO)"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Number of Employees</label>
-              <input
+              <FormInput
+                label="Monthly Salary Per Employee (RWF)"
                 type="number"
-                min={1}
-                value={m.count}
-                onChange={(e) => updateMember(i, "count", parseInt(e.target.value) || 1)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Monthly Salary Per Employee (RWF)</label>
-              <input
-                type="number"
-                min={0}
                 value={m.salaryPerEmployee}
-                onChange={(e) => updateMember(i, "salaryPerEmployee", parseInt(e.target.value) || 0)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                onChange={(v) => updateMember(i, "salaryPerEmployee", parseInt(v) || 0)}
                 placeholder="2200000"
               />
-              <p className="text-xs text-gray-400 mt-1">Annual: {fmt(m.salaryPerEmployee * m.count * 12)} RWF</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Annual: {fmt(m.salaryPerEmployee * m.count * 12)} RWF</p>
             </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">Responsibilities</label>
-              <textarea
-                value={m.responsibilities}
-                onChange={(e) => updateMember(i, "responsibilities", e.target.value)}
-                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 resize-none"
-                rows={2}
-                placeholder="Key responsibilities..."
-              />
-            </div>
-          </div>
+            <FormTextArea
+              label="Responsibilities"
+              value={m.responsibilities}
+              onChange={(v) => updateMember(i, "responsibilities", v)}
+              rows={2}
+              placeholder="Key responsibilities..."
+            />
+          </GridRow>
         </div>
       ))}
 

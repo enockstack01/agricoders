@@ -171,6 +171,59 @@ html {
   animation: mktPulseRing 1.8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
+/* ── Shared elevation scale ────────────────────────────────────────────────
+   Codifies the soft-shadow style used across the marketing site so app
+   cards can opt into the same depth language instead of repeating inline
+   box-shadow styles.                                                       */
+.shadow-soft {
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.07);
+}
+.dark .shadow-soft {
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.28);
+}
+.shadow-soft-lg {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.14);
+}
+.dark .shadow-soft-lg {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+.hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-lift:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.14);
+}
+.dark .hover-lift:hover {
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hover-lift {
+    transition: box-shadow 0.25s ease;
+  }
+  .hover-lift:hover {
+    transform: none;
+  }
+}
+
+/* Dark-surface variant: lift + lighten instead of lift + shadow (used on cards that already
+   sit on a dark section background, where a stronger shadow wouldn't read). */
+.hover-lift-dark {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hover-lift-dark:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.12);
+}
+@media (prefers-reduced-motion: reduce) {
+  .hover-lift-dark {
+    transition: background-color 0.25s ease;
+  }
+  .hover-lift-dark:hover {
+    transform: none;
+  }
+}
+
 /* Nav underline hover effect */
 .mkt-nav-link {
   position: relative;

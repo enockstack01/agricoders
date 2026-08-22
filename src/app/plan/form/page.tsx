@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import axios from "axios";
 import { defaultFormData, buildDefaultFormData } from "@/lib/defaults";
@@ -27,11 +27,13 @@ import {
   ClipboardCheck,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Layers,
   Loader2,
   Coins,
   Send,
   CheckCircle2,
+  Check,
 } from "lucide-react";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 
@@ -51,6 +53,39 @@ const STEPS = [
 ];
 
 const CREDITS_PER_DOC = 5;
+
+// Shared sticky top bar used by both the wizard shell and the credit gate screen,
+// so the header markup lives in exactly one place.
+function WizardTopBar({
+  onBack,
+  backLabel = "Dashboard",
+  children,
+  right,
+}: {
+  onBack: () => void;
+  backLabel?: string;
+  children?: React.ReactNode;
+  right?: React.ReactNode;
+}) {
+  return (
+    <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 sm:px-6 h-14 flex items-center justify-between sticky top-0 z-20">
+      <div className="flex items-center gap-3 min-w-0">
+        <button
+          onClick={onBack}
+          className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white text-sm transition-colors flex-shrink-0"
+        >
+          <ChevronLeft size={16} />
+          <span className="hidden sm:inline">{backLabel}</span>
+        </button>
+        {children}
+      </div>
+      <div className="flex items-center gap-2 flex-shrink-0">
+        {right}
+        <ThemeToggle compact />
+      </div>
+    </header>
+  );
+}
 
 function CreditGate({ credits, required, onBack }: { credits: number; required: number; onBack: () => void }) {
   const [bpCount, setBpCount] = useState(1);
@@ -83,16 +118,7 @@ function CreditGate({ credits, required, onBack }: { credits: number; required: 
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 sm:px-6 h-14 flex items-center justify-between sticky top-0 z-10">
-        <button
-          onClick={onBack}
-          className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white text-sm transition-colors"
-        >
-          <ChevronLeft size={16} />
-          <span className="hidden sm:inline">Dashboard</span>
-        </button>
-        <ThemeToggle compact />
-      </header>
+      <WizardTopBar onBack={onBack} />
 
       <div className="flex-1 flex items-center justify-center px-4 py-10">
         <div className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-200 dark:border-gray-800 shadow-sm w-full max-w-md p-8">
@@ -202,6 +228,100 @@ function CreditGate({ credits, required, onBack }: { credits: number; required: 
   );
 }
 
+// Mobile-only labeled step indicator + tap-to-jump dropdown, replacing the
+// bare numbered-circle strip. Desktop keeps the icon+label pill row.
+function MobileStepJumper({
+  steps,
+  step,
+  setStep,
+}: {
+  steps: typeof STEPS;
+  step: number;
+  setStep: (i: number) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    return () => document.removeEventListener("mousedown", onClick);
+  }, [open]);
+
+  const CurrentIcon = steps[step].icon;
+
+  return (
+    <div ref={ref} className="relative lg:hidden px-4 sm:px-6 py-2.5">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="w-full flex items-center justify-between gap-2 rounded-lg border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-left transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+      >
+        <span className="flex items-center gap-2.5 min-w-0">
+          <span className="w-7 h-7 rounded-md bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-600 dark:text-green-400 flex-shrink-0">
+            <CurrentIcon size={14} />
+          </span>
+          <span className="min-w-0">
+            <span className="block text-[11px] font-medium text-gray-400 dark:text-gray-500 leading-none mb-1">
+              Step {step + 1} of {steps.length}
+            </span>
+            <span className="block text-sm font-semibold text-gray-900 dark:text-white truncate">
+              {steps[step].label}
+            </span>
+          </span>
+        </span>
+        <ChevronDown
+          size={16}
+          className={`text-gray-400 dark:text-gray-500 flex-shrink-0 transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <div className="absolute left-4 right-4 sm:left-6 sm:right-6 top-full mt-1.5 z-30 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-lg overflow-hidden max-h-[70vh] overflow-y-auto">
+          {steps.map((s, i) => {
+            const StepIcon = s.icon;
+            const done = i < step;
+            const active = i === step;
+            return (
+              <button
+                key={i}
+                type="button"
+                onClick={() => {
+                  setStep(i);
+                  setOpen(false);
+                }}
+                className={`w-full flex items-center gap-3 px-3 py-2.5 text-left text-sm transition-colors ${
+                  active
+                    ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400"
+                    : "text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800"
+                }`}
+              >
+                <span
+                  className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 text-[11px] font-semibold ${
+                    active
+                      ? "bg-green-600 text-white"
+                      : done
+                      ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
+                      : "bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-500"
+                  }`}
+                >
+                  {done ? <Check size={12} /> : i + 1}
+                </span>
+                <StepIcon size={14} className="flex-shrink-0 opacity-70" />
+                <span className="flex-1 truncate font-medium">{s.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function FormPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -307,28 +427,22 @@ function FormPageContent() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-950 flex flex-col">
       {/* Top bar */}
-      <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 sm:px-6 h-14 flex items-center justify-between sticky top-0 z-10">
-        <div className="flex items-center gap-3 min-w-0">
-          <button
-            onClick={() => router.push("/plan/dashboard")}
-            className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white text-sm transition-colors flex-shrink-0"
-          >
-            <ChevronLeft size={16} />
-            <span className="hidden sm:inline">Dashboard</span>
-          </button>
-          <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 flex-shrink-0" />
-          <div className="flex items-center gap-2 min-w-0">
-            <Layers size={16} className="text-green-600 dark:text-green-400 flex-shrink-0" />
-            <span className="font-semibold text-gray-900 dark:text-white text-sm truncate">
-              {editId ? "Edit Business Plan" : "New Business Plan"}
-            </span>
-          </div>
+      <WizardTopBar
+        onBack={() => router.push("/plan/dashboard")}
+        right={
+          <span className="hidden lg:inline text-xs text-gray-400 dark:text-gray-500">
+            Step {step + 1}/{STEPS.length}
+          </span>
+        }
+      >
+        <div className="w-px h-4 bg-gray-200 dark:bg-gray-700 flex-shrink-0" />
+        <div className="flex items-center gap-2 min-w-0">
+          <Layers size={16} className="text-green-600 dark:text-green-400 flex-shrink-0" />
+          <span className="font-semibold text-gray-900 dark:text-white text-sm truncate">
+            {editId ? "Edit Business Plan" : "New Business Plan"}
+          </span>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
-          <span className="text-xs text-gray-400 dark:text-gray-500">Step {step + 1}/{STEPS.length}</span>
-          <ThemeToggle compact />
-        </div>
-      </header>
+      </WizardTopBar>
 
       {/* Progress bar */}
       <div className="bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800">
@@ -339,8 +453,11 @@ function FormPageContent() {
           />
         </div>
 
-        {/* Step pills — scrollable on mobile */}
-        <div className="px-4 sm:px-6 py-2 overflow-x-auto scrollbar-hide">
+        {/* Mobile: labeled current-step indicator + tap-to-jump dropdown */}
+        <MobileStepJumper steps={STEPS} step={step} setStep={setStep} />
+
+        {/* Desktop: icon+label pill row */}
+        <div className="hidden lg:block px-4 sm:px-6 py-2 overflow-x-auto scrollbar-hide">
           <div className="flex items-center gap-1 min-w-max">
             {STEPS.map((s, i) => {
               const Icon = s.icon;
@@ -359,8 +476,7 @@ function FormPageContent() {
                   }`}
                 >
                   <Icon size={12} />
-                  <span className="hidden sm:inline">{s.label}</span>
-                  <span className="sm:hidden">{i + 1}</span>
+                  <span>{s.label}</span>
                 </button>
               );
             })}

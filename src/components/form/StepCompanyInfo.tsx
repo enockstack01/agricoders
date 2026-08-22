@@ -1,7 +1,7 @@
 "use client";
 import { useRef } from "react";
 import { FormSubmission } from "@/types";
-import { FormInput, SectionTitle, GridRow } from "./FormField";
+import { FormInput, FormSelect, SectionTitle, GridRow } from "./FormField";
 import { Upload, X } from "lucide-react";
 
 interface Props {
@@ -119,31 +119,28 @@ export default function StepCompanyInfo({ formData, update }: Props) {
           hint="The sector or industry your business operates in. Used throughout the document to describe your market."
         />
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Currency <span className="text-red-500">*</span>
-          </label>
-          <p className="text-xs text-gray-400 mb-1">All monetary values in the business plan will be displayed in this currency.</p>
-          <select
+          <FormSelect
+            label="Currency"
+            required
+            hint="All monetary values in the business plan will be displayed in this currency."
             value={COMMON_CURRENCIES.includes(ci.currency) ? ci.currency : "__custom__"}
-            onChange={(e) => {
-              if (e.target.value === "__custom__") {
+            onChange={(v) => {
+              if (v === "__custom__") {
                 set("currency", ""); // clear so the text input appears
               } else {
-                set("currency", e.target.value);
+                set("currency", v);
               }
             }}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white mb-2"
-          >
-            {COMMON_CURRENCIES.map((c) => (
-              <option key={c} value={c}>{c}</option>
-            ))}
-            <option value="__custom__">Other (enter below)</option>
-          </select>
+            options={[
+              ...COMMON_CURRENCIES.map((c) => ({ value: c, label: c })),
+              { value: "__custom__", label: "Other (enter below)" },
+            ]}
+          />
           {!COMMON_CURRENCIES.includes(ci.currency) && (
             <input
               value={ci.currency}
               onChange={(e) => set("currency", e.target.value.toUpperCase())}
-              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              className="mt-2 w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
               placeholder="Enter currency code, e.g. MXN, JPY, BRL"
               maxLength={5}
               autoFocus
@@ -164,21 +161,22 @@ export default function StepCompanyInfo({ formData, update }: Props) {
 
       {/* Company Logo Upload */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">Company Logo</label>
-        <p className="text-xs text-gray-400 mb-2">Upload your company logo to have it displayed prominently on the cover page of the generated business plan. Accepted formats: PNG, JPG, GIF, WebP. Recommended size: 300×150 px or wider.</p>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company Logo</label>
+        <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">Upload your company logo to have it displayed prominently on the cover page of the generated business plan. Accepted formats: PNG, JPG, GIF, WebP. Recommended size: 300×150 px or wider.</p>
         {ci.companyLogo ? (
           <div className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={ci.companyLogo} alt="Company logo" className="h-16 object-contain rounded" />
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-green-700 font-medium">Logo uploaded</p>
-              <p className="text-xs text-gray-400">It will appear on the cover page of your business plan.</p>
+              <p className="text-xs text-green-700 dark:text-green-400 font-medium">Logo uploaded</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500">It will appear on the cover page of your business plan.</p>
             </div>
             <button
               type="button"
               onClick={removeLogo}
-              className="flex-shrink-0 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+              aria-label="Remove logo"
               title="Remove logo"
+              className="flex-shrink-0 flex items-center justify-center w-9 h-9 text-gray-400 dark:text-gray-500 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
             >
               <X size={14} />
             </button>
@@ -187,7 +185,7 @@ export default function StepCompanyInfo({ formData, update }: Props) {
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-gray-300 hover:border-green-400 rounded-lg text-sm text-gray-500 hover:text-green-600 transition-colors w-full justify-center"
+            className="flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-gray-300 dark:border-gray-700 hover:border-green-400 dark:hover:border-green-500 rounded-lg text-sm text-gray-500 dark:text-gray-400 hover:text-green-600 dark:hover:text-green-400 transition-colors w-full justify-center"
           >
             <Upload size={15} />
             Click to upload logo

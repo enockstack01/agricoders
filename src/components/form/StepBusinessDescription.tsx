@@ -2,7 +2,7 @@
 import { useState } from "react";
 import axios from "axios";
 import { FormSubmission } from "@/types";
-import { FormTextArea, SectionTitle, AddButton, RemoveButton } from "./FormField";
+import { SectionTitle, AddButton, RemoveButton } from "./FormField";
 
 interface Props {
   formData: Omit<FormSubmission, "userId">;
@@ -15,7 +15,7 @@ function AIButton({ label, loading, onClick }: { label: string; loading: boolean
       type="button"
       onClick={onClick}
       disabled={loading}
-      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-purple-50 text-purple-700 border border-purple-200 hover:bg-purple-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
       {loading ? (
         <span className="inline-block w-3 h-3 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
@@ -82,7 +82,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
   return (
     <div className="space-y-4">
       {/* AI info banner */}
-      <div className="bg-purple-50 border border-purple-100 rounded-lg px-4 py-3 text-sm text-purple-800">
+      <div className="bg-purple-50 dark:bg-purple-900/10 border border-purple-100 dark:border-purple-800 rounded-lg px-4 py-3 text-sm text-purple-800 dark:text-purple-300">
         <strong>✨ AI Assist</strong> — Click any &quot;Generate with AI&quot; button to auto-fill that section based on your company info from Step 1. You can edit any generated content.
       </div>
 
@@ -90,7 +90,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
       <div className="space-y-3">
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="block text-sm font-medium text-gray-700">Vision Statement</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Vision Statement</label>
             <AIButton label="Generate with AI" loading={!!loading["vision"]}
               onClick={() => generateSection("vision", (d) => set("vision", d as string))} />
           </div>
@@ -98,13 +98,13 @@ export default function StepBusinessDescription({ formData, update }: Props) {
             value={bd.vision}
             onChange={(e) => set("vision", e.target.value)}
             rows={2}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
             placeholder="To be the leading platform in our industry…"
           />
         </div>
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="block text-sm font-medium text-gray-700">Mission Statement</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Mission Statement</label>
             <AIButton label="Generate with AI" loading={!!loading["mission"]}
               onClick={() => generateSection("mission", (d) => set("mission", d as string))} />
           </div>
@@ -112,7 +112,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
             value={bd.mission}
             onChange={(e) => set("mission", e.target.value)}
             rows={2}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
             placeholder="To deliver outstanding products/services that…"
           />
         </div>
@@ -128,7 +128,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
       ).map(({ key, label, aiSection }) => (
         <div key={key}>
           <div className="flex items-center justify-between mb-2">
-            <label className="block text-sm font-medium text-gray-700">{label}</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">{label}</label>
             <AIButton label="Generate with AI" loading={!!loading[aiSection]}
               onClick={() => generateSection(aiSection, (d) => set(key, d as string[]))} />
           </div>
@@ -137,7 +137,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
               <input
                 value={g}
                 onChange={(e) => updateGoal(key, i, e.target.value)}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                 placeholder={`Goal ${i + 1}`}
               />
               <RemoveButton onClick={() => removeGoal(key, i)} />
@@ -161,7 +161,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
               arr[i] = { ...arr[i], name: e.target.value };
               set("values", arr);
             }}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
             placeholder="Value name"
           />
           <div className="md:col-span-2 flex gap-2">
@@ -172,7 +172,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
                 arr[i] = { ...arr[i], description: e.target.value };
                 set("values", arr);
               }}
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
               placeholder="Description"
             />
             <RemoveButton onClick={() => set("values", bd.values.filter((_, idx) => idx !== i))} />
@@ -191,7 +191,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
               arr[i] = { ...arr[i], name: e.target.value };
               set("products", arr);
             }}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm"
+            className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
             placeholder="Product / service name"
           />
           <div className="md:col-span-2 flex gap-2">
@@ -202,7 +202,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
                 arr[i] = { ...arr[i], description: e.target.value };
                 set("products", arr);
               }}
-              className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm"
+              className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
               placeholder="Brief description"
             />
             <RemoveButton onClick={() => set("products", bd.products.filter((_, idx) => idx !== i))} />
@@ -221,7 +221,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
           {bd.workingModelSteps.map((s, i) => (
             <div key={i} className="flex gap-2 mb-2">
               <input value={s} onChange={(e) => { const a = [...bd.workingModelSteps]; a[i] = e.target.value; set("workingModelSteps", a); }}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder={`Step ${i + 1}`} />
+                className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors" placeholder={`Step ${i + 1}`} />
               <RemoveButton onClick={() => set("workingModelSteps", bd.workingModelSteps.filter((_, idx) => idx !== i))} />
             </div>
           ))}
@@ -237,7 +237,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
       {bd.technologies.map((t, i) => (
         <div key={i} className="flex gap-2 mb-2">
           <input value={t} onChange={(e) => { const a = [...bd.technologies]; a[i] = e.target.value; set("technologies", a); }}
-            className="flex-1 border border-gray-300 rounded-lg px-3 py-2 text-sm" placeholder={`Technology ${i + 1}`} />
+            className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors" placeholder={`Technology ${i + 1}`} />
           <RemoveButton onClick={() => set("technologies", bd.technologies.filter((_, idx) => idx !== i))} />
         </div>
       ))}
@@ -253,9 +253,9 @@ export default function StepBusinessDescription({ formData, update }: Props) {
       </div>
       {(["strengths", "weaknesses", "opportunities", "threats"] as const).map((key) => (
         <div key={key} className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">{key}</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 capitalize">{key}</label>
           {bd.swot[key].map((item, i) => (
-            <div key={i} className="flex gap-2 mb-1">
+            <div key={i} className="flex gap-2 mb-2">
               <input
                 value={item}
                 onChange={(e) => {
@@ -263,7 +263,7 @@ export default function StepBusinessDescription({ formData, update }: Props) {
                   arr[i] = e.target.value;
                   set("swot", { ...bd.swot, [key]: arr });
                 }}
-                className="flex-1 border border-gray-300 rounded-lg px-3 py-1.5 text-sm"
+                className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
                 placeholder={`${key.charAt(0).toUpperCase() + key.slice(1)} ${i + 1}`}
               />
               <RemoveButton onClick={() => set("swot", { ...bd.swot, [key]: bd.swot[key].filter((_, idx) => idx !== i) })} />
@@ -280,12 +280,12 @@ export default function StepBusinessDescription({ formData, update }: Props) {
       </div>
       {(["political", "economic", "social", "technological", "environmental", "legal"] as const).map((key) => (
         <div key={key} className="mb-3">
-          <label className="block text-sm font-medium text-gray-700 mb-1 capitalize">{key}</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 capitalize">{key}</label>
           <textarea
             value={bd.pestel[key]}
             onChange={(e) => set("pestel", { ...bd.pestel, [key]: e.target.value })}
             rows={2}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+            className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
             placeholder={`${key} factors and their impact on the business…`}
           />
         </div>

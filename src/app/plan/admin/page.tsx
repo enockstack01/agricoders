@@ -167,9 +167,9 @@ export default function AdminPage() {
     return (
       <AppShell role={role} title="Admin Panel" breadcrumb={[{ label: "Dashboard", href: "/plan/dashboard" }, { label: "Admin" }]}>
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <AlertTriangle size={40} className="text-amber-400 mb-3" />
-          <h2 className="text-lg font-semibold text-gray-800 mb-1">Access Denied</h2>
-          <p className="text-sm text-gray-500">You need Admin or Super Admin role to view this page.</p>
+          <AlertTriangle size={40} className="text-amber-400 dark:text-amber-500 mb-3" />
+          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-1">Access Denied</h2>
+          <p className="text-sm text-gray-500 dark:text-gray-400">You need Admin or Super Admin role to view this page.</p>
         </div>
       </AppShell>
     );
@@ -199,13 +199,13 @@ export default function AdminPage() {
       breadcrumb={[{ label: "Dashboard", href: "/plan/dashboard" }, { label: "Admin Panel" }]}
     >
       {/* Tab bar */}
-      <div className="flex items-center gap-0.5 bg-gray-100 p-1 rounded-xl mb-6 w-full sm:w-auto sm:inline-flex">
+      <div className="flex items-center gap-0.5 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl mb-6 w-full sm:w-auto sm:inline-flex">
         {TABS.map((t) => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
             className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex-1 sm:flex-none justify-center ${
-              tab === t.key ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+              tab === t.key ? "bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
             }`}
           >
             {t.icon}
@@ -223,7 +223,7 @@ export default function AdminPage() {
       {tab === "overview" && (
         <div className="space-y-6">
           {loadingStats ? (
-            <div className="flex items-center justify-center py-16 gap-2 text-gray-400">
+            <div className="flex items-center justify-center py-16 gap-2 text-gray-400 dark:text-gray-500">
               <Loader2 size={18} className="animate-spin" />
               <span className="text-sm">Loading stats…</span>
             </div>
@@ -238,10 +238,10 @@ export default function AdminPage() {
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
                 {/* Activity chart */}
-                <div className="bg-white border border-gray-200 rounded-xl p-5">
+                <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 shadow-soft">
                   <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-gray-900 text-sm">Plans Created — Last 7 Days</h3>
-                    <button onClick={loadStats} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors">
+                    <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Plans Created — Last 7 Days</h3>
+                    <button onClick={loadStats} className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-400 dark:text-gray-500 transition-colors">
                       <RefreshCw size={14} />
                     </button>
                   </div>
@@ -249,8 +249,8 @@ export default function AdminPage() {
                 </div>
 
                 {/* Summary table */}
-                <div className="bg-white border border-gray-200 rounded-xl p-5">
-                  <h3 className="font-semibold text-gray-900 text-sm mb-4">System Summary</h3>
+                <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 shadow-soft">
+                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-4">System Summary</h3>
                   <div className="space-y-3">
                     {[
                       { label: "Total registered users", val: stats.totalUsers },
@@ -260,9 +260,9 @@ export default function AdminPage() {
                       { label: "Plans created this week", val: stats.plansThisWeek },
                       { label: "Avg plans per active user", val: stats.activeUsers > 0 ? (stats.totalSubmissions / stats.activeUsers).toFixed(1) : "—" },
                     ].map((r) => (
-                      <div key={r.label} className="flex items-center justify-between py-1.5 border-b border-gray-50 last:border-0">
-                        <span className="text-sm text-gray-600">{r.label}</span>
-                        <span className="text-sm font-semibold text-gray-900">{typeof r.val === "number" ? r.val.toLocaleString() : r.val}</span>
+                      <div key={r.label} className="flex items-center justify-between py-1.5 border-b border-gray-50 dark:border-gray-800 last:border-0">
+                        <span className="text-sm text-gray-600 dark:text-gray-400">{r.label}</span>
+                        <span className="text-sm font-semibold text-gray-900 dark:text-white">{typeof r.val === "number" ? r.val.toLocaleString() : r.val}</span>
                       </div>
                     ))}
                   </div>
@@ -270,67 +270,67 @@ export default function AdminPage() {
               </div>
             </>
           ) : (
-            <div className="text-center py-12 text-gray-400 text-sm">Failed to load stats.</div>
+            <div className="text-center py-12 text-gray-400 dark:text-gray-500 text-sm">Failed to load stats.</div>
           )}
         </div>
       )}
 
       {/* ── Users ────────────────────────────────────────── */}
       {tab === "users" && (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100">
-            <h3 className="font-semibold text-gray-900 text-sm">All Users ({users.length})</h3>
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 dark:border-gray-800">
+            <h3 className="font-semibold text-gray-900 dark:text-white text-sm">All Users ({users.length})</h3>
             <div className="relative">
               <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 value={userSearch}
                 onChange={(e) => setUserSearch(e.target.value)}
                 placeholder="Search users…"
-                className="pl-8 pr-3 py-1.5 border border-gray-200 rounded-lg text-sm w-full sm:w-52 focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="pl-8 pr-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm w-full sm:w-52 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
               />
             </div>
           </div>
 
           {loadingUsers ? (
-            <div className="flex items-center justify-center py-12 gap-2 text-gray-400">
+            <div className="flex items-center justify-center py-12 gap-2 text-gray-400 dark:text-gray-500">
               <Loader2 size={18} className="animate-spin" />
               <span className="text-sm">Loading users…</span>
             </div>
           ) : (
             <>
-              <div className="hidden sm:block overflow-x-auto">
+              <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-gray-50 border-b border-gray-100">
-                      <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">User</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden xl:table-cell">User ID</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Role</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Plans</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Credits</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">Last Active</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">Joined</th>
+                    <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+                      <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">User</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide hidden xl:table-cell">User ID</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Role</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Plans</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Credits</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Last Active</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Joined</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50">
+                  <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
                     {filteredUsers.map((u) => (
-                      <tr key={u.id} className="hover:bg-gray-50 transition-colors">
+                      <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                         <td className="px-5 py-3.5">
                           <div className="flex items-center gap-3">
                             {u.imageUrl ? (
                               <img src={u.imageUrl} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0" />
                             ) : (
-                              <div className="w-7 h-7 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-                                <Users size={12} className="text-gray-500" />
+                              <div className="w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                                <Users size={12} className="text-gray-500 dark:text-gray-400" />
                               </div>
                             )}
                             <div className="min-w-0">
-                              <p className="font-medium text-gray-900 text-sm truncate">{u.name || "—"}</p>
-                              <p className="text-xs text-gray-400 truncate">{u.email}</p>
+                              <p className="font-medium text-gray-900 dark:text-white text-sm truncate">{u.name || "—"}</p>
+                              <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{u.email}</p>
                             </div>
                           </div>
                         </td>
                         <td className="px-4 py-3.5 hidden xl:table-cell">
-                          <span className="font-mono text-[11px] text-gray-400 select-all">{u.id}</span>
+                          <span className="font-mono text-[11px] text-gray-400 dark:text-gray-500 select-all">{u.id}</span>
                         </td>
                         <td className="px-4 py-3.5">
                           <Badge variant={roleBadgeVariant(u.role)}>
@@ -338,26 +338,26 @@ export default function AdminPage() {
                           </Badge>
                         </td>
                         <td className="px-4 py-3.5">
-                          <span className={`text-sm font-semibold ${u.submissionCount > 0 ? "text-green-700" : "text-gray-400"}`}>
+                          <span className={`text-sm font-semibold ${u.submissionCount > 0 ? "text-green-700 dark:text-green-400" : "text-gray-400 dark:text-gray-500"}`}>
                             {u.submissionCount}
                           </span>
                         </td>
                         <td className="px-4 py-3.5">
                           <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${
                             u.credits === 0
-                              ? "bg-red-50 text-red-600"
+                              ? "bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400"
                               : u.credits < 10
-                              ? "bg-amber-50 text-amber-700"
-                              : "bg-green-50 text-green-700"
+                              ? "bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
+                              : "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400"
                           }`}>
                             <Coins size={10} />
                             {u.credits}
                           </span>
                         </td>
-                        <td className="px-4 py-3.5 text-gray-500 text-sm hidden lg:table-cell">
+                        <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-sm">
                           {u.lastActive ? new Date(u.lastActive).toLocaleDateString() : "—"}
                         </td>
-                        <td className="px-4 py-3.5 text-gray-500 text-sm hidden lg:table-cell">
+                        <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-sm">
                           {new Date(u.createdAt).toLocaleDateString()}
                         </td>
                       </tr>
@@ -367,28 +367,28 @@ export default function AdminPage() {
               </div>
 
               {/* Mobile user cards */}
-              <div className="sm:hidden divide-y divide-gray-100">
+              <div className="lg:hidden divide-y divide-gray-100 dark:divide-gray-800">
                 {filteredUsers.map((u) => (
                   <div key={u.id} className="px-4 py-3.5 flex items-center gap-3">
                     {u.imageUrl
                       ? <img src={u.imageUrl} alt="" className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
-                      : <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><Users size={14} className="text-gray-500" /></div>
+                      : <div className="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0"><Users size={14} className="text-gray-500 dark:text-gray-400" /></div>
                     }
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">{u.name || "—"}</p>
-                      <p className="text-xs text-gray-400 truncate">{u.email}</p>
-                      <p className="text-[10px] font-mono text-gray-300 truncate select-all mt-0.5">{u.id}</p>
+                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{u.name || "—"}</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{u.email}</p>
+                      <p className="text-[10px] font-mono text-gray-300 dark:text-gray-600 truncate select-all mt-0.5">{u.id}</p>
                       <div className="flex items-center gap-2 mt-1 flex-wrap">
                         <Badge variant={roleBadgeVariant(u.role)}>
                           {u.role === "super_admin" ? "Super Admin" : u.role === "admin" ? "Admin" : "User"}
                         </Badge>
-                        <span className="text-xs text-gray-400">{u.submissionCount} plan{u.submissionCount !== 1 ? "s" : ""}</span>
+                        <span className="text-xs text-gray-400 dark:text-gray-500">{u.submissionCount} plan{u.submissionCount !== 1 ? "s" : ""}</span>
                         <span className={`inline-flex items-center gap-1 text-xs font-semibold px-1.5 py-0.5 rounded-full ${
                           u.credits === 0
-                            ? "bg-red-50 text-red-600"
+                            ? "bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400"
                             : u.credits < 10
-                            ? "bg-amber-50 text-amber-700"
-                            : "bg-green-50 text-green-700"
+                            ? "bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
+                            : "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400"
                         }`}>
                           <Coins size={9} />
                           {u.credits} cr
@@ -405,9 +405,9 @@ export default function AdminPage() {
 
       {/* ── All Submissions ───────────────────────────────── */}
       {tab === "submissions" && (
-        <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100">
-            <h3 className="font-semibold text-gray-900 text-sm">All Business Plans ({submissionsTotal})</h3>
+        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 dark:border-gray-800">
+            <h3 className="font-semibold text-gray-900 dark:text-white text-sm">All Business Plans ({submissionsTotal})</h3>
             <div className="flex items-center gap-2">
               <div className="relative">
                 <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -415,47 +415,47 @@ export default function AdminPage() {
                   value={submissionsSearch}
                   onChange={(e) => { setSubmissionsSearch(e.target.value); setSubmissionsPage(1); loadSubmissions(1, e.target.value); }}
                   placeholder="Search companies…"
-                  className="pl-8 pr-3 py-1.5 border border-gray-200 rounded-lg text-sm w-full sm:w-52 focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="pl-8 pr-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm w-full sm:w-52 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
                 />
               </div>
-              <button onClick={() => loadSubmissions(submissionsPage, submissionsSearch)} className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors flex-shrink-0">
+              <button onClick={() => loadSubmissions(submissionsPage, submissionsSearch)} className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-400 dark:text-gray-500 transition-colors flex-shrink-0">
                 <RefreshCw size={14} />
               </button>
             </div>
           </div>
 
           {loadingSubmissions ? (
-            <div className="flex items-center justify-center py-12 gap-2 text-gray-400">
+            <div className="flex items-center justify-center py-12 gap-2 text-gray-400 dark:text-gray-500">
               <Loader2 size={18} className="animate-spin" />
               <span className="text-sm">Loading…</span>
             </div>
           ) : (
             <>
-              <div className="hidden sm:block overflow-x-auto">
+              <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
-                    <tr className="bg-gray-50 border-b border-gray-100">
-                      <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Company</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden md:table-cell">Owner</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">Industry</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide hidden lg:table-cell">Currency</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Created</th>
+                    <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
+                      <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Company</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Owner</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Industry</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Currency</th>
+                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Created</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50">
+                  <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
                     {submissions.map((s) => (
-                      <tr key={s._id} className="hover:bg-gray-50 transition-colors">
+                      <tr key={s._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
                         <td className="px-5 py-3.5">
-                          <p className="font-medium text-gray-900 text-sm truncate max-w-[160px]">{s.companyInfo?.companyName || "—"}</p>
+                          <p className="font-medium text-gray-900 dark:text-white text-sm truncate max-w-[160px]">{s.companyInfo?.companyName || "—"}</p>
                         </td>
-                        <td className="px-4 py-3.5 text-gray-500 text-sm hidden md:table-cell truncate max-w-[140px]">{s.userName}</td>
-                        <td className="px-4 py-3.5 text-gray-500 text-sm hidden lg:table-cell">{s.companyInfo?.companyFocus || "—"}</td>
-                        <td className="px-4 py-3.5 hidden lg:table-cell">
+                        <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-sm truncate max-w-[140px]">{s.userName}</td>
+                        <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-sm">{s.companyInfo?.companyFocus || "—"}</td>
+                        <td className="px-4 py-3.5">
                           {s.companyInfo?.currency && (
                             <Badge variant="gray">{s.companyInfo.currency}</Badge>
                           )}
                         </td>
-                        <td className="px-4 py-3.5 text-gray-500 text-sm whitespace-nowrap">
+                        <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-sm whitespace-nowrap">
                           {new Date(s.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                         </td>
                       </tr>
@@ -465,32 +465,32 @@ export default function AdminPage() {
               </div>
 
               {/* Mobile cards */}
-              <div className="sm:hidden divide-y divide-gray-100">
+              <div className="lg:hidden divide-y divide-gray-100 dark:divide-gray-800">
                 {submissions.map((s) => (
                   <div key={s._id} className="px-4 py-3.5">
-                    <p className="text-sm font-medium text-gray-900">{s.companyInfo?.companyName || "—"}</p>
-                    <p className="text-xs text-gray-400 mt-0.5">{s.userName} · {s.companyInfo?.companyFocus || "No industry"}</p>
-                    <p className="text-xs text-gray-400">{new Date(s.createdAt).toLocaleDateString()}</p>
+                    <p className="text-sm font-medium text-gray-900 dark:text-white">{s.companyInfo?.companyName || "—"}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{s.userName} · {s.companyInfo?.companyFocus || "No industry"}</p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">{new Date(s.createdAt).toLocaleDateString()}</p>
                   </div>
                 ))}
               </div>
 
               {/* Pagination */}
               {totalPages > 1 && (
-                <div className="flex items-center justify-between px-5 py-3 border-t border-gray-100 bg-gray-50">
-                  <span className="text-xs text-gray-400">Page {submissionsPage} of {totalPages}</span>
+                <div className="flex items-center justify-between px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
+                  <span className="text-xs text-gray-400 dark:text-gray-500">Page {submissionsPage} of {totalPages}</span>
                   <div className="flex items-center gap-2">
                     <button
                       onClick={() => { const p = submissionsPage - 1; setSubmissionsPage(p); loadSubmissions(p, submissionsSearch); }}
                       disabled={submissionsPage <= 1}
-                      className="px-3 py-1.5 text-xs font-medium border border-gray-200 rounded-lg disabled:opacity-40 hover:bg-gray-100 transition-colors"
+                      className="px-3 py-1.5 text-xs font-medium border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                     >
                       Previous
                     </button>
                     <button
                       onClick={() => { const p = submissionsPage + 1; setSubmissionsPage(p); loadSubmissions(p, submissionsSearch); }}
                       disabled={submissionsPage >= totalPages}
-                      className="px-3 py-1.5 text-xs font-medium border border-gray-200 rounded-lg disabled:opacity-40 hover:bg-gray-100 transition-colors"
+                      className="px-3 py-1.5 text-xs font-medium border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                     >
                       Next
                     </button>
@@ -589,22 +589,22 @@ function AdminRequestsPanel({
   };
 
   const STATUS_COLORS: Record<string, string> = {
-    pending: "bg-amber-50 text-amber-700 border-amber-200",
-    approved: "bg-green-50 text-green-700 border-green-200",
-    rejected: "bg-red-50 text-red-700 border-red-200",
+    pending: "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800",
+    approved: "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800",
+    rejected: "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800",
   };
 
   return (
     <div className="space-y-4">
       {/* Header + filter */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2 bg-gray-100 p-1 rounded-lg w-fit">
+        <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg w-fit">
           {(["pending", "all"] as const).map((f) => (
             <button
               key={f}
               onClick={() => onFilterChange(f)}
               className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                filter === f ? "bg-white text-gray-900 shadow-sm" : "text-gray-500 hover:text-gray-700"
+                filter === f ? "bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
               }`}
             >
               {f === "pending" ? "Pending" : "All Requests"}
@@ -613,22 +613,22 @@ function AdminRequestsPanel({
         </div>
         <button
           onClick={onRefresh}
-          className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors self-start sm:self-auto"
+          className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-400 dark:text-gray-500 transition-colors self-start sm:self-auto"
         >
           <RefreshCw size={14} />
         </button>
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-16 gap-2 text-gray-400">
+        <div className="flex items-center justify-center py-16 gap-2 text-gray-400 dark:text-gray-500">
           <Loader2 size={18} className="animate-spin" />
           <span className="text-sm">Loading requests…</span>
         </div>
       ) : requests.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center bg-white border border-gray-200 rounded-xl">
-          <Inbox size={32} className="text-gray-300 mb-3" />
-          <p className="text-sm font-medium text-gray-500">No {filter === "pending" ? "pending" : ""} requests</p>
-          <p className="text-xs text-gray-400 mt-1">Users will appear here when they request credits.</p>
+        <div className="flex flex-col items-center justify-center py-20 text-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl">
+          <Inbox size={32} className="text-gray-300 dark:text-gray-600 mb-3" />
+          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">No {filter === "pending" ? "pending" : ""} requests</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Users will appear here when they request credits.</p>
         </div>
       ) : (
         <div className="space-y-3">
@@ -637,7 +637,7 @@ function AdminRequestsPanel({
             return (
               <div
                 key={req._id}
-                className="bg-white border border-gray-200 rounded-xl overflow-hidden"
+                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft"
               >
                 <div className="px-5 py-4 flex flex-col sm:flex-row sm:items-start gap-4">
                   {/* User */}
@@ -645,13 +645,13 @@ function AdminRequestsPanel({
                     {req.user.imageUrl ? (
                       <img src={req.user.imageUrl} alt="" className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
                     ) : (
-                      <div className="w-9 h-9 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
-                        <Users size={14} className="text-gray-500" />
+                      <div className="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                        <Users size={14} className="text-gray-500 dark:text-gray-400" />
                       </div>
                     )}
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 truncate">{req.user.name || "—"}</p>
-                      <p className="text-xs text-gray-400 truncate">{req.user.email}</p>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{req.user.name || "—"}</p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{req.user.email}</p>
                     </div>
                   </div>
 
@@ -661,24 +661,24 @@ function AdminRequestsPanel({
                       {req.documents.map((d, i) => (
                         <span
                           key={i}
-                          className="inline-flex items-center gap-1 text-xs bg-blue-50 text-blue-700 border border-blue-200 px-2 py-0.5 rounded-full font-medium"
+                          className="inline-flex items-center gap-1 text-xs bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800 px-2 py-0.5 rounded-full font-medium"
                         >
                           <FileText size={10} />
                           {d.count}× {DOC_LABELS[d.type] ?? d.type}
                         </span>
                       ))}
-                      <span className="inline-flex items-center gap-1 text-xs bg-gray-100 text-gray-700 px-2 py-0.5 rounded-full font-semibold">
+                      <span className="inline-flex items-center gap-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full font-semibold">
                         <Coins size={10} />
                         {req.creditsRequested} credits
                       </span>
                     </div>
                     {req.note && (
-                      <p className="text-xs text-gray-500 italic">&ldquo;{req.note}&rdquo;</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 italic">&ldquo;{req.note}&rdquo;</p>
                     )}
                     {req.adminNote && (
-                      <p className="text-xs text-gray-400">Admin note: <span className="text-gray-600">{req.adminNote}</span></p>
+                      <p className="text-xs text-gray-400 dark:text-gray-500">Admin note: <span className="text-gray-600 dark:text-gray-400">{req.adminNote}</span></p>
                     )}
-                    <p className="text-xs text-gray-400">
+                    <p className="text-xs text-gray-400 dark:text-gray-500">
                       <Clock size={10} className="inline mr-1" />
                       {new Date(req.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                     </p>
@@ -700,7 +700,7 @@ function AdminRequestsPanel({
                         </button>
                         <button
                           onClick={() => startReview(req._id, "reject")}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 border border-red-200 text-xs font-medium rounded-lg transition-colors"
+                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800 text-xs font-medium rounded-lg transition-colors"
                         >
                           <XCircle size={12} />
                           Reject
@@ -712,8 +712,8 @@ function AdminRequestsPanel({
 
                 {/* Inline review form */}
                 {isReviewing && (
-                  <div className={`px-5 py-4 border-t ${reviewing.action === "approve" ? "bg-green-50 border-green-100" : "bg-red-50 border-red-100"}`}>
-                    <p className="text-xs font-semibold mb-2 text-gray-700">
+                  <div className={`px-5 py-4 border-t ${reviewing.action === "approve" ? "bg-green-50 dark:bg-green-900/10 border-green-100 dark:border-green-900/40" : "bg-red-50 dark:bg-red-900/10 border-red-100 dark:border-red-900/40"}`}>
+                    <p className="text-xs font-semibold mb-2 text-gray-700 dark:text-gray-300">
                       {reviewing.action === "approve"
                         ? `Approve and grant ${req.creditsRequested} credits to ${req.user.name}?`
                         : `Reject this request from ${req.user.name}?`}
@@ -722,16 +722,16 @@ function AdminRequestsPanel({
                       value={adminNote}
                       onChange={(e) => setAdminNote(e.target.value)}
                       placeholder="Add a note for the user (optional)…"
-                      className="w-full text-xs border border-gray-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white mb-3"
+                      className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600 mb-3"
                     />
                     {error && (
-                      <p className="text-xs text-red-600 mb-2">{error}</p>
+                      <p className="text-xs text-red-600 dark:text-red-400 mb-2">{error}</p>
                     )}
                     <div className="flex items-center gap-2">
                       <button
                         onClick={cancelReview}
                         disabled={submitting}
-                        className="px-3 py-1.5 text-xs font-medium text-gray-600 bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors"
+                        className="px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
                       >
                         Cancel
                       </button>
@@ -883,81 +883,81 @@ function AdminCreditsPanel() {
     <div className="space-y-1.5 max-w-xl">
 
       {/* ── Assign Credits ──────────────────────────── */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
         <button
           type="button"
           onClick={() => toggle("assign")}
-          className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 transition-colors text-left"
+          className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors text-left"
         >
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center flex-shrink-0">
-              <Coins size={14} className="text-green-600" />
+            <div className="w-7 h-7 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center flex-shrink-0">
+              <Coins size={14} className="text-green-600 dark:text-green-400" />
             </div>
             <div>
-              <p className="font-semibold text-gray-900 text-sm leading-tight">Assign Credits</p>
-              <p className="text-xs text-gray-400 leading-tight mt-0.5">Add credits to a user account</p>
+              <p className="font-semibold text-gray-900 dark:text-white text-sm leading-tight">Assign Credits</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 leading-tight mt-0.5">Add credits to a user account</p>
             </div>
           </div>
-          <ChevronDown size={14} className={`text-gray-400 transition-transform flex-shrink-0 ${openSection === "assign" ? "rotate-180" : ""}`} />
+          <ChevronDown size={14} className={`text-gray-400 dark:text-gray-500 transition-transform flex-shrink-0 ${openSection === "assign" ? "rotate-180" : ""}`} />
         </button>
         {openSection === "assign" && (
-          <form onSubmit={handleAssign} className="px-5 pb-5 pt-3 border-t border-gray-100 space-y-3">
+          <form onSubmit={handleAssign} className="px-5 pb-5 pt-3 border-t border-gray-100 dark:border-gray-800 space-y-3">
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">User Account ID <span className="text-red-500">*</span></label>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">User Account ID <span className="text-red-500">*</span></label>
               <input
                 value={assignUserId}
                 onChange={(e) => setAssignUserId(e.target.value)}
                 placeholder="user_2abc123def..."
                 required
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
               />
-              <p className="text-xs text-gray-400 mt-1">User can find this in Profile → Account.</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">User can find this in Profile → Account.</p>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Credits <span className="text-red-500">*</span></label>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Credits <span className="text-red-500">*</span></label>
                 <input
                   type="number" min={1} value={assignCredits}
                   onChange={(e) => setAssignCredits(e.target.value)}
                   placeholder="50" required
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Amount</label>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Amount</label>
                 <input
                   type="number" min={0} step={0.01} value={paymentAmount}
                   onChange={(e) => setPaymentAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
                 />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Currency</label>
+                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Currency</label>
                 <select
                   value={currency} onChange={(e) => setCurrency(e.target.value)}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                  className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
                 >
                   {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
                 </select>
               </div>
             </div>
             <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Note</label>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Note</label>
               <input
                 value={assignNote} onChange={(e) => setAssignNote(e.target.value)}
                 placeholder="e.g. Monthly subscription payment"
-                className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
               />
             </div>
             {assignResult && (
-              <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${assignResult.ok ? "bg-green-50 border border-green-200 text-green-700" : "bg-red-50 border border-red-200 text-red-700"}`}>
+              <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${assignResult.ok ? "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400" : "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400"}`}>
                 {assignResult.ok ? <CheckCircle size={14} className="mt-0.5 flex-shrink-0" /> : <AlertCircle size={14} className="mt-0.5 flex-shrink-0" />}
                 {assignResult.message}
               </div>
             )}
             <div className="flex items-center justify-between gap-3 pt-0.5">
-              <p className="text-xs text-gray-400">1 credit = $1</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500">1 credit = $1</p>
               <button
                 type="submit" disabled={assignSubmitting}
                 className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
@@ -971,31 +971,31 @@ function AdminCreditsPanel() {
       </div>
 
       {/* ── Lookup Credits ──────────────────────────── */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
         <button
           type="button"
           onClick={() => toggle("lookup")}
-          className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 transition-colors text-left"
+          className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors text-left"
         >
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center flex-shrink-0">
-              <Search size={14} className="text-blue-600" />
+            <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
+              <Search size={14} className="text-blue-600 dark:text-blue-400" />
             </div>
             <div>
-              <p className="font-semibold text-gray-900 text-sm leading-tight">Lookup User Credits</p>
-              <p className="text-xs text-gray-400 leading-tight mt-0.5">Check balance and transaction history</p>
+              <p className="font-semibold text-gray-900 dark:text-white text-sm leading-tight">Lookup User Credits</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 leading-tight mt-0.5">Check balance and transaction history</p>
             </div>
           </div>
-          <ChevronDown size={14} className={`text-gray-400 transition-transform flex-shrink-0 ${openSection === "lookup" ? "rotate-180" : ""}`} />
+          <ChevronDown size={14} className={`text-gray-400 dark:text-gray-500 transition-transform flex-shrink-0 ${openSection === "lookup" ? "rotate-180" : ""}`} />
         </button>
         {openSection === "lookup" && (
-          <div className="px-5 pb-5 pt-3 border-t border-gray-100">
+          <div className="px-5 pb-5 pt-3 border-t border-gray-100 dark:border-gray-800">
             <form onSubmit={handleLookup} className="flex gap-2 mb-3">
               <input
                 value={lookupId}
                 onChange={(e) => setLookupId(e.target.value)}
                 placeholder="Paste User Account ID…"
-                className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
               />
               <button
                 type="submit" disabled={looking}
@@ -1006,30 +1006,30 @@ function AdminCreditsPanel() {
               </button>
             </form>
             {lookupError && (
-              <div className="flex items-center gap-2 p-3 bg-red-50 border border-red-200 rounded-lg text-sm text-red-700 mb-3">
+              <div className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-400 mb-3">
                 <AlertCircle size={14} /> {lookupError}
               </div>
             )}
             {lookupData && (
               <>
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg mb-3">
-                  <span className="text-sm text-gray-600 font-medium">Current Balance</span>
-                  <span className="text-xl font-bold text-gray-900">{lookupData.credits} credits</span>
+                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mb-3">
+                  <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">Current Balance</span>
+                  <span className="text-xl font-bold text-gray-900 dark:text-white">{lookupData.credits} credits</span>
                 </div>
                 {lookupData.transactions.length > 0 ? (
                   <div>
-                    <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-1.5">Recent Transactions</p>
-                    <div className="divide-y divide-gray-100 border border-gray-200 rounded-lg overflow-hidden max-h-56 overflow-y-auto">
+                    <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1.5">Recent Transactions</p>
+                    <div className="divide-y divide-gray-100 dark:divide-gray-800 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden max-h-56 overflow-y-auto">
                       {lookupData.transactions.map((tx, i) => (
-                        <div key={i} className="flex items-center justify-between px-3 py-2 bg-white text-xs">
+                        <div key={i} className="flex items-center justify-between px-3 py-2 bg-white dark:bg-gray-900 text-xs">
                           <div className="flex items-center gap-2">
-                            <span className={`px-1.5 py-0.5 rounded-full font-medium ${tx.credits > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                            <span className={`px-1.5 py-0.5 rounded-full font-medium ${tx.credits > 0 ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"}`}>
                               {tx.credits > 0 ? `+${tx.credits}` : tx.credits}
                             </span>
-                            <span className="text-gray-600 capitalize">{tx.type}</span>
-                            {tx.paymentAmount && <span className="text-gray-400">({tx.paymentAmount} {tx.currency})</span>}
+                            <span className="text-gray-600 dark:text-gray-400 capitalize">{tx.type}</span>
+                            {tx.paymentAmount && <span className="text-gray-400 dark:text-gray-500">({tx.paymentAmount} {tx.currency})</span>}
                           </div>
-                          <div className="flex items-center gap-1.5 text-gray-400">
+                          <div className="flex items-center gap-1.5 text-gray-400 dark:text-gray-500">
                             <span>→ {tx.balanceAfter}</span>
                             <Clock size={10} />
                             <span>{new Date(tx.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })}</span>
@@ -1039,7 +1039,7 @@ function AdminCreditsPanel() {
                     </div>
                   </div>
                 ) : (
-                  <p className="text-xs text-gray-400">No transactions yet for this account.</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500">No transactions yet for this account.</p>
                 )}
               </>
             )}
@@ -1048,83 +1048,83 @@ function AdminCreditsPanel() {
       </div>
 
       {/* ── Dismiss Credits ─────────────────────────── */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
         <button
           type="button"
           onClick={() => toggle("deduct")}
-          className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 transition-colors text-left"
+          className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors text-left"
         >
           <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
-              <AlertCircle size={14} className="text-red-500" />
+            <div className="w-7 h-7 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center flex-shrink-0">
+              <AlertCircle size={14} className="text-red-500 dark:text-red-400" />
             </div>
             <div>
-              <p className="font-semibold text-gray-900 text-sm leading-tight">Dismiss Credits</p>
-              <p className="text-xs text-gray-400 leading-tight mt-0.5">Remove credits from a user account</p>
+              <p className="font-semibold text-gray-900 dark:text-white text-sm leading-tight">Dismiss Credits</p>
+              <p className="text-xs text-gray-400 dark:text-gray-500 leading-tight mt-0.5">Remove credits from a user account</p>
             </div>
           </div>
-          <ChevronDown size={14} className={`text-gray-400 transition-transform flex-shrink-0 ${openSection === "deduct" ? "rotate-180" : ""}`} />
+          <ChevronDown size={14} className={`text-gray-400 dark:text-gray-500 transition-transform flex-shrink-0 ${openSection === "deduct" ? "rotate-180" : ""}`} />
         </button>
         {openSection === "deduct" && (
-          <div className="px-5 pb-5 pt-3 border-t border-gray-100 space-y-3">
+          <div className="px-5 pb-5 pt-3 border-t border-gray-100 dark:border-gray-800 space-y-3">
             <form onSubmit={handleCheck} className="space-y-2">
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">User Account ID <span className="text-red-500">*</span></label>
+              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">User Account ID <span className="text-red-500">*</span></label>
               <div className="flex gap-2">
                 <input
                   value={deductUserId}
                   onChange={(e) => { setDeductUserId(e.target.value); setBalance(null); setDeductResult(null); }}
                   placeholder="user_2abc123def..."
                   required
-                  className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-400"
+                  className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
                 />
                 <button
                   type="submit" disabled={checking || !deductUserId.trim()}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 bg-gray-900 hover:bg-black disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors whitespace-nowrap"
+                  className="inline-flex items-center gap-1.5 px-3 py-2 bg-gray-900 dark:bg-gray-700 hover:bg-black dark:hover:bg-gray-600 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors whitespace-nowrap"
                 >
                   {checking ? <Loader2 size={12} className="animate-spin" /> : <Search size={12} />}
                   {checking ? "Checking…" : "Check Balance"}
                 </button>
               </div>
               {checkError && (
-                <div className="flex items-center gap-2 p-2.5 bg-red-50 border border-red-200 rounded-lg text-xs text-red-700">
+                <div className="flex items-center gap-2 p-2.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-xs text-red-700 dark:text-red-400">
                   <AlertCircle size={13} /> {checkError}
                 </div>
               )}
             </form>
             {balance !== null && (
-              <form onSubmit={handleDeduct} className="space-y-3 pt-2 border-t border-gray-100">
-                <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                  <span className="text-sm text-gray-600 font-medium">Current Balance</span>
-                  <span className={`text-xl font-bold ${balance === 0 ? "text-red-500" : "text-gray-900"}`}>
+              <form onSubmit={handleDeduct} className="space-y-3 pt-2 border-t border-gray-100 dark:border-gray-800">
+                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
+                  <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">Current Balance</span>
+                  <span className={`text-xl font-bold ${balance === 0 ? "text-red-500 dark:text-red-400" : "text-gray-900 dark:text-white"}`}>
                     {balance} credits
                   </span>
                 </div>
                 {balance === 0 ? (
-                  <p className="text-xs text-gray-400 text-center py-1">This user has no credits to dismiss.</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 text-center py-1">This user has no credits to dismiss.</p>
                 ) : (
                   <>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                       <div>
-                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Credits to Dismiss <span className="text-red-500">*</span></label>
+                        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Credits to Dismiss <span className="text-red-500">*</span></label>
                         <input
                           type="number" min={1} max={maxDeduct} value={deductAmt}
                           onChange={(e) => setDeductAmt(e.target.value)}
                           placeholder={`1 – ${maxDeduct}`} required
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                          className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
                         />
-                        <p className="text-xs text-gray-400 mt-1">Max {maxDeduct}</p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Max {maxDeduct}</p>
                       </div>
                       <div>
-                        <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">Reason</label>
+                        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Reason</label>
                         <input
                           value={deductNote} onChange={(e) => setDeductNote(e.target.value)}
                           placeholder="e.g. Correction"
-                          className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400"
+                          className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
                         />
                       </div>
                     </div>
                     {deductResult && (
-                      <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${deductResult.ok ? "bg-green-50 border border-green-200 text-green-700" : "bg-red-50 border border-red-200 text-red-700"}`}>
+                      <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${deductResult.ok ? "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400" : "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400"}`}>
                         {deductResult.ok ? <CheckCircle size={14} className="mt-0.5 flex-shrink-0" /> : <AlertCircle size={14} className="mt-0.5 flex-shrink-0" />}
                         {deductResult.message}
                       </div>
@@ -1295,7 +1295,7 @@ function OneHealthPanel() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between gap-3 flex-wrap">
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-gray-500 dark:text-gray-400">
           Disease risk signals synced automatically from LivestockPro every few minutes.
         </p>
         <button
@@ -1309,7 +1309,7 @@ function OneHealthPanel() {
       </div>
 
       {summary?.sync.status === "not_configured" && (
-        <div className="flex items-start gap-3 bg-amber-50 border border-amber-200 rounded-xl px-4 py-3 text-sm text-amber-800">
+        <div className="flex items-start gap-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-3 text-sm text-amber-800 dark:text-amber-400">
           <Settings size={16} className="flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold">LivestockPro connection not configured yet</p>
@@ -1322,7 +1322,7 @@ function OneHealthPanel() {
       )}
 
       {summary?.sync.status === "error" && (
-        <div className="flex items-start gap-3 bg-rose-50 border border-rose-200 rounded-xl px-4 py-3 text-sm text-rose-800">
+        <div className="flex items-start gap-3 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-xl px-4 py-3 text-sm text-rose-800 dark:text-rose-400">
           <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
           <div>
             <p className="font-semibold">Last sync failed</p>
@@ -1352,19 +1352,19 @@ function OneHealthPanel() {
             key={s}
             onClick={() => setStatusFilter(s)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
-              statusFilter === s ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              statusFilter === s ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900" : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
             }`}
           >
             {s}
           </button>
         ))}
-        <span className="w-px h-5 bg-gray-200 mx-1" />
+        <span className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
         {(["all", "critical", "high", "medium", "low"] as const).map((s) => (
           <button
             key={s}
             onClick={() => setSeverityFilter(s)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
-              severityFilter === s ? "bg-gray-900 text-white" : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+              severityFilter === s ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900" : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
             }`}
           >
             {s}
@@ -1373,19 +1373,19 @@ function OneHealthPanel() {
       </div>
 
       {/* Alert list */}
-      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
         {loading ? (
-          <div className="flex items-center justify-center py-16 text-gray-400">
+          <div className="flex items-center justify-center py-16 text-gray-400 dark:text-gray-500">
             <Loader2 size={20} className="animate-spin" />
           </div>
         ) : alerts.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center px-4">
-            <ShieldAlert size={28} className="text-gray-300 mb-3" />
-            <p className="text-sm font-medium text-gray-600">No {statusFilter !== "all" ? statusFilter : ""} alerts</p>
-            <p className="text-xs text-gray-400 mt-1">Risk signals detected from LivestockPro data will appear here.</p>
+            <ShieldAlert size={28} className="text-gray-300 dark:text-gray-600 mb-3" />
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-400">No {statusFilter !== "all" ? statusFilter : ""} alerts</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Risk signals detected from LivestockPro data will appear here.</p>
           </div>
         ) : (
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-gray-100 dark:divide-gray-800">
             {alerts.map((a) => {
               const style = OH_SEVERITY_STYLE[a.severity];
               const isOpen = expanded === a._id;
@@ -1393,18 +1393,18 @@ function OneHealthPanel() {
                 <div key={a._id}>
                   <button
                     onClick={() => toggleExpand(a)}
-                    className="w-full flex items-start gap-3 px-4 py-3.5 text-left hover:bg-gray-50 transition-colors"
+                    className="w-full flex items-start gap-3 px-4 py-3.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
                   >
                     <span className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${style.dot}`} />
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <p className="text-sm font-semibold text-gray-900">{a.title}</p>
+                        <p className="text-sm font-semibold text-gray-900 dark:text-white">{a.title}</p>
                         {a.zoonotic && <Badge variant="rose">Zoonotic</Badge>}
                         <Badge variant={style.badge}>{a.severity}</Badge>
                         <Badge variant="gray">{OH_TYPE_LABEL[a.type]}</Badge>
                       </div>
-                      <p className="text-xs text-gray-500 mt-1 leading-relaxed">{a.description}</p>
-                      <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-400 flex-wrap">
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">{a.description}</p>
+                      <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-400 dark:text-gray-500 flex-wrap">
                         {a.district && <span className="flex items-center gap-1"><MapPin size={11} />{a.district}</span>}
                         <span className="flex items-center gap-1"><PawPrint size={11} />{a.species.join(", ")}</span>
                         <span>{a.farmIds.length} farm{a.farmIds.length === 1 ? "" : "s"}</span>
@@ -1418,7 +1418,7 @@ function OneHealthPanel() {
                             onClick={(e) => { e.stopPropagation(); updateStatus(a._id, "reviewed"); }}
                             disabled={updating === a._id}
                             title="Mark reviewed"
-                            className="p-1.5 rounded-lg text-gray-400 hover:text-green-600 hover:bg-green-50 transition-colors"
+                            className="p-1.5 rounded-lg text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
                           >
                             <CheckCircle2 size={16} />
                           </button>
@@ -1426,35 +1426,35 @@ function OneHealthPanel() {
                             onClick={(e) => { e.stopPropagation(); updateStatus(a._id, "dismissed"); }}
                             disabled={updating === a._id}
                             title="Dismiss"
-                            className="p-1.5 rounded-lg text-gray-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
+                            className="p-1.5 rounded-lg text-gray-400 dark:text-gray-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors"
                           >
                             <XCircle size={16} />
                           </button>
                         </>
                       )}
-                      {isOpen ? <ChevronUp size={16} className="text-gray-400" /> : <ChevronDown size={16} className="text-gray-400" />}
+                      {isOpen ? <ChevronUp size={16} className="text-gray-400 dark:text-gray-500" /> : <ChevronDown size={16} className="text-gray-400 dark:text-gray-500" />}
                     </div>
                   </button>
 
                   {isOpen && (
                     <div className="px-4 pb-4 pl-9">
                       {loadingRecords ? (
-                        <div className="flex items-center gap-2 text-xs text-gray-400 py-3">
+                        <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500 py-3">
                           <Loader2 size={13} className="animate-spin" /> Loading records…
                         </div>
                       ) : (
-                        <div className="border border-gray-100 rounded-lg overflow-hidden">
+                        <div className="border border-gray-100 dark:border-gray-800 rounded-lg overflow-hidden">
                           {records.map((r) => (
-                            <div key={r._id} className="px-3 py-2 text-xs border-b last:border-b-0 border-gray-100 flex items-center justify-between gap-3 flex-wrap">
+                            <div key={r._id} className="px-3 py-2 text-xs border-b last:border-b-0 border-gray-100 dark:border-gray-800 flex items-center justify-between gap-3 flex-wrap">
                               <div>
-                                <span className="font-medium text-gray-700">{r.species}</span>
-                                <span className="text-gray-400"> · {r.farmName ?? r.farmId ?? "Unknown farm"}</span>
-                                {r.diagnosis && <span className="text-gray-500"> · {r.diagnosis}</span>}
+                                <span className="font-medium text-gray-700 dark:text-gray-300">{r.species}</span>
+                                <span className="text-gray-400 dark:text-gray-500"> · {r.farmName ?? r.farmId ?? "Unknown farm"}</span>
+                                {r.diagnosis && <span className="text-gray-500 dark:text-gray-400"> · {r.diagnosis}</span>}
                                 {r.symptoms?.length > 0 && (
-                                  <span className="text-gray-400"> · {r.symptoms.join(", ")}</span>
+                                  <span className="text-gray-400 dark:text-gray-500"> · {r.symptoms.join(", ")}</span>
                                 )}
                               </div>
-                              <span className="text-gray-400 flex-shrink-0">{ohFmtDate(r.recordedAt)}</span>
+                              <span className="text-gray-400 dark:text-gray-500 flex-shrink-0">{ohFmtDate(r.recordedAt)}</span>
                             </div>
                           ))}
                         </div>
@@ -1468,20 +1468,20 @@ function OneHealthPanel() {
         )}
 
         {total > 20 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 text-xs text-gray-500">
+          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-500 dark:text-gray-400">
             <span>Page {page} of {Math.ceil(total / 20)}</span>
             <div className="flex gap-2">
               <button
                 disabled={page <= 1}
                 onClick={() => loadAlerts(page - 1)}
-                className="px-2.5 py-1 rounded-md border border-gray-200 disabled:opacity-40"
+                className="px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700 disabled:opacity-40"
               >
                 Prev
               </button>
               <button
                 disabled={page >= Math.ceil(total / 20)}
                 onClick={() => loadAlerts(page + 1)}
-                className="px-2.5 py-1 rounded-md border border-gray-200 disabled:opacity-40"
+                className="px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700 disabled:opacity-40"
               >
                 Next
               </button>

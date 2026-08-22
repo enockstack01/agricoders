@@ -51,24 +51,19 @@ export default function StepFinancialSettings({ formData, update }: Props) {
       <SectionTitle>Projection Period</SectionTitle>
       <GridRow cols={2}>
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Number of Projection Years <span className="text-red-500">*</span>
-          </label>
-          <p className="text-xs text-gray-400 mb-1">Enter how many years the financial projections should cover (e.g. 3, 5, 10, 20).</p>
-          <input
+          <FormInput
+            label="Number of Projection Years"
             type="number"
-            min={1}
-            max={50}
-            step={1}
+            required
             value={fin.projectionYears ?? 5}
-            onChange={(e) => {
-              const v = parseInt(e.target.value);
-              if (!isNaN(v) && v >= 1) setFin("projectionYears", v);
+            onChange={(v) => {
+              const n = parseInt(v);
+              if (!isNaN(n) && n >= 1) setFin("projectionYears", n);
             }}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm bg-white w-full focus:outline-none focus:ring-2 focus:ring-green-500"
             placeholder="5"
+            hint="Enter how many years the financial projections should cover (e.g. 3, 5, 10, 20)."
           />
-          <p className="text-xs text-gray-400 mt-1">Financial model tables display up to 5 years; the narrative will reference the full projection period.</p>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Financial model tables display up to 5 years; the narrative will reference the full projection period.</p>
         </div>
         <div />
       </GridRow>

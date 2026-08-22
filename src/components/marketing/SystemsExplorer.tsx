@@ -14,93 +14,43 @@ function SystemCard({ app, delay }: { app: AppEntry; delay: number }) {
   const icon = ICON_MAP[app.id] ?? <Sparkles size={26} color="white" />;
 
   return (
-    <Reveal delay={delay} className="col-md-6 col-lg-4">
-      <div
-        className="sys-card h-100 d-flex flex-column"
-        style={{
-          background: "white",
-          borderRadius: 28,
-          padding: "clamp(24px, 6vw, 40px) clamp(20px, 5vw, 36px)",
-          boxShadow: "0 2px 20px rgba(0,0,0,0.07)",
-          border: "1.5px solid rgba(0,0,0,0.05)",
-        }}
-      >
-        <div className="d-flex align-items-start justify-content-between mb-6">
+    <Reveal delay={delay} className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-0.75rem)]">
+      <div className="hover-lift shadow-soft flex h-full flex-col rounded-[28px] border-[1.5px] border-black/5 bg-white dark:bg-gray-900 p-[clamp(24px,6vw,40px)_clamp(20px,5vw,36px)]">
+        <div className="mb-6 flex items-start justify-between">
           <div
-            style={{
-              width: 68,
-              height: 68,
-              background: app.accentColor,
-              borderRadius: 22,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              flexShrink: 0,
-            }}
+            className="flex h-[68px] w-[68px] flex-shrink-0 items-center justify-center rounded-[22px]"
+            style={{ background: app.accentColor }}
           >
             {icon}
           </div>
           {app.status === "live" ? (
-            <span
-              className="d-inline-flex align-items-center gap-1.5"
-              style={{ fontSize: 11, fontWeight: 600, color: "#2E7D32" }}
-            >
-              <span
-                className="mkt-pulse-dot rounded-circle"
-                style={{ width: 6, height: 6, background: "#2E7D32", display: "inline-block" }}
-              />
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-green-600">
+              <span className="mkt-pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-green-600" />
               Live
             </span>
           ) : (
-            <span style={{ fontSize: 11, fontWeight: 600, color: "#9ca3af" }}>Coming soon</span>
+            <span className="text-[11px] font-semibold text-gray-400 dark:text-gray-500">Coming soon</span>
           )}
         </div>
-        <span
-          className="d-inline-block mb-3"
-          style={{
-            fontSize: 11,
-            fontWeight: 600,
-            color: "#6b7280",
-            background: "#f3f4f6",
-            borderRadius: 999,
-            padding: "3px 10px",
-            alignSelf: "flex-start",
-          }}
-        >
+        <span className="mb-3 inline-block self-start rounded-full bg-gray-100 dark:bg-gray-800 px-2.5 py-[3px] text-[11px] font-semibold text-gray-500 dark:text-gray-400">
           {app.category}
         </span>
-        <h3 style={{ fontSize: 20, fontWeight: 700, color: "#111827", marginBottom: 8, lineHeight: 1.2 }}>
-          {app.name}
-        </h3>
-        <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 8 }}>{app.tagline}</p>
-        <p style={{ fontSize: 14, color: "#9ca3af", lineHeight: 1.65, marginBottom: 28, flexGrow: 1 }}>
-          {app.description}
-        </p>
+        <h3 className="mb-2 text-xl font-bold leading-tight text-gray-900 dark:text-white">{app.name}</h3>
+        <p className="mb-2 text-[13px] text-gray-500 dark:text-gray-400">{app.tagline}</p>
+        <p className="mb-7 flex-grow text-sm leading-relaxed text-gray-400 dark:text-gray-500">{app.description}</p>
         {app.status === "live" ? (
           <Link
             href={app.href}
             target={app.href.startsWith("http") ? "_blank" : undefined}
             rel={app.href.startsWith("http") ? "noopener noreferrer" : undefined}
-            className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl no-underline transition-all hover:-translate-y-0.5 hover:shadow-lg"
-            style={{ background: app.accentColor, fontSize: 14, alignSelf: "flex-start" }}
+            className="inline-flex items-center gap-2 self-start rounded-xl px-5 py-2.5 text-sm font-semibold text-white no-underline transition-all hover:-translate-y-0.5 hover:shadow-lg"
+            style={{ background: app.accentColor }}
           >
             Open {app.name}
             <ArrowRight size={14} />
           </Link>
         ) : (
-          <span
-            style={{
-              display: "inline-flex",
-              alignItems: "center",
-              padding: "10px 20px",
-              background: "#f3f4f6",
-              color: "#9ca3af",
-              fontSize: 14,
-              fontWeight: 600,
-              borderRadius: 12,
-              alignSelf: "flex-start",
-            }}
-          >
+          <span className="inline-flex items-center self-start rounded-xl bg-gray-100 dark:bg-gray-800 px-5 py-2.5 text-sm font-semibold text-gray-400 dark:text-gray-500">
             Coming Soon
           </span>
         )}
@@ -132,54 +82,40 @@ export default function SystemsExplorer({ apps }: { apps: AppEntry[] }) {
   }, [apps, query, category]);
 
   return (
-    <div className="container">
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       {/* Search + filters */}
-      <Reveal className="row justify-content-center mb-10">
-        <div className="col-lg-7">
-          <div className="position-relative mb-4">
+      <Reveal className="mb-10 flex justify-center">
+        <div className="w-full max-w-2xl">
+          <div className="relative mb-4">
             <Search
               size={16}
-              style={{ position: "absolute", left: 18, top: "50%", transform: "translateY(-50%)", color: "#9ca3af" }}
+              className="pointer-events-none absolute left-[18px] top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500"
             />
             <input
               type="text"
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search systems by name or capability…"
-              className="w-100"
-              style={{
-                padding: "13px 44px",
-                borderRadius: 14,
-                border: "1.5px solid #e5e7eb",
-                fontSize: 14,
-                outline: "none",
-              }}
+              className="w-full rounded-2xl border-[1.5px] border-gray-200 dark:border-gray-800 py-[13px] pl-11 pr-11 text-sm outline-none"
             />
             {query && (
               <button
                 onClick={() => setQuery("")}
                 aria-label="Clear search"
-                className="border-0 bg-transparent d-flex align-items-center justify-content-center"
-                style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", color: "#9ca3af" }}
+                className="absolute right-1.5 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center border-0 bg-transparent text-gray-400 dark:text-gray-500"
               >
                 <X size={16} />
               </button>
             )}
           </div>
-          <div className="d-flex flex-wrap justify-content-center gap-2">
+          <div className="flex flex-wrap justify-center gap-2">
             {categories.map((c) => (
               <button
                 key={c}
                 onClick={() => setCategory(c)}
-                className="border-0 transition-all"
-                style={{
-                  fontSize: 13,
-                  fontWeight: 600,
-                  padding: "7px 16px",
-                  borderRadius: 999,
-                  background: category === c ? "#2E7D32" : "#f3f4f6",
-                  color: category === c ? "white" : "#4b5563",
-                }}
+                className={`min-h-[40px] rounded-full border-0 px-4 py-2.5 text-[13px] font-semibold transition-all ${
+                  category === c ? "bg-green-600 text-white" : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
+                }`}
               >
                 {c}
               </button>
@@ -190,42 +126,28 @@ export default function SystemsExplorer({ apps }: { apps: AppEntry[] }) {
 
       {/* Grid */}
       {filtered.length > 0 ? (
-        <div className="row g-4 align-items-stretch">
+        <div className="flex flex-wrap items-stretch justify-center gap-6">
           {filtered.map((app, i) => (
             <SystemCard key={app.id} app={app} delay={i * 80} />
           ))}
-          <Reveal delay={filtered.length * 80} className="col-md-6 col-lg-4">
-            <div
-              style={{
-                height: "100%",
-                minHeight: 220,
-                borderRadius: 28,
-                padding: "clamp(28px, 7vw, 48px) clamp(20px, 5vw, 36px)",
-                border: "2px dashed #e5e7eb",
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                justifyContent: "center",
-                textAlign: "center",
-              }}
-            >
-              <Sparkles size={32} style={{ color: "#d1d5db", marginBottom: 16 }} />
-              <p style={{ fontSize: 15, fontWeight: 600, color: "#9ca3af", marginBottom: 6 }}>
-                More systems coming
-              </p>
-              <p style={{ fontSize: 13, color: "#d1d5db", marginBottom: 0 }}>
-                New tools are under development.
-              </p>
+          <Reveal
+            delay={filtered.length * 80}
+            className="w-full sm:w-[calc(50%-0.75rem)] lg:w-[calc(33.333%-0.75rem)]"
+          >
+            <div className="flex h-full min-h-[220px] flex-col items-center justify-center rounded-[28px] border-2 border-dashed border-gray-200 dark:border-gray-800 p-[clamp(28px,7vw,48px)_clamp(20px,5vw,36px)] text-center">
+              <Sparkles size={32} className="mb-4 text-gray-300" />
+              <p className="mb-1.5 text-[15px] font-semibold text-gray-400 dark:text-gray-500">More systems coming</p>
+              <p className="mb-0 text-[13px] text-gray-300">New tools are under development.</p>
             </div>
           </Reveal>
         </div>
       ) : (
-        <div className="text-center py-5">
-          <Search size={28} style={{ color: "#d1d5db", marginBottom: 12 }} />
-          <p style={{ fontSize: 15, fontWeight: 600, color: "#6b7280", marginBottom: 4 }}>
+        <div className="py-12 text-center">
+          <Search size={28} className="mx-auto mb-3 text-gray-300" />
+          <p className="mb-1 text-[15px] font-semibold text-gray-500 dark:text-gray-400">
             No systems match &ldquo;{query}&rdquo;
           </p>
-          <p style={{ fontSize: 13, color: "#9ca3af" }}>Try a different search term or category.</p>
+          <p className="text-[13px] text-gray-400 dark:text-gray-500">Try a different search term or category.</p>
         </div>
       )}
     </div>

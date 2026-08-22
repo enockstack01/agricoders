@@ -1,7 +1,8 @@
 "use client";
 import { useUser, SignInButton, SignUpButton } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import Link from "next/link";
 import {
   FileText,
   BarChart2,
@@ -12,8 +13,6 @@ import {
   LineChart,
   ShieldCheck,
   ChevronRight,
-  X,
-  Menu,
   Globe,
   TrendingUp,
   Zap,
@@ -22,7 +21,9 @@ import {
   Mail,
   MapPin,
 } from "lucide-react";
-import ThemeToggle from "@/components/ui/ThemeToggle";
+import AgriNav from "@/components/layout/AgriNav";
+import Reveal from "@/components/ui/Reveal";
+import CountUp from "@/components/ui/CountUp";
 import PlanIllustration from "@/components/marketing/PlanIllustration";
 
 const FEATURES = [
@@ -58,371 +59,272 @@ const FEATURES = [
   },
 ];
 
+const STATS = [
+  { value: "< 5 min", label: "Generation Time" },
+  { value: "19", label: "Excel Sheets" },
+  { value: "6", label: "Embedded Charts" },
+  { value: "100+", label: "Currencies Supported" },
+];
+
+const BUSINESS_PLAN_ITEMS = [
+  "AI-Written Executive Summary",
+  "Company Introduction and Vision",
+  "Industry & Market Analysis",
+  "Competitor Review",
+  "Financial Highlights & Projections",
+  "Six Embedded Professional Charts",
+  "APA-Cited Reference List",
+];
+
+const FINANCIAL_MODEL_ITEMS = [
+  "CAPEX & Product Bill of Materials",
+  "Staff, Payroll & Deduction Schedules",
+  "Operating Expenses (Multi-Year)",
+  "Revenue Forecast & Sales Volume",
+  "Cash Flow Statement",
+  "Income Statement & P&L",
+  "NPV, IRR, Payback Period & Balance Sheet",
+];
+
+const STEPS = [
+  {
+    num: "01",
+    title: "Complete the guided form",
+    desc: "Our structured 10-step form walks you through company details, team, products, market analysis, and financial projections. No finance expertise required.",
+    time: "~10 minutes",
+  },
+  {
+    num: "02",
+    title: "AI generates your documents",
+    desc: "Our system analyses your data and produces a professional narrative, all financial calculations, and six embedded charts, automatically.",
+    time: "2 to 3 minutes",
+  },
+  {
+    num: "03",
+    title: "Receive and present",
+    desc: "Receive a complete Business Plan Word document and a full Excel financial model, polished, internally consistent, and ready for investors.",
+    time: "Instant",
+  },
+];
+
+const QUALITY_ITEMS = [
+  {
+    Icon: Award,
+    title: "Indistinguishable from consultant work",
+    desc: "Our output meets the quality standard of documents produced by experienced business consultants. Investors and lenders take it seriously.",
+  },
+  {
+    Icon: Users,
+    title: "Extra-mile client support",
+    desc: "Our team helps you get the inputs right. From financial figures to market data, we support you through every part of the process.",
+  },
+  {
+    Icon: ShieldCheck,
+    title: "Internally consistent",
+    desc: "The business plan narrative and financial model are aligned. Every figure in the document matches the model. No inconsistencies.",
+  },
+  {
+    Icon: Brain,
+    title: "Market-specific intelligence",
+    desc: "Content is generated for your specific industry, country, and business context. Not a generic template with your name inserted.",
+  },
+];
+
+const WHY_IT_WORKS = [
+  {
+    icon: <Brain size={26} />,
+    title: "Context-Aware Analysis",
+    desc: "The AI reads your industry, location, and financial inputs to generate narrative that accurately reflects your specific business.",
+  },
+  {
+    icon: <Zap size={26} />,
+    title: "Real-Time Financial Intelligence",
+    desc: "NPV, IRR, payback period, break-even, and cash flow, all computed automatically with live Excel formulas.",
+  },
+  {
+    icon: <ShieldCheck size={26} />,
+    title: "Research-Backed Content",
+    desc: "Sections include market statistics, industry benchmarks, and data-driven analysis with APA-cited references.",
+  },
+];
+
 export default function Home() {
   const { isSignedIn, isLoaded } = useUser();
   const router = useRouter();
-  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     if (isLoaded && isSignedIn) router.push("/plan/dashboard");
   }, [isLoaded, isSignedIn, router]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col">
-
-      {/* Navigation */}
-      <header className="sticky top-0 z-50 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 shadow-sm transition-colors">
-        <div className="container-xl px-4">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center gap-3 flex-shrink-0">
-              <div
-                className="flex items-center justify-center rounded-xl"
-                style={{ width: 36, height: 36, background: "#2E7D32" }}
-              >
-                <Layers size={17} color="white" />
-              </div>
-              <span className="font-bold text-gray-900 dark:text-white text-[15px] tracking-tight">Logistack Plan</span>
-            </div>
-
-            <nav className="hidden md:flex items-center gap-1">
-              {[
-                { label: "How it works", href: "#how-it-works" },
-                { label: "Features", href: "#features" },
-                { label: "Pricing", href: "#pricing" },
-              ].map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="px-4 py-2 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all no-underline"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
-
-            <div className="hidden md:flex items-center gap-2">
-              <ThemeToggle compact />
-              <SignInButton mode="modal" forceRedirectUrl="/plan/dashboard">
-                <button className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg transition-all border-0 bg-transparent">
-                  Sign In
-                </button>
-              </SignInButton>
-              <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
-                <button
-                  className="flex items-center gap-2 px-4 py-2 text-white text-sm font-semibold rounded-xl transition-all shadow-sm border-0"
-                  style={{ background: "#2E7D32" }}
-                >
-                  Get Started
-                  <ArrowRight size={14} />
-                </button>
-              </SignUpButton>
-            </div>
-
-            <div className="flex items-center gap-1 md:hidden">
-              <ThemeToggle compact />
-              <button
-                className="p-2 rounded-lg text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors border-0 bg-transparent"
-                onClick={() => setMobileOpen((v) => !v)}
-              >
-                {mobileOpen ? <X size={20} /> : <Menu size={20} />}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {mobileOpen && (
-          <div className="md:hidden border-t border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 px-4 pb-4 pt-3 transition-colors">
-            <div className="flex flex-col gap-1 mb-3">
-              {[
-                { label: "How it works", href: "#how-it-works" },
-                { label: "Features", href: "#features" },
-                { label: "Pricing", href: "#pricing" },
-              ].map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  onClick={() => setMobileOpen(false)}
-                  className="block px-3 py-2.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg no-underline"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </div>
-            <div className="flex flex-col gap-2 pt-2 border-t border-gray-100">
-              <SignInButton mode="modal" forceRedirectUrl="/plan/dashboard">
-                <button className="w-full px-4 py-2.5 text-sm font-medium text-gray-700 border border-gray-200 rounded-xl hover:bg-gray-50 bg-transparent">
-                  Sign In
-                </button>
-              </SignInButton>
-              <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
-                <button
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-white text-sm font-semibold rounded-xl border-0"
-                  style={{ background: "#2E7D32" }}
-                >
-                  Get Started
-                  <ArrowRight size={14} />
-                </button>
-              </SignUpButton>
-            </div>
-          </div>
-        )}
-      </header>
+    <div className="flex min-h-screen flex-col bg-white dark:bg-gray-900">
+      <AgriNav />
 
       {/* Hero */}
-      <section className="bg-black px-4 py-28 sm:py-36 text-center relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="absolute rounded-full blur-3xl"
-            style={{
-              top: 0,
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: 600,
-              height: 300,
-              background: "rgba(46,125,50,0.10)",
-            }}
-          />
+      <section className="relative overflow-hidden bg-black px-4 py-28 text-center sm:py-36">
+        <div className="pointer-events-none absolute inset-0">
+          <div className="mkt-float absolute left-1/2 top-0 h-[300px] w-[600px] -translate-x-1/2 rounded-full bg-green-600/10 blur-3xl" />
         </div>
-        <div className="container position-relative">
-          <div className="row align-items-center">
-            <div className="col-lg-6 text-center text-lg-start">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white mb-6 leading-tight tracking-tight">
-                Investor-Ready Business Plans{" "}
-                <span style={{ color: "#66BB6A" }}>in Under 15 Minutes</span>
-              </h1>
-              <p className="text-lg sm:text-xl text-gray-400 mb-10 leading-relaxed">
-                Logistack Plan uses Artificial Intelligence to instantly produce a complete{" "}
-                <strong className="text-white">Business Plan</strong> and a full{" "}
-                <strong className="text-white">Financial Model</strong>{" "}
-                so you can focus on building your business, not writing documents.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-3 justify-center justify-content-lg-start mb-10">
-                <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
-                  <button
-                    className="inline-flex items-center justify-center gap-2.5 px-8 py-4 text-white font-bold rounded-xl transition-all text-sm border-0"
-                    style={{
-                      background: "#2E7D32",
-                      boxShadow: "0 10px 25px rgba(46,125,50,0.35)",
-                    }}
-                  >
-                    Generate My Business Plan
-                    <ArrowRight size={16} />
-                  </button>
-                </SignUpButton>
-                <SignInButton mode="modal" forceRedirectUrl="/plan/dashboard">
-                  <button
-                    className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-semibold rounded-xl transition-all text-sm border-0"
-                    style={{
-                      background: "rgba(255,255,255,0.05)",
-                      border: "1px solid rgba(255,255,255,0.15)",
-                    }}
-                  >
-                    Sign In to Dashboard
-                    <ChevronRight size={15} className="text-gray-400" />
-                  </button>
-                </SignInButton>
-              </div>
-              <div className="flex flex-wrap items-center justify-center justify-content-lg-start gap-x-6 gap-y-2 text-sm text-gray-500">
-                {["Any industry", "Any country", "Any currency", "Delivered in minutes"].map((t) => (
-                  <span key={t} className="flex items-center gap-1.5">
-                    <CheckCircle size={12} style={{ color: "#66BB6A" }} />
-                    {t}
-                  </span>
-                ))}
-              </div>
+        <div className="relative mx-auto max-w-7xl px-0 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-12">
+            <div className="text-center lg:text-left">
+              <Reveal>
+                <h1 className="mb-6 text-balance text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl lg:text-6xl">
+                  Investor-Ready Business Plans{" "}
+                  <span className="text-green-400">in Under 15 Minutes</span>
+                </h1>
+              </Reveal>
+              <Reveal delay={80}>
+                <p className="mb-10 text-lg leading-relaxed text-gray-400 dark:text-gray-500 sm:text-xl">
+                  Logistack Plan uses Artificial Intelligence to instantly produce a complete{" "}
+                  <strong className="text-white">Business Plan</strong> and a full{" "}
+                  <strong className="text-white">Financial Model</strong>{" "}
+                  so you can focus on building your business, not writing documents.
+                </p>
+              </Reveal>
+              <Reveal delay={160}>
+                <div className="mb-10 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+                  <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
+                    <button className="inline-flex items-center justify-center gap-2.5 rounded-xl border-0 bg-green-600 px-8 py-4 text-sm font-bold text-white shadow-[0_10px_25px_rgba(46,125,50,0.35)] transition-all">
+                      Generate My Business Plan
+                      <ArrowRight size={16} />
+                    </button>
+                  </SignUpButton>
+                  <SignInButton mode="modal" forceRedirectUrl="/plan/dashboard">
+                    <button className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/5 px-8 py-4 text-sm font-semibold text-white transition-all">
+                      Sign In to Dashboard
+                      <ChevronRight size={15} className="text-gray-400 dark:text-gray-500" />
+                    </button>
+                  </SignInButton>
+                </div>
+              </Reveal>
+              <Reveal delay={240}>
+                <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-gray-500 dark:text-gray-400 lg:justify-start">
+                  {["Any industry", "Any country", "Any currency", "Delivered in minutes"].map((t) => (
+                    <span key={t} className="flex items-center gap-1.5">
+                      <CheckCircle size={12} className="text-green-400" />
+                      {t}
+                    </span>
+                  ))}
+                </div>
+              </Reveal>
             </div>
-            <div className="col-lg-6 d-none d-lg-block">
-              <div style={{ maxWidth: 460, marginLeft: "auto" }}>
-                <PlanIllustration />
-              </div>
+            <div>
+              <Reveal delay={120}>
+                <div className="mx-auto w-full max-w-[280px] sm:max-w-[360px] lg:ml-auto lg:mr-0 lg:max-w-[460px]">
+                  <PlanIllustration />
+                </div>
+              </Reveal>
             </div>
           </div>
         </div>
       </section>
 
       {/* Stats */}
-      <section className="py-10" style={{ background: "#2E7D32" }}>
-        <div className="container">
-          <div className="row g-4 text-center">
-            {[
-              { value: "< 5 min", label: "Generation Time" },
-              { value: "19", label: "Excel Sheets" },
-              { value: "6", label: "Embedded Charts" },
-              { value: "100+", label: "Currencies Supported" },
-            ].map((s) => (
-              <div key={s.label} className="col-6 col-sm-3">
-                <div className="text-3xl sm:text-4xl font-black text-white mb-1">{s.value}</div>
-                <div
-                  className="text-xs font-medium uppercase"
-                  style={{ color: "#A5D6A7", letterSpacing: "0.1em" }}
-                >
+      <section className="bg-green-600 py-10">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="grid grid-cols-2 gap-4 text-center sm:grid-cols-4">
+            {STATS.map((s) => (
+              <div key={s.label}>
+                <div className="mb-1 text-3xl font-black text-white sm:text-4xl">
+                  <CountUp value={s.value} />
+                </div>
+                <div className="text-xs font-medium uppercase tracking-[0.1em] text-green-200">
                   {s.label}
                 </div>
               </div>
             ))}
-          </div>
+          </Reveal>
         </div>
       </section>
 
       {/* What you get */}
-      <section className="py-24 bg-white">
-        <div className="container">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+      <section className="bg-white dark:bg-gray-900 py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mb-14 text-center">
+            <h2 className="mb-4 text-balance text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
               Two complete documents, one generation
             </h2>
-            <p className="text-gray-500 mx-auto" style={{ maxWidth: 400 }}>
+            <p className="mx-auto max-w-[400px] text-gray-500 dark:text-gray-400">
               Every generation produces a professionally formatted Business Plan and a fully
               functional Financial Model, built from your actual data.
             </p>
-          </div>
-          <div className="row g-4">
-            <div className="col-md-6">
-              <div
-                className="h-100 d-flex flex-column"
-                style={{ background: "white", borderRadius: 28, padding: "clamp(24px, 6vw, 40px) clamp(20px, 5vw, 36px)", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
-                onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
-                onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
-              >
-                <div className="d-flex align-items-center gap-3 mb-5">
-                  <div
-                    className="d-flex align-items-center justify-content-center flex-shrink-0"
-                    style={{ width: 64, height: 64, background: "#111827", borderRadius: 20 }}
-                  >
+          </Reveal>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <Reveal>
+              <div className="hover-lift shadow-soft flex h-full flex-col rounded-[28px] bg-white dark:bg-gray-900 p-[clamp(24px,6vw,40px)_clamp(20px,5vw,36px)]">
+                <div className="mb-5 flex items-center gap-3">
+                  <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-[20px] bg-gray-900">
                     <FileText size={28} color="white" />
                   </div>
                   <div>
-                    <p style={{ fontSize: 18, fontWeight: 700, color: "#111827", marginBottom: 2 }}>Business Plan</p>
-                    <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 0 }}>Microsoft Word (.docx)</p>
+                    <p className="mb-0.5 text-lg font-bold text-gray-900 dark:text-white">Business Plan</p>
+                    <p className="mb-0 text-[13px] text-gray-400 dark:text-gray-500">Microsoft Word (.docx)</p>
                   </div>
                 </div>
-                <ul className="list-unstyled">
-                  {[
-                    "AI-Written Executive Summary",
-                    "Company Introduction and Vision",
-                    "Industry & Market Analysis",
-                    "Competitor Review",
-                    "Financial Highlights & Projections",
-                    "Six Embedded Professional Charts",
-                    "APA-Cited Reference List",
-                  ].map((item) => (
-                    <li key={item} className="d-flex align-items-center gap-2 mb-3" style={{ fontSize: 15, color: "#4b5563" }}>
-                      <CheckCircle size={15} style={{ color: "#2E7D32", flexShrink: 0 }} />
+                <ul className="list-none space-y-3 pl-0">
+                  {BUSINESS_PLAN_ITEMS.map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-[15px] text-gray-600 dark:text-gray-400">
+                      <CheckCircle size={15} className="flex-shrink-0 text-green-600" />
                       {item}
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
-            <div className="col-md-6">
-              <div
-                className="h-100 d-flex flex-column"
-                style={{ background: "white", borderRadius: 28, padding: "clamp(24px, 6vw, 40px) clamp(20px, 5vw, 36px)", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
-                onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
-                onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
-              >
-                <div className="d-flex align-items-center gap-3 mb-5">
-                  <div
-                    className="d-flex align-items-center justify-content-center flex-shrink-0"
-                    style={{ width: 64, height: 64, background: "#2E7D32", borderRadius: 20 }}
-                  >
+            </Reveal>
+            <Reveal delay={90}>
+              <div className="hover-lift shadow-soft flex h-full flex-col rounded-[28px] bg-white dark:bg-gray-900 p-[clamp(24px,6vw,40px)_clamp(20px,5vw,36px)]">
+                <div className="mb-5 flex items-center gap-3">
+                  <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-[20px] bg-green-600">
                     <BarChart2 size={28} color="white" />
                   </div>
                   <div>
-                    <p style={{ fontSize: 18, fontWeight: 700, color: "#111827", marginBottom: 2 }}>Financial Model</p>
-                    <p style={{ fontSize: 13, color: "#9ca3af", marginBottom: 0 }}>Excel Workbook (.xlsx, 19 sheets)</p>
+                    <p className="mb-0.5 text-lg font-bold text-gray-900 dark:text-white">Financial Model</p>
+                    <p className="mb-0 text-[13px] text-gray-400 dark:text-gray-500">Excel Workbook (.xlsx, 19 sheets)</p>
                   </div>
                 </div>
-                <ul className="list-unstyled">
-                  {[
-                    "CAPEX & Product Bill of Materials",
-                    "Staff, Payroll & Deduction Schedules",
-                    "Operating Expenses (Multi-Year)",
-                    "Revenue Forecast & Sales Volume",
-                    "Cash Flow Statement",
-                    "Income Statement & P&L",
-                    "NPV, IRR, Payback Period & Balance Sheet",
-                  ].map((item) => (
-                    <li key={item} className="d-flex align-items-center gap-2 mb-3" style={{ fontSize: 15, color: "#4b5563" }}>
-                      <CheckCircle size={15} style={{ color: "#2E7D32", flexShrink: 0 }} />
+                <ul className="list-none space-y-3 pl-0">
+                  {FINANCIAL_MODEL_ITEMS.map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-[15px] text-gray-600 dark:text-gray-400">
+                      <CheckCircle size={15} className="flex-shrink-0 text-green-600" />
                       {item}
                     </li>
                   ))}
                 </ul>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
       {/* How it works */}
-      <section id="how-it-works" className="py-24" style={{ background: "#030712" }}>
-        <div className="container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+      <section id="how-it-works" className="bg-gray-950 py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mb-16 text-center">
+            <h2 className="mb-4 text-balance text-3xl font-bold text-white sm:text-4xl">
               Three steps. One session.
             </h2>
-            <p className="text-gray-400 mx-auto" style={{ maxWidth: 400 }}>
+            <p className="mx-auto max-w-[400px] text-gray-400 dark:text-gray-500">
               From your first input to investor-ready documents, guided, automated, complete.
             </p>
-          </div>
-          <div className="row g-5">
-            {[
-              {
-                num: "01",
-                title: "Complete the guided form",
-                desc: "Our structured 10-step form walks you through company details, team, products, market analysis, and financial projections. No finance expertise required.",
-                time: "~10 minutes",
-              },
-              {
-                num: "02",
-                title: "AI generates your documents",
-                desc: "Our system analyses your data and produces a professional narrative, all financial calculations, and six embedded charts, automatically.",
-                time: "2 to 3 minutes",
-              },
-              {
-                num: "03",
-                title: "Receive and present",
-                desc: "Receive a complete Business Plan Word document and a full Excel financial model, polished, internally consistent, and ready for investors.",
-                time: "Instant",
-              },
-            ].map((step) => (
-              <div key={step.num} className="col-md-4 text-center">
-                <div
-                  className="d-flex align-items-center justify-content-center rounded-3 mx-auto mb-4 shadow"
-                  style={{
-                    width: 56,
-                    height: 56,
-                    background: "#2E7D32",
-                    boxShadow: "0 10px 30px rgba(46,125,50,0.35)",
-                  }}
-                >
-                  <span className="text-white font-black text-lg">{step.num}</span>
+          </Reveal>
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-3">
+            {STEPS.map((step, i) => (
+              <Reveal key={step.num} delay={i * 90} className="text-center">
+                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-green-600 shadow-[0_10px_30px_rgba(46,125,50,0.35)]">
+                  <span className="text-lg font-black text-white">{step.num}</span>
                 </div>
-                <div
-                  className="inline-flex items-center gap-1 text-xs font-semibold rounded-full px-3 py-1 mb-3"
-                  style={{
-                    color: "#66BB6A",
-                    background: "rgba(46,125,50,0.1)",
-                    border: "1px solid rgba(46,125,50,0.25)",
-                  }}
-                >
+                <div className="mb-3 inline-flex items-center gap-1 rounded-full border border-green-600/25 bg-green-600/10 px-3 py-1 text-xs font-semibold text-green-400">
                   {step.time}
                 </div>
-                <h3 className="font-bold text-white mb-2 text-sm">{step.title}</h3>
-                <p className="text-xs text-gray-400 leading-relaxed">{step.desc}</p>
-              </div>
+                <h3 className="mb-2 text-sm font-bold text-white">{step.title}</h3>
+                <p className="text-xs leading-relaxed text-gray-400 dark:text-gray-500">{step.desc}</p>
+              </Reveal>
             ))}
           </div>
           <div className="mt-14 text-center">
             <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
-              <button
-                className="inline-flex items-center gap-2 px-7 py-3.5 text-white font-bold rounded-xl transition-all text-sm border-0"
-                style={{
-                  background: "#2E7D32",
-                  boxShadow: "0 10px 25px rgba(46,125,50,0.35)",
-                }}
-              >
+              <button className="inline-flex items-center gap-2 rounded-xl border-0 bg-green-600 px-7 py-3.5 text-sm font-bold text-white shadow-[0_10px_25px_rgba(46,125,50,0.35)] transition-all">
                 Start now
                 <ArrowRight size={15} />
               </button>
@@ -432,80 +334,45 @@ export default function Home() {
       </section>
 
       {/* Professional Quality */}
-      <section className="py-24 bg-white">
-        <div className="container">
-          <div className="text-center mb-14">
-            <p
-              className="text-xs font-bold uppercase tracking-widest mb-3"
-              style={{ color: "#2E7D32", letterSpacing: "0.12em" }}
-            >
+      <section className="bg-white dark:bg-gray-900 py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mb-14 text-center">
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.12em] text-green-600">
               Our Promise
             </p>
-            <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4 leading-tight">
+            <h2 className="mb-4 text-balance text-3xl font-extrabold leading-tight text-gray-900 dark:text-white sm:text-4xl">
               Your documents won&apos;t look like they were written by AI
             </h2>
-            <p className="text-gray-500 leading-relaxed mx-auto mb-3" style={{ maxWidth: 560 }}>
+            <p className="mx-auto mb-3 max-w-[560px] leading-relaxed text-gray-500 dark:text-gray-400">
               We don&apos;t produce generic outputs. Our system is built on professional business document
               structures, industry-specific frameworks, and real financial modelling standards.
               Every business plan reads like it was written by an experienced consultant.
             </p>
-            <p className="text-gray-500 leading-relaxed mx-auto mb-8" style={{ maxWidth: 560 }}>
+            <p className="mx-auto mb-8 max-w-[560px] leading-relaxed text-gray-500 dark:text-gray-400">
               We also go the extra mile to support every client. If you need help sourcing the
               right inputs, understanding your financials, or refining your narrative, our team
               is here to make sure the final document reflects your actual business.
             </p>
-          </div>
-          <div className="row g-4">
-            {[
-              {
-                Icon: Award,
-                title: "Indistinguishable from consultant work",
-                desc: "Our output meets the quality standard of documents produced by experienced business consultants. Investors and lenders take it seriously.",
-              },
-              {
-                Icon: Users,
-                title: "Extra-mile client support",
-                desc: "Our team helps you get the inputs right. From financial figures to market data, we support you through every part of the process.",
-              },
-              {
-                Icon: ShieldCheck,
-                title: "Internally consistent",
-                desc: "The business plan narrative and financial model are aligned. Every figure in the document matches the model. No inconsistencies.",
-              },
-              {
-                Icon: Brain,
-                title: "Market-specific intelligence",
-                desc: "Content is generated for your specific industry, country, and business context. Not a generic template with your name inserted.",
-              },
-            ].map((item) => {
+          </Reveal>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {QUALITY_ITEMS.map((item, i) => {
               const ItemIcon = item.Icon;
               return (
-                <div key={item.title} className="col-md-6">
-                  <div
-                    className="h-100 d-flex flex-column"
-                    style={{ background: "white", borderRadius: 24, padding: "clamp(22px, 5.5vw, 36px) clamp(18px, 4.5vw, 32px)", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
-                    onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
-                    onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
-                  >
-                    <div
-                      className="d-flex align-items-center justify-content-center mb-4"
-                      style={{ width: 60, height: 60, background: "#2E7D32", borderRadius: 20, flexShrink: 0 }}
-                    >
+                <Reveal key={item.title} delay={i * 90}>
+                  <div className="hover-lift shadow-soft flex h-full flex-col rounded-3xl bg-white dark:bg-gray-900 p-[clamp(22px,5.5vw,36px)_clamp(18px,4.5vw,32px)]">
+                    <div className="mb-4 flex h-[60px] w-[60px] flex-shrink-0 items-center justify-center rounded-[20px] bg-green-600">
                       <ItemIcon size={26} color="white" />
                     </div>
-                    <h3 style={{ fontSize: 17, fontWeight: 700, color: "#111827", marginBottom: 10 }}>{item.title}</h3>
-                    <p style={{ fontSize: 14, color: "#6b7280", lineHeight: 1.65, marginBottom: 0 }}>{item.desc}</p>
+                    <h3 className="mb-2.5 text-[17px] font-bold text-gray-900 dark:text-white">{item.title}</h3>
+                    <p className="mb-0 text-sm leading-relaxed text-gray-500 dark:text-gray-400">{item.desc}</p>
                   </div>
-                </div>
+                </Reveal>
               );
             })}
           </div>
-          <div className="text-center mt-10">
+          <div className="mt-10 text-center">
             <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
-              <button
-                className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-bold rounded-xl transition-all border-0"
-                style={{ background: "#2E7D32" }}
-              >
+              <button className="inline-flex items-center gap-2 rounded-xl border-0 bg-green-600 px-6 py-3 text-sm font-bold text-white transition-all">
                 Generate My Business Plan
                 <ArrowRight size={14} />
               </button>
@@ -515,126 +382,88 @@ export default function Home() {
       </section>
 
       {/* Features */}
-      <section id="features" className="py-24" style={{ background: "#f9fafb" }}>
-        <div className="container">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+      <section id="features" className="bg-gray-50 dark:bg-gray-950 py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mb-14 text-center">
+            <h2 className="mb-4 text-balance text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
               Everything in a single generation
             </h2>
-            <p className="text-gray-500 mx-auto" style={{ maxWidth: 420 }}>
+            <p className="mx-auto max-w-[420px] text-gray-500 dark:text-gray-400">
               Built for founders, consultants, and financial analysts who need professional output
               without the manual effort.
             </p>
-          </div>
-          <div className="row g-4">
-            {FEATURES.map((feat) => (
-              <div key={feat.title} className="col-md-6 col-lg-4">
-                <div
-                  className="h-100 d-flex flex-column"
-                  style={{ background: "white", borderRadius: 24, padding: "clamp(22px, 5.5vw, 36px) clamp(18px, 4.5vw, 32px)", boxShadow: "0 2px 20px rgba(0,0,0,0.07)", transition: "box-shadow 0.3s, transform 0.3s" }}
-                  onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
-                  onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 20px rgba(0,0,0,0.07)"; el.style.transform = "translateY(0)"; }}
-                >
-                  <div
-                    className="d-flex align-items-center justify-content-center mb-4"
-                    style={{ width: 60, height: 60, background: "#2E7D32", borderRadius: 20, color: "white", flexShrink: 0 }}
-                  >
+          </Reveal>
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {FEATURES.map((feat, i) => (
+              <Reveal key={feat.title} delay={i * 60}>
+                <div className="hover-lift shadow-soft flex h-full flex-col rounded-3xl bg-white dark:bg-gray-900 p-[clamp(22px,5.5vw,36px)_clamp(18px,4.5vw,32px)]">
+                  <div className="mb-4 flex h-[60px] w-[60px] flex-shrink-0 items-center justify-center rounded-[20px] bg-green-600 text-white">
                     {feat.icon}
                   </div>
-                  <h3 style={{ fontSize: 17, fontWeight: 700, color: "#111827", marginBottom: 10 }}>{feat.title}</h3>
-                  <p style={{ fontSize: 14, color: "#6b7280", lineHeight: 1.65, marginBottom: 0 }}>{feat.desc}</p>
+                  <h3 className="mb-2.5 text-[17px] font-bold text-gray-900 dark:text-white">{feat.title}</h3>
+                  <p className="mb-0 text-sm leading-relaxed text-gray-500 dark:text-gray-400">{feat.desc}</p>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
       {/* Why it works */}
-      <section className="py-24 bg-black">
-        <div className="container">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
+      <section className="bg-black py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mb-14 text-center">
+            <h2 className="mb-4 text-balance text-3xl font-bold text-white sm:text-4xl">
               Not a template tool.{" "}
-              <span style={{ color: "#66BB6A" }}>An intelligence engine.</span>
+              <span className="text-green-400">An intelligence engine.</span>
             </h2>
-            <p className="text-gray-400 mx-auto leading-relaxed" style={{ maxWidth: 600 }}>
+            <p className="mx-auto max-w-[600px] leading-relaxed text-gray-400 dark:text-gray-500">
               Our system is built on an advanced AI model that understands your business context,
               industry, location, and financial data. It does not fill in blanks. It thinks, analyses,
               and produces market-specific strategic narrative that reflects your actual business.
             </p>
-          </div>
-          <div className="row g-3">
-            {[
-              {
-                icon: <Brain size={26} />,
-                title: "Context-Aware Analysis",
-                desc: "The AI reads your industry, location, and financial inputs to generate narrative that accurately reflects your specific business.",
-              },
-              {
-                icon: <Zap size={26} />,
-                title: "Real-Time Financial Intelligence",
-                desc: "NPV, IRR, payback period, break-even, and cash flow, all computed automatically with live Excel formulas.",
-              },
-              {
-                icon: <ShieldCheck size={26} />,
-                title: "Research-Backed Content",
-                desc: "Sections include market statistics, industry benchmarks, and data-driven analysis with APA-cited references.",
-              },
-            ].map((item) => (
-              <div key={item.title} className="col-md-4">
-                <div
-                  className="h-100"
-                  style={{ background: "rgba(255,255,255,0.07)", borderRadius: 28, padding: "clamp(22px, 5.5vw, 36px) clamp(18px, 4.5vw, 32px)", transition: "background 0.3s, transform 0.3s" }}
-                  onMouseEnter={(e) => { const el = e.currentTarget; el.style.background = "rgba(255,255,255,0.12)"; el.style.transform = "translateY(-5px)"; }}
-                  onMouseLeave={(e) => { const el = e.currentTarget; el.style.background = "rgba(255,255,255,0.07)"; el.style.transform = "translateY(0)"; }}
-                >
-                  <div
-                    className="d-flex align-items-center justify-content-center mb-4"
-                    style={{ width: 60, height: 60, background: "rgba(46,125,50,0.25)", borderRadius: 20, color: "#66BB6A" }}
-                  >
+          </Reveal>
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+            {WHY_IT_WORKS.map((item, i) => (
+              <Reveal key={item.title} delay={i * 90}>
+                <div className="hover-lift-dark h-full rounded-[28px] bg-white/[0.07] p-[clamp(22px,5.5vw,36px)_clamp(18px,4.5vw,32px)]">
+                  <div className="mb-4 flex h-[60px] w-[60px] items-center justify-center rounded-[20px] bg-green-600/25 text-green-400">
                     {item.icon}
                   </div>
-                  <h3 style={{ color: "white", fontWeight: 600, fontSize: 17, marginBottom: 10 }}>{item.title}</h3>
-                  <p style={{ color: "#9ca3af", fontSize: 14, lineHeight: 1.65, marginBottom: 0 }}>{item.desc}</p>
+                  <h3 className="mb-2.5 text-[17px] font-semibold text-white">{item.title}</h3>
+                  <p className="mb-0 text-sm leading-relaxed text-gray-400 dark:text-gray-500">{item.desc}</p>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="py-24 bg-white">
-        <div className="container">
-          <div className="text-center mb-14">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+      <section id="pricing" className="bg-white dark:bg-gray-900 py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <Reveal className="mb-14 text-center">
+            <h2 className="mb-4 text-balance text-3xl font-bold text-gray-900 dark:text-white sm:text-4xl">
               Clear, straightforward pricing
             </h2>
-            <p className="text-gray-500 mx-auto" style={{ maxWidth: 420 }}>
+            <p className="mx-auto max-w-[420px] text-gray-500 dark:text-gray-400">
               All packages include the complete standard documents. Choose system-generated or add expert customization for additional sections.
             </p>
-          </div>
-          <div className="row g-4 justify-content-center align-items-start">
-
-            <div className="col-md-5">
-              <div
-                className="d-flex flex-column"
-                style={{ background: "white", borderRadius: 24, padding: "clamp(20px, 5vw, 32px) clamp(16px, 4vw, 28px)", boxShadow: "0 2px 24px rgba(0,0,0,0.08)", transition: "box-shadow 0.3s, transform 0.3s" }}
-                onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 20px 60px rgba(0,0,0,0.14)"; el.style.transform = "translateY(-6px)"; }}
-                onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 2px 24px rgba(0,0,0,0.08)"; el.style.transform = "translateY(0)"; }}
-              >
-                <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: "#6b7280", marginBottom: 10 }}>
+          </Reveal>
+          <div className="flex flex-wrap items-start justify-center gap-4">
+            <Reveal className="w-full sm:w-[calc(50%-0.5rem)] lg:max-w-[420px]">
+              <div className="hover-lift shadow-soft flex h-full flex-col rounded-3xl bg-white dark:bg-gray-900 p-[clamp(20px,5vw,32px)_clamp(16px,4vw,28px)]">
+                <p className="mb-2.5 text-[10px] font-bold uppercase tracking-[0.12em] text-gray-500 dark:text-gray-400">
                   System Generated
                 </p>
-                <div className="d-flex align-items-baseline gap-1 mb-2">
-                  <span style={{ fontSize: "clamp(32px, 8vw, 44px)", fontWeight: 900, color: "#111827", lineHeight: 1 }}>$20</span>
-                  <span style={{ fontSize: 13, color: "#9ca3af" }}>per document</span>
+                <div className="mb-2 flex items-baseline gap-1">
+                  <span className="text-[clamp(32px,8vw,44px)] font-black leading-none text-gray-900 dark:text-white">$20</span>
+                  <span className="text-[13px] text-gray-400 dark:text-gray-500">per document</span>
                 </div>
-                <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 18, lineHeight: 1.55 }}>
-                  <strong style={{ color: "#111827" }}>Complete package</strong> — Business Plan & Financial Model, system-generated by AI in minutes.
+                <p className="mb-[18px] text-[13px] leading-relaxed text-gray-500 dark:text-gray-400">
+                  <strong className="text-gray-900 dark:text-white">Complete package</strong> — Business Plan & Financial Model, system-generated by AI in minutes.
                 </p>
-                <ul className="list-unstyled mb-4">
+                <ul className="mb-4 list-none space-y-2 pl-0">
                   {[
                     "Full business plan (.docx) + financial model (.xlsx)",
                     "19-sheet Excel spreadsheet",
@@ -642,47 +471,37 @@ export default function Home() {
                     "NPV, IRR & payback analysis",
                     "Investor-ready in minutes",
                   ].map((f) => (
-                    <li key={f} className="d-flex align-items-center gap-2 mb-2" style={{ fontSize: 14, color: "#374151" }}>
-                      <CheckCircle size={14} style={{ color: "#2E7D32", flexShrink: 0 }} />
+                    <li key={f} className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                      <CheckCircle size={14} className="flex-shrink-0 text-green-600" />
                       {f}
                     </li>
                   ))}
                 </ul>
                 <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
-                  <button
-                    className="w-full font-bold border-0 transition-all"
-                    style={{ background: "#111827", color: "white", borderRadius: 12, padding: "12px 0", fontSize: 14 }}
-                  >
+                  <button className="w-full rounded-xl border-0 bg-gray-900 py-3 text-sm font-bold text-white transition-all">
                     Get Started
                   </button>
                 </SignUpButton>
               </div>
-            </div>
+            </Reveal>
 
-            <div className="col-md-5 position-relative">
-              <div
-                className="d-flex flex-column"
-                style={{ background: "white", borderRadius: 24, padding: "clamp(20px, 5vw, 32px) clamp(16px, 4vw, 28px)", boxShadow: "0 8px 40px rgba(46,125,50,0.22)", border: "2px solid #2E7D32", transition: "box-shadow 0.3s, transform 0.3s" }}
-                onMouseEnter={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 24px 70px rgba(46,125,50,0.32)"; el.style.transform = "translateY(-6px)"; }}
-                onMouseLeave={(e) => { const el = e.currentTarget; el.style.boxShadow = "0 8px 40px rgba(46,125,50,0.22)"; el.style.transform = "translateY(0)"; }}
-              >
-                <span
-                  className="position-absolute font-bold text-white px-3 py-1 rounded-full"
-                  style={{ top: -13, left: "50%", transform: "translateX(-50%)", background: "#2E7D32", whiteSpace: "nowrap", fontSize: 11 }}
-                >
+            <Reveal delay={90} className="relative w-full sm:w-[calc(50%-0.5rem)] lg:max-w-[420px]">
+              <div className="flex h-full flex-col rounded-3xl border-2 border-green-600 bg-white dark:bg-gray-900 p-[clamp(20px,5vw,32px)_clamp(16px,4vw,28px)] shadow-[0_8px_40px_rgba(46,125,50,0.22)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_70px_rgba(46,125,50,0.32)]">
+                <span className="absolute -top-[13px] left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full bg-green-600 px-3 py-1 text-[11px] font-bold text-white">
                   Best Value
                 </span>
-                <p style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.12em", color: "#2E7D32", marginBottom: 10 }}>
+                <p className="mb-2.5 text-[10px] font-bold uppercase tracking-[0.12em] text-green-600">
                   Custom by Expert
                 </p>
-                <div className="d-flex align-items-baseline gap-1 mb-2">
-                  <span style={{ fontSize: "clamp(32px, 8vw, 44px)", fontWeight: 900, color: "#111827", lineHeight: 1 }}>$69</span>
-                  <span style={{ fontSize: 13, color: "#9ca3af" }}>per document</span>
+                <div className="mb-2 flex items-baseline gap-1">
+                  <span className="text-[clamp(32px,8vw,44px)] font-black leading-none text-gray-900 dark:text-white">$69</span>
+                  <span className="text-[13px] text-gray-400 dark:text-gray-500">per document</span>
                 </div>
-                <p style={{ fontSize: 13, color: "#6b7280", marginBottom: 18, lineHeight: 1.55 }}>
-                  Includes all standard parts plus <strong style={{ color: "#111827" }}>expert customization</strong> for additional sections your business may need.
+                <p className="mb-[18px] text-[13px] leading-relaxed text-gray-500 dark:text-gray-400">
+                  Includes all standard parts plus{" "}
+                  <strong className="text-gray-900 dark:text-white">expert customization</strong> for additional sections your business may need.
                 </p>
-                <ul className="list-unstyled mb-4">
+                <ul className="mb-4 list-none space-y-2 pl-0">
                   {[
                     "All standard documents included ($20 value)",
                     "Custom sections for your specific needs",
@@ -691,112 +510,95 @@ export default function Home() {
                     "Direct consultation with specialist",
                     "Tailored strategic recommendations",
                   ].map((f) => (
-                    <li key={f} className="d-flex align-items-center gap-2 mb-2" style={{ fontSize: 14, color: "#374151" }}>
-                      <CheckCircle size={14} style={{ color: "#2E7D32", flexShrink: 0 }} />
+                    <li key={f} className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
+                      <CheckCircle size={14} className="flex-shrink-0 text-green-600" />
                       {f}
                     </li>
                   ))}
                 </ul>
                 <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
-                  <button
-                    className="w-full font-bold border-0 transition-all"
-                    style={{ background: "#2E7D32", color: "white", borderRadius: 12, padding: "12px 0", fontSize: 14 }}
-                  >
+                  <button className="w-full rounded-xl border-0 bg-green-600 py-3 text-sm font-bold text-white transition-all">
                     Add Custom Sections
                   </button>
                 </SignUpButton>
               </div>
-            </div>
-
+            </Reveal>
           </div>
-          <p className="text-center text-xs text-gray-400 mt-8 d-flex align-items-center justify-content-center gap-2">
-            <LineChart size={11} style={{ color: "#2E7D32" }} />
+          <p className="mt-8 flex items-center justify-center gap-2 text-center text-xs text-gray-400 dark:text-gray-500">
+            <LineChart size={11} className="text-green-600" />
             Contact your administrator to get credits and start generating
           </p>
         </div>
       </section>
 
       {/* Final CTA */}
-      <section className="py-24" style={{ background: "#2E7D32" }}>
-        <div className="container">
-          <div className="row justify-content-center text-center">
-            <div className="col-lg-8">
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-5 leading-tight">
+      <section className="bg-green-600 py-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-center text-center">
+            <Reveal className="max-w-2xl">
+              <h2 className="mb-5 text-balance text-3xl font-extrabold leading-tight text-white sm:text-4xl">
                 Your next business plan should not take weeks
               </h2>
-              <p className="text-white mb-9 leading-relaxed" style={{ opacity: 0.9, maxWidth: 520, margin: "0 auto 2.25rem" }}>
+              <p className="mx-auto mb-9 max-w-[520px] leading-relaxed text-white/90">
                 Join entrepreneurs and consultants who use Logistack Plan to produce professional
                 business documents in a single session and present with confidence.
               </p>
-              <div className="d-flex flex-column flex-sm-row gap-3 justify-content-center">
+              <div className="flex flex-col justify-center gap-3 sm:flex-row">
                 <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">
-                  <button
-                    className="inline-flex items-center justify-center gap-2.5 px-8 py-4 bg-white font-bold rounded-xl hover:opacity-90 transition-all text-sm border-0"
-                    style={{ color: "#1B5E20" }}
-                  >
+                  <button className="inline-flex items-center justify-center gap-2.5 rounded-xl border-0 bg-white dark:bg-gray-900 px-8 py-4 text-sm font-bold text-green-700 dark:text-green-400 transition-all hover:opacity-90">
                     Generate My Business Plan
                     <ArrowRight size={16} />
                   </button>
                 </SignUpButton>
                 <SignInButton mode="modal" forceRedirectUrl="/plan/dashboard">
-                  <button
-                    className="inline-flex items-center justify-center gap-2 px-8 py-4 text-white font-semibold rounded-xl hover:opacity-80 transition-all text-sm border-0"
-                    style={{
-                      background: "transparent",
-                      border: "1px solid rgba(255,255,255,0.4)",
-                    }}
-                  >
+                  <button className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/40 bg-transparent px-8 py-4 text-sm font-semibold text-white transition-all hover:opacity-80">
                     Sign In to Dashboard
                     <ChevronRight size={15} />
                   </button>
                 </SignInButton>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-black border-t" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
-        <div className="container py-5">
-          <div className="row g-4 g-md-5">
-
-            <div className="col-12 col-md-5">
-              <div className="d-flex align-items-center gap-2 mb-3">
-                <div
-                  className="d-flex align-items-center justify-content-center rounded-2"
-                  style={{ width: 30, height: 30, background: "#2E7D32" }}
-                >
+      <footer className="border-t border-white/[0.08] bg-black">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-5 lg:gap-8">
+            <div className="lg:col-span-2">
+              <div className="mb-3 flex items-center gap-2">
+                <div className="flex h-[30px] w-[30px] items-center justify-center rounded-lg bg-green-600">
                   <Layers size={14} color="white" />
                 </div>
                 <span className="font-bold text-white">Logistack Plan</span>
               </div>
-              <p className="text-sm leading-relaxed mb-3" style={{ color: "#6b7280", maxWidth: 300 }}>
+              <p className="mb-3 max-w-[300px] text-sm leading-relaxed text-gray-500 dark:text-gray-400">
                 Logistack Ltd — AI-powered business planning and financial modelling for agribusinesses and entrepreneurs.
               </p>
-              <div className="d-flex flex-column gap-2 mb-3">
-                <div className="d-flex align-items-start gap-2">
-                  <MapPin size={13} style={{ color: "#66BB6A", flexShrink: 0, marginTop: 2 }} />
-                  <span className="text-xs" style={{ color: "#6b7280" }}>
+              <div className="mb-3 flex flex-col gap-2">
+                <div className="flex items-start gap-2">
+                  <MapPin size={13} className="mt-0.5 flex-shrink-0 text-green-400" />
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
                     Deco Center — NYARUTARAMA, Kigali, Rwanda
                   </span>
                 </div>
-                <div className="d-flex align-items-center gap-2">
-                  <Mail size={13} style={{ color: "#66BB6A", flexShrink: 0 }} />
-                  <a href="mailto:logistackltd@gmail.com" className="text-xs no-underline" style={{ color: "#6b7280" }}>
+                <div className="flex items-center gap-2">
+                  <Mail size={13} className="flex-shrink-0 text-green-400" />
+                  <a href="mailto:logistackltd@gmail.com" className="text-xs text-gray-500 dark:text-gray-400 no-underline">
                     logistackltd@gmail.com
                   </a>
                 </div>
-                <div className="d-flex align-items-start gap-2">
-                  <span className="text-xs" style={{ color: "#66BB6A", flexShrink: 0, marginTop: 1 }}>☎</span>
-                  <div className="d-flex flex-column gap-0.5">
-                    <a href="tel:+250796847804" className="text-xs no-underline" style={{ color: "#6b7280" }}>+250 796 847 804</a>
-                    <a href="tel:+250783826653" className="text-xs no-underline" style={{ color: "#6b7280" }}>+250 783 826 653</a>
+                <div className="flex items-start gap-2">
+                  <span className="mt-px flex-shrink-0 text-xs text-green-400">☎</span>
+                  <div className="flex flex-col gap-0.5">
+                    <a href="tel:+250796847804" className="text-xs text-gray-500 dark:text-gray-400 no-underline">+250 796 847 804</a>
+                    <a href="tel:+250783826653" className="text-xs text-gray-500 dark:text-gray-400 no-underline">+250 783 826 653</a>
                   </div>
                 </div>
-                <div className="d-flex align-items-center gap-2">
-                  <span className="text-xs" style={{ color: "#66BB6A", flexShrink: 0 }}>WhatsApp</span>
-                  <a href="https://wa.me/250796847804" target="_blank" rel="noreferrer" className="text-xs no-underline" style={{ color: "#6b7280" }}>
+                <div className="flex items-center gap-2">
+                  <span className="flex-shrink-0 text-xs text-green-400">WhatsApp</span>
+                  <a href="https://wa.me/250796847804" target="_blank" rel="noreferrer" className="text-xs text-gray-500 dark:text-gray-400 no-underline">
                     +250 796 847 804
                   </a>
                 </div>
@@ -805,77 +607,70 @@ export default function Home() {
                 href="https://logistack.space/"
                 target="_blank"
                 rel="noreferrer"
-                className="text-xs no-underline"
-                style={{ color: "#66BB6A" }}
+                className="text-xs text-green-400 no-underline"
               >
                 logistack.space ↗
               </a>
             </div>
 
-            <div className="col-6 col-md-3 col-lg-2 offset-md-1 offset-lg-2">
-              <h3
-                className="text-xs font-semibold uppercase mb-4"
-                style={{ color: "#9ca3af", letterSpacing: "0.1em" }}
-              >
-                Product
-              </h3>
-              <ul className="list-unstyled">
-                {[
-                  { label: "Dashboard", href: "/plan/dashboard" },
-                  { label: "New Business Plan", href: "/plan/form" },
-                  { label: "Financial Model", href: "/plan/form" },
-                  { label: "logistack.space", href: "https://logistack.space/" },
-                  { label: "Agricoders Portal", href: "/" },
-                ].map((link) => (
-                  <li key={link.label} className="mb-2">
-                    <a href={link.href} className="text-sm no-underline" style={{ color: "#6b7280" }}>
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
+            <div className="grid grid-cols-2 gap-8 lg:col-span-3 lg:pl-12">
+              <div>
+                <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.1em] text-gray-400 dark:text-gray-500">
+                  Product
+                </h3>
+                <ul className="list-none space-y-2 pl-0">
+                  {[
+                    { label: "Dashboard", href: "/plan/dashboard" },
+                    { label: "New Business Plan", href: "/plan/form" },
+                    { label: "Financial Model", href: "/plan/form" },
+                    { label: "logistack.space", href: "https://logistack.space/" },
+                    { label: "Agricoders Portal", href: "/" },
+                  ].map((link) => (
+                    <li key={link.label}>
+                      <a href={link.href} className="text-sm text-gray-500 dark:text-gray-400 no-underline">
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
 
-            <div className="col-6 col-md-3 col-lg-2">
-              <h3
-                className="text-xs font-semibold uppercase mb-4"
-                style={{ color: "#9ca3af", letterSpacing: "0.1em" }}
-              >
-                Company
-              </h3>
-              <ul className="list-unstyled">
-                {[
-                  { label: "Contact", href: "mailto:logistackltd@gmail.com" },
-                  { label: "Support", href: "mailto:logistackltd@gmail.com" },
-                  { label: "Privacy Policy", href: "/privacy" },
-                  { label: "Terms of Service", href: "/terms" },
-                ].map((link) => (
-                  <li key={link.label} className="mb-2">
-                    <a href={link.href} className="text-sm no-underline" style={{ color: "#6b7280" }}>
-                      {link.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+              <div>
+                <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.1em] text-gray-400 dark:text-gray-500">
+                  Company
+                </h3>
+                <ul className="list-none space-y-2 pl-0">
+                  {[
+                    { label: "Contact", href: "mailto:logistackltd@gmail.com" },
+                    { label: "Support", href: "mailto:logistackltd@gmail.com" },
+                    { label: "Privacy Policy", href: "/privacy" },
+                    { label: "Terms of Service", href: "/terms" },
+                  ].map((link) => (
+                    <li key={link.label}>
+                      <a href={link.href} className="text-sm text-gray-500 dark:text-gray-400 no-underline">
+                        {link.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-
           </div>
         </div>
-        <div className="border-top" style={{ borderColor: "rgba(255,255,255,0.05)" }}>
-          <div className="container py-3">
-            <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-2">
-              <span className="text-xs" style={{ color: "#4b5563" }}>
+        <div className="border-t border-white/5">
+          <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
+            <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
+              <span className="text-xs text-gray-600 dark:text-gray-400">
                 &copy; {new Date().getFullYear()} Logistack Ltd. All rights reserved.
               </span>
-              <div className="d-flex align-items-center gap-3 text-xs" style={{ color: "#4b5563" }}>
-                <a href="/privacy" className="no-underline" style={{ color: "#4b5563" }}>Privacy</a>
-                <a href="/terms" className="no-underline" style={{ color: "#4b5563" }}>Terms</a>
+              <div className="flex items-center gap-3 text-xs text-gray-600 dark:text-gray-400">
+                <Link href="/privacy" className="text-gray-600 dark:text-gray-400 no-underline">Privacy</Link>
+                <Link href="/terms" className="text-gray-600 dark:text-gray-400 no-underline">Terms</Link>
               </div>
             </div>
           </div>
         </div>
       </footer>
-
     </div>
   );
 }

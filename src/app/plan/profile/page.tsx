@@ -27,12 +27,12 @@ const COMPANY_TYPES = ["Private Limited Company","Public Limited Company","LLC",
 
 function Section({ title, icon, children }: { title: string; icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
-      <div className="px-5 py-4 border-b border-gray-100 flex items-center gap-2.5">
-        <div className="w-7 h-7 rounded-lg bg-green-50 flex items-center justify-center text-green-600 flex-shrink-0">
+    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
+      <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center gap-2.5">
+        <div className="w-7 h-7 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-600 dark:text-green-400 flex-shrink-0">
           {icon}
         </div>
-        <h2 className="font-semibold text-gray-900 text-sm">{title}</h2>
+        <h2 className="font-semibold text-gray-900 dark:text-white text-sm">{title}</h2>
       </div>
       <div className="px-5 py-5">{children}</div>
     </div>
@@ -42,8 +42,8 @@ function Section({ title, icon, children }: { title: string; icon: React.ReactNo
 function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-sm font-medium text-gray-700 mb-1">{label}</label>
-      {hint && <p className="text-xs text-gray-400 mb-1">{hint}</p>}
+      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{label}</label>
+      {hint && <p className="text-xs text-gray-400 dark:text-gray-500 mb-1">{hint}</p>}
       {children}
     </div>
   );
@@ -52,7 +52,7 @@ function Field({ label, hint, children }: { label: string; hint?: string; childr
 function Input({ value, onChange, placeholder, type = "text" }: { value: string | number; onChange: (v: string) => void; placeholder?: string; type?: string }) {
   return (
     <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder}
-      className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white" />
+      className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600" />
   );
 }
 
@@ -60,7 +60,7 @@ function SelectField({ value, onChange, options }: { value: string; onChange: (v
   return (
     <div className="relative">
       <select value={value} onChange={(e) => onChange(e.target.value)}
-        className="appearance-none w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer pr-8">
+        className="appearance-none w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer pr-8">
         {options.map((o) => <option key={o} value={o}>{o}</option>)}
       </select>
       <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
@@ -75,7 +75,7 @@ function RateInput({ label, hint, value, onChange }: { label: string; hint?: str
         <input type="number" min={0} max={100} step={0.1}
           value={(value * 100).toFixed(1)}
           onChange={(e) => onChange((parseFloat(e.target.value) || 0) / 100)}
-          className="w-full border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white" />
+          className="w-full border border-gray-200 dark:border-gray-700 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200" />
         <Percent size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
       </div>
     </Field>
@@ -158,7 +158,7 @@ export default function ProfilePage() {
   if (!isLoaded || loading) {
     return (
       <AppShell role={role} title="Profile" breadcrumb={[{ label: "Dashboard", href: "/plan/dashboard" }, { label: "Profile" }]}>
-        <div className="flex items-center justify-center py-16 gap-2 text-gray-400">
+        <div className="flex items-center justify-center py-16 gap-2 text-gray-400 dark:text-gray-500">
           <Loader2 size={18} className="animate-spin" />
           <span className="text-sm">Loading profile…</span>
         </div>
@@ -171,8 +171,8 @@ export default function ProfilePage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-xl font-bold text-gray-900">Profile &amp; Default Settings</h1>
-          <p className="text-sm text-gray-500 mt-0.5">
+          <h1 className="text-xl font-bold text-gray-900 dark:text-white">Profile &amp; Default Settings</h1>
+          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
             These defaults pre-fill every new business plan you create. You can always override them in the form.
           </p>
         </div>
@@ -188,13 +188,13 @@ export default function ProfilePage() {
 
       {/* Feedback */}
       {saved && (
-        <div className="mb-4 flex items-center gap-2 bg-green-50 border border-green-200 rounded-lg px-4 py-3 text-sm text-green-700">
+        <div className="mb-4 flex items-center gap-2 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg px-4 py-3 text-sm text-green-700 dark:text-green-400">
           <CheckCircle size={15} />
           Profile saved. Your defaults will apply to all new business plans.
         </div>
       )}
       {error && (
-        <div className="mb-4 flex items-center gap-2 bg-red-50 border border-red-200 rounded-lg px-4 py-3 text-sm text-red-700">
+        <div className="mb-4 flex items-center gap-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg px-4 py-3 text-sm text-red-700 dark:text-red-400">
           <AlertCircle size={15} />
           {error}
         </div>
@@ -205,22 +205,22 @@ export default function ProfilePage() {
         <Section title="Account" icon={<User size={15} />}>
           <div className="flex items-center gap-4">
             {user?.imageUrl
-              ? <img src={user.imageUrl} alt="" className="w-14 h-14 rounded-full object-cover flex-shrink-0 border border-gray-200" />
-              : <div className="w-14 h-14 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0"><User size={22} className="text-gray-500" /></div>
+              ? <img src={user.imageUrl} alt="" className="w-14 h-14 rounded-full object-cover flex-shrink-0 border border-gray-200 dark:border-gray-700" />
+              : <div className="w-14 h-14 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0"><User size={22} className="text-gray-500 dark:text-gray-400" /></div>
             }
             <div className="flex-1 min-w-0">
-              <p className="font-semibold text-gray-900">{user?.fullName || "—"}</p>
-              <p className="text-sm text-gray-500">{user?.primaryEmailAddress?.emailAddress || "—"}</p>
+              <p className="font-semibold text-gray-900 dark:text-white">{user?.fullName || "—"}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{user?.primaryEmailAddress?.emailAddress || "—"}</p>
               <div className="flex items-center gap-2 mt-1">
                 {role !== "user" && (
                   <span className={`inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full border ${
-                    role === "super_admin" ? "bg-purple-100 text-purple-700 border-purple-200" : "bg-blue-100 text-blue-700 border-blue-200"
+                    role === "super_admin" ? "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800" : "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800"
                   }`}>
                     <Shield size={10} />
                     {role === "super_admin" ? "Super Admin" : "Admin"}
                   </span>
                 )}
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-gray-400 dark:text-gray-500">
                   Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB", { month: "long", year: "numeric" }) : "—"}
                 </span>
               </div>
@@ -228,13 +228,13 @@ export default function ProfilePage() {
           </div>
 
           {/* Account ID — copy button */}
-          <div className="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-lg">
-            <p className="text-xs font-semibold text-gray-600 mb-1 uppercase tracking-wide">Your Account ID</p>
-            <p className="text-xs text-gray-500 mb-2">
+          <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+            <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-1 uppercase tracking-wide">Your Account ID</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">
               Share this ID with an admin when requesting credits. Keep it private otherwise.
             </p>
             <div className="flex items-center gap-2">
-              <code className="flex-1 text-xs font-mono bg-white border border-gray-200 rounded px-2.5 py-1.5 text-gray-700 truncate select-all">
+              <code className="flex-1 text-xs font-mono bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded px-2.5 py-1.5 text-gray-700 dark:text-gray-300 truncate select-all">
                 {user?.id || "—"}
               </code>
               <button
@@ -245,15 +245,15 @@ export default function ProfilePage() {
                     setTimeout(() => setCopied(false), 2000);
                   }
                 }}
-                className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 text-xs rounded-lg transition-colors flex-shrink-0"
+                className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 text-gray-600 dark:text-gray-400 text-xs rounded-lg transition-colors flex-shrink-0"
               >
-                {copied ? <CheckCircle size={12} className="text-green-600" /> : <Copy size={12} />}
+                {copied ? <CheckCircle size={12} className="text-green-600 dark:text-green-400" /> : <Copy size={12} />}
                 {copied ? "Copied!" : "Copy"}
               </button>
             </div>
           </div>
 
-          <p className="mt-3 text-xs text-gray-400">
+          <p className="mt-3 text-xs text-gray-400 dark:text-gray-500">
             To update your name, email, or profile photo, use the account button in the top-right corner.
           </p>
         </Section>
@@ -263,17 +263,17 @@ export default function ProfilePage() {
           {/* Balance row */}
           <div className="flex items-center justify-between gap-4 mb-5">
             <div>
-              <p className="text-3xl font-bold text-gray-900">{credits ?? "—"}</p>
-              <p className="text-xs text-gray-500 mt-0.5">Available credits</p>
+              <p className="text-3xl font-bold text-gray-900 dark:text-white">{credits ?? "—"}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Available credits</p>
             </div>
-            <div className="text-right text-xs text-gray-500 space-y-0.5">
-              <p>Generation cost: <strong className="text-gray-700">5 credits</strong></p>
-              <p>Downloads: <strong className="text-green-700">Free</strong></p>
+            <div className="text-right text-xs text-gray-500 dark:text-gray-400 space-y-0.5">
+              <p>Generation cost: <strong className="text-gray-700 dark:text-gray-300">5 credits</strong></p>
+              <p>Downloads: <strong className="text-green-700 dark:text-green-400">Free</strong></p>
             </div>
           </div>
 
-          <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-lg px-3 py-2.5 text-xs text-blue-700 mb-5">
-            <Mail size={12} className="flex-shrink-0 mt-0.5 text-blue-500" />
+          <div className="flex items-start gap-2 bg-blue-50 dark:bg-blue-900/20 border border-blue-100 dark:border-blue-800 rounded-lg px-3 py-2.5 text-xs text-blue-700 dark:text-blue-400 mb-5">
+            <Mail size={12} className="flex-shrink-0 mt-0.5 text-blue-500 dark:text-blue-400" />
             <span>
               To get more credits, contact your administrator. Each business plan generation costs <strong>5 credits</strong>.
             </span>
@@ -282,22 +282,22 @@ export default function ProfilePage() {
           {/* Transaction history */}
           {transactions.length > 0 ? (
             <div>
-              <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide mb-2">Transaction History</p>
-              <div className="divide-y divide-gray-100 border border-gray-200 rounded-lg overflow-hidden">
+              <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide mb-2">Transaction History</p>
+              <div className="divide-y divide-gray-100 dark:divide-gray-800 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden">
                 {transactions.slice(0, 10).map((tx, i) => (
-                  <div key={i} className="flex items-center justify-between px-3 py-2 bg-white text-xs">
+                  <div key={i} className="flex items-center justify-between px-3 py-2 bg-white dark:bg-gray-900 text-xs">
                     <div className="flex items-center gap-2">
                       <span className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-xs font-medium ${
-                        tx.credits > 0 ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                        tx.credits > 0 ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
                       }`}>
                         {tx.credits > 0 ? `+${tx.credits}` : tx.credits}
                       </span>
-                      <span className="text-gray-600 capitalize">{tx.type}</span>
+                      <span className="text-gray-600 dark:text-gray-400 capitalize">{tx.type}</span>
                       {tx.paymentAmount && (
-                        <span className="text-gray-400">({tx.paymentAmount} {tx.currency})</span>
+                        <span className="text-gray-400 dark:text-gray-500">({tx.paymentAmount} {tx.currency})</span>
                       )}
                     </div>
-                    <div className="flex items-center gap-2 text-gray-400">
+                    <div className="flex items-center gap-2 text-gray-400 dark:text-gray-500">
                       <span>Balance: {tx.balanceAfter}</span>
                       <Clock size={10} />
                       <span>{new Date(tx.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</span>
@@ -307,7 +307,7 @@ export default function ProfilePage() {
               </div>
             </div>
           ) : (
-            <p className="text-xs text-gray-400">No transactions yet.</p>
+            <p className="text-xs text-gray-400 dark:text-gray-500">No transactions yet.</p>
           )}
         </Section>
 
@@ -338,7 +338,7 @@ export default function ProfilePage() {
                   <select
                     value={CURRENCIES.includes(defaults.currency) ? defaults.currency : "__custom__"}
                     onChange={(e) => { if (e.target.value !== "__custom__") set("currency", e.target.value); }}
-                    className="appearance-none w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer pr-8"
+                    className="appearance-none w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer pr-8"
                   >
                     {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
                     <option value="__custom__">Other</option>
@@ -347,13 +347,13 @@ export default function ProfilePage() {
                 </div>
                 {!CURRENCIES.includes(defaults.currency) && (
                   <input value={defaults.currency} onChange={(e) => set("currency", e.target.value.toUpperCase())}
-                    className="border border-gray-200 rounded-lg px-3 py-2 text-sm w-24 focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm w-24 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200"
                     placeholder="XXX" maxLength={5} />
                 )}
               </div>
             </Field>
             <div className="flex items-end pb-1">
-              <p className="text-xs text-gray-400 leading-relaxed">
+              <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
                 Popular codes: <strong>USD</strong> (US Dollar), <strong>EUR</strong> (Euro), <strong>GBP</strong> (British Pound),
                 <strong> RWF</strong> (Rwandan Franc), <strong>KES</strong> (Kenyan Shilling), <strong>NGN</strong> (Nigerian Naira)
               </p>
@@ -371,7 +371,7 @@ export default function ProfilePage() {
                 <input type="number" min={0} max={100} step={0.1}
                   value={(defaults.loanRate * 100).toFixed(1)}
                   onChange={(e) => set("loanRate", (parseFloat(e.target.value) || 0) / 100)}
-                  className="w-full border border-gray-200 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white" />
+                  className="w-full border border-gray-200 dark:border-gray-700 rounded-lg pl-3 pr-8 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200" />
                 <Percent size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               </div>
             </Field>
@@ -380,8 +380,8 @@ export default function ProfilePage() {
             </Field>
           </div>
 
-          <div className="border-t border-gray-100 pt-4">
-            <p className="text-xs font-semibold text-gray-600 mb-3 uppercase tracking-wide">Payroll Contribution Rates</p>
+          <div className="border-t border-gray-100 dark:border-gray-800 pt-4">
+            <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-3 uppercase tracking-wide">Payroll Contribution Rates</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <RateInput label="Social Security / Pension" hint="Employee pension contribution rate" value={defaults.rssbRate} onChange={(v) => set("rssbRate", v)} />
               <RateInput label="Health Insurance" value={defaults.healthInsuranceRate} onChange={(v) => set("healthInsuranceRate", v)} />
@@ -389,7 +389,7 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <div className="mt-4 bg-amber-50 border border-amber-100 rounded-lg p-3 text-xs text-amber-700">
+          <div className="mt-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 rounded-lg p-3 text-xs text-amber-700 dark:text-amber-400">
             <strong>Note:</strong> These rates apply to all new business plans created from your account.
             You can still override any rate inside an individual plan in the Financial Settings step.
           </div>
@@ -397,12 +397,12 @@ export default function ProfilePage() {
       </div>
 
       {/* Sticky save bar on mobile */}
-      <div className="fixed bottom-0 left-0 right-0 sm:hidden bg-white border-t border-gray-200 px-4 py-3 flex items-center justify-between gap-3 z-20">
+      <div className="fixed bottom-0 left-0 right-0 sm:hidden bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 px-4 py-3 flex items-center justify-between gap-3 z-20">
         {saved
-          ? <p className="text-xs text-green-600 font-medium flex items-center gap-1"><CheckCircle size={13} />Saved!</p>
+          ? <p className="text-xs text-green-600 dark:text-green-400 font-medium flex items-center gap-1"><CheckCircle size={13} />Saved!</p>
           : error
-          ? <p className="text-xs text-red-600 font-medium flex items-center gap-1"><AlertCircle size={13} />{error}</p>
-          : <p className="text-xs text-gray-400">Unsaved changes</p>
+          ? <p className="text-xs text-red-600 dark:text-red-400 font-medium flex items-center gap-1"><AlertCircle size={13} />{error}</p>
+          : <p className="text-xs text-gray-400 dark:text-gray-500">Unsaved changes</p>
         }
         <button onClick={handleSave} disabled={saving}
           className="flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors">

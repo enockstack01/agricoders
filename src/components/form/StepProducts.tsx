@@ -9,8 +9,8 @@ import {
   DELIVERY_MODELS,
   PRICING_MODELS,
 } from "@/types";
-import { AddButton, RemoveButton } from "./FormField";
-import { Package, Briefcase, ChevronDown } from "lucide-react";
+import { AddButton, RemoveButton, FormInput, FormTextArea, FormSelect, GridRow, DataTable, DataTableColumn } from "./FormField";
+import { Package, Briefcase } from "lucide-react";
 
 interface Props {
   formData: Omit<FormSubmission, "userId">;
@@ -18,6 +18,9 @@ interface Props {
 }
 
 const fmt = (n: number) => n.toLocaleString("en-US");
+
+const cellInput =
+  "w-full border border-gray-200 dark:border-gray-700 rounded-lg px-2.5 py-2 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors";
 
 type TabKey = "products" | "services";
 
@@ -77,6 +80,10 @@ export default function StepProducts({ formData, update }: Props) {
     setServices(arr);
   };
 
+  const serviceTypeOptions = SERVICE_TYPES.map((t) => ({ value: t, label: t }));
+  const deliveryModelOptions = DELIVERY_MODELS.map((d) => ({ value: d, label: d }));
+  const pricingModelOptions = PRICING_MODELS.map((p) => ({ value: p, label: p }));
+
   // ── Render ─────────────────────────────────────────────────────────────────
   return (
     <div className="space-y-5">
@@ -110,7 +117,7 @@ export default function StepProducts({ formData, update }: Props) {
           <Briefcase size={15} />
           Services
           {services.length > 0 && (
-            <span className="text-xs bg-blue-100 text-blue-700 rounded-full px-1.5 py-0.5 font-semibold">{services.length}</span>
+            <span className="text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full px-1.5 py-0.5 font-semibold">{services.length}</span>
           )}
         </button>
       </div>
@@ -124,7 +131,7 @@ export default function StepProducts({ formData, update }: Props) {
           </div>
 
           {products.length === 0 && (
-            <div className="text-center py-10 border-2 border-dashed border-gray-200 rounded-xl text-gray-400">
+            <div className="text-center py-10 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl text-gray-400 dark:text-gray-500">
               <Package size={28} className="mx-auto mb-2 opacity-40" />
               <p className="text-sm font-medium">No products added</p>
               <p className="text-xs mt-0.5">Add a product below, or switch to Services.</p>
@@ -134,6 +141,66 @@ export default function StepProducts({ formData, update }: Props) {
           {products.map((product, pi) => {
             const totalCost = product.components.reduce((s, c) => s + c.quantity * c.costPerUnit, 0);
             const unitCost = product.batchSize > 0 ? totalCost / product.batchSize : 0;
+
+            const bomColumns: DataTableColumn<ProductComponent>[] = [
+              {
+                key: "item",
+                header: "Component / Material",
+                render: (c, ci) => (
+                  <input
+                    value={c.item}
+                    onChange={(e) => updateComponent(pi, ci, "item", e.target.value)}
+                    className={cellInput}
+                    placeholder="Component name"
+                  />
+                ),
+              },
+              {
+                key: "quantity",
+                header: "Qty",
+                headClassName: "text-right",
+                cellClassName: "text-right",
+                render: (c, ci) => (
+                  <input
+                    type="number"
+                    min={0}
+                    value={c.quantity}
+                    onChange={(e) => updateComponent(pi, ci, "quantity", parseInt(e.target.value) || 0)}
+                    className={`${cellInput} text-right`}
+                  />
+                ),
+              },
+              {
+                key: "costPerUnit",
+                header: `Cost/Unit (${cur})`,
+                headClassName: "text-right",
+                cellClassName: "text-right",
+                render: (c, ci) => (
+                  <input
+                    type="number"
+                    min={0}
+                    value={c.costPerUnit}
+                    onChange={(e) => updateComponent(pi, ci, "costPerUnit", parseFloat(e.target.value) || 0)}
+                    className={`${cellInput} text-right`}
+                  />
+                ),
+              },
+              {
+                key: "total",
+                header: "Total",
+                headClassName: "text-right",
+                cellClassName: "text-right font-medium text-gray-700 dark:text-gray-300",
+                render: (c) => fmt(c.quantity * c.costPerUnit),
+              },
+              {
+                key: "remove",
+                header: "",
+                cellClassName: "text-center",
+                hideOnMobile: true,
+                render: (_, ci) => <RemoveButton onClick={() => removeComponent(pi, ci)} />,
+              },
+            ];
+
             return (
               <div key={pi} className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
                 <div className="bg-green-600 text-white px-4 py-2.5 flex items-center justify-between">
@@ -143,78 +210,50 @@ export default function StepProducts({ formData, update }: Props) {
                   <RemoveButton onClick={() => removeProduct(pi)} />
                 </div>
                 <div className="p-4 space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <GridRow cols={3}>
                     <div className="sm:col-span-2">
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Product Name *</label>
-                      <input value={product.name} onChange={(e) => updateProduct(pi, "name", e.target.value)}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                        placeholder="e.g. Widget Pro, SolarKit, Smart Sensor" />
+                      <FormInput
+                        label="Product Name"
+                        required
+                        value={product.name}
+                        onChange={(v) => updateProduct(pi, "name", v)}
+                        placeholder="e.g. Widget Pro, SolarKit, Smart Sensor"
+                      />
                     </div>
-                    <div>
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Batch Size (units/run)</label>
-                      <input type="number" min={1} value={product.batchSize} onChange={(e) => updateProduct(pi, "batchSize", parseInt(e.target.value) || 1)}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500" />
-                    </div>
-                    <div className="sm:col-span-3">
-                      <label className="block text-xs font-medium text-gray-600 mb-1">Description</label>
-                      <input value={product.description} onChange={(e) => updateProduct(pi, "description", e.target.value)}
-                        className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-                        placeholder="Brief description of what this product does" />
-                    </div>
-                  </div>
+                    <FormInput
+                      label="Batch Size (units/run)"
+                      type="number"
+                      value={product.batchSize}
+                      onChange={(v) => updateProduct(pi, "batchSize", parseInt(v) || 1)}
+                    />
+                  </GridRow>
+                  <FormInput
+                    label="Description"
+                    value={product.description}
+                    onChange={(v) => updateProduct(pi, "description", v)}
+                    placeholder="Brief description of what this product does"
+                  />
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="bg-green-50 border border-green-100 rounded-lg px-4 py-3 text-sm">
-                      <p className="text-xs text-green-600 font-medium">Batch Total</p>
-                      <p className="font-bold text-green-800">{fmt(totalCost)} {cur}</p>
+                    <div className="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800 rounded-lg px-4 py-3 text-sm">
+                      <p className="text-xs text-green-600 dark:text-green-400 font-medium">Batch Total</p>
+                      <p className="font-bold text-green-800 dark:text-green-300">{fmt(totalCost)} {cur}</p>
                     </div>
-                    <div className="bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 text-sm">
-                      <p className="text-xs text-blue-600 font-medium">Unit Cost (avg)</p>
-                      <p className="font-bold text-blue-800">{fmt(Math.round(unitCost))} {cur}</p>
+                    <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-lg px-4 py-3 text-sm">
+                      <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Unit Cost (avg)</p>
+                      <p className="font-bold text-blue-800 dark:text-blue-300">{fmt(Math.round(unitCost))} {cur}</p>
                     </div>
                   </div>
 
                   <div>
-                    <p className="text-xs font-semibold text-gray-600 mb-2 uppercase tracking-wide">Bill of Materials</p>
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm">
-                        <thead>
-                          <tr className="bg-gray-50 dark:bg-gray-700">
-                            <th className="px-3 py-2 text-left text-xs font-semibold text-gray-500 dark:text-gray-400">Component / Material</th>
-                            <th className="px-3 py-2 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 w-20">Qty</th>
-                            <th className="px-3 py-2 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 w-32">Cost/Unit ({cur})</th>
-                            <th className="px-3 py-2 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 w-28">Total</th>
-                            <th className="w-10"></th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          {product.components.map((c, ci) => (
-                            <tr key={ci} className={ci % 2 === 0 ? "bg-white dark:bg-gray-800" : "bg-gray-50 dark:bg-gray-700"}>
-                              <td className="px-2 py-1.5">
-                                <input value={c.item} onChange={(e) => updateComponent(pi, ci, "item", e.target.value)}
-                                  className="w-full border border-gray-200 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-green-500"
-                                  placeholder="Component name" />
-                              </td>
-                              <td className="px-2 py-1.5">
-                                <input type="number" min={0} value={c.quantity} onChange={(e) => updateComponent(pi, ci, "quantity", parseInt(e.target.value) || 0)}
-                                  className="w-full border border-gray-200 rounded px-2 py-1 text-sm text-right focus:outline-none focus:ring-1 focus:ring-green-500" />
-                              </td>
-                              <td className="px-2 py-1.5">
-                                <input type="number" min={0} value={c.costPerUnit} onChange={(e) => updateComponent(pi, ci, "costPerUnit", parseFloat(e.target.value) || 0)}
-                                  className="w-full border border-gray-200 rounded px-2 py-1 text-sm text-right focus:outline-none focus:ring-1 focus:ring-green-500" />
-                              </td>
-                              <td className="px-3 py-1.5 text-right font-medium text-gray-700 text-sm">{fmt(c.quantity * c.costPerUnit)}</td>
-                              <td className="px-1 py-1.5"><RemoveButton onClick={() => removeComponent(pi, ci)} /></td>
-                            </tr>
-                          ))}
-                          <tr className="bg-green-50 dark:bg-green-900/10 font-semibold text-sm">
-                            <td colSpan={3} className="px-3 py-2 text-right text-gray-600 dark:text-gray-400">Batch Total</td>
-                            <td className="px-3 py-2 text-right text-green-700 dark:text-green-400">{fmt(totalCost)}</td>
-                            <td></td>
-                          </tr>
-                        </tbody>
-                      </table>
-                    </div>
+                    <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 mb-2 uppercase tracking-wide">Bill of Materials</p>
+                    <DataTable
+                      columns={bomColumns}
+                      rows={product.components}
+                      rowKey={(_, ci) => ci}
+                      emptyMessage="No components yet."
+                      mobileActions={(_, ci) => <RemoveButton onClick={() => removeComponent(pi, ci)} />}
+                    />
                     <div className="mt-2">
                       <AddButton onClick={() => addComponent(pi)} label="Add component" />
                     </div>
@@ -230,13 +269,13 @@ export default function StepProducts({ formData, update }: Props) {
       {/* ── SERVICES TAB ──────────────────────────────────────────────────────── */}
       {tab === "services" && (
         <div className="space-y-4">
-          <div className="bg-blue-50 border border-blue-100 rounded-lg px-4 py-3 text-sm text-blue-800">
+          <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-lg px-4 py-3 text-sm text-blue-800 dark:text-blue-300">
             <strong>Service Offerings</strong> — Intangible services your business delivers (consulting, SaaS, training, support, etc.).
             Services have no manufacturing cost — their pricing and revenue is configured in the Revenue step.
           </div>
 
           {services.length === 0 && (
-            <div className="text-center py-10 border-2 border-dashed border-gray-200 rounded-xl text-gray-400">
+            <div className="text-center py-10 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-xl text-gray-400 dark:text-gray-500">
               <Briefcase size={28} className="mx-auto mb-2 opacity-40" />
               <p className="text-sm font-medium">No services added</p>
               <p className="text-xs mt-0.5">Add a service below, or switch to Products.</p>
@@ -244,68 +283,55 @@ export default function StepProducts({ formData, update }: Props) {
           )}
 
           {services.map((svc, i) => (
-            <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
+            <div key={i} className="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
               <div className="bg-blue-600 text-white px-4 py-2.5 flex items-center justify-between">
                 <span className="font-semibold text-sm">
                   Service {i + 1}{svc.name ? `: ${svc.name}` : ""}
                 </span>
                 <RemoveButton onClick={() => removeService(i)} />
               </div>
-              <div className="p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="sm:col-span-2">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Service Name *</label>
-                  <input value={svc.name} onChange={(e) => updateService(i, "name", e.target.value)}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="e.g. Cloud Migration Consulting, Monthly Analytics Subscription" />
-                </div>
-                <div className="sm:col-span-2">
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Description</label>
-                  <textarea value={svc.description} onChange={(e) => updateService(i, "description", e.target.value)} rows={2}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 resize-y"
-                    placeholder="What does this service deliver? Who is it for?" />
-                </div>
+              <div className="p-4 space-y-4">
+                <FormInput
+                  label="Service Name"
+                  required
+                  value={svc.name}
+                  onChange={(v) => updateService(i, "name", v)}
+                  placeholder="e.g. Cloud Migration Consulting, Monthly Analytics Subscription"
+                />
+                <FormTextArea
+                  label="Description"
+                  value={svc.description}
+                  onChange={(v) => updateService(i, "description", v)}
+                  rows={2}
+                  placeholder="What does this service deliver? Who is it for?"
+                />
 
-                {/* Service Type */}
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Service Type</label>
-                  <div className="relative">
-                    <select value={svc.serviceType} onChange={(e) => updateService(i, "serviceType", e.target.value)}
-                      className="appearance-none w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer pr-8">
-                      {SERVICE_TYPES.map((t) => <option key={t} value={t}>{t}</option>)}
-                    </select>
-                    <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+                <GridRow cols={2}>
+                  <FormSelect
+                    label="Service Type"
+                    value={svc.serviceType}
+                    onChange={(v) => updateService(i, "serviceType", v)}
+                    options={serviceTypeOptions}
+                  />
+                  <FormSelect
+                    label="Delivery Model"
+                    value={svc.deliveryModel}
+                    onChange={(v) => updateService(i, "deliveryModel", v)}
+                    options={deliveryModelOptions}
+                  />
+                </GridRow>
+                <GridRow cols={2}>
+                  <FormSelect
+                    label="Pricing Model"
+                    value={svc.pricingModel}
+                    onChange={(v) => updateService(i, "pricingModel", v)}
+                    options={pricingModelOptions}
+                  />
+                  <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-lg px-3 py-2.5 text-xs text-blue-700 dark:text-blue-300 flex items-start gap-2">
+                    <Briefcase size={13} className="mt-0.5 flex-shrink-0" />
+                    <span>Service pricing and customer volumes are configured in the <strong>Revenue Streams</strong> step.</span>
                   </div>
-                </div>
-
-                {/* Delivery Model */}
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Delivery Model</label>
-                  <div className="relative">
-                    <select value={svc.deliveryModel} onChange={(e) => updateService(i, "deliveryModel", e.target.value)}
-                      className="appearance-none w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer pr-8">
-                      {DELIVERY_MODELS.map((d) => <option key={d} value={d}>{d}</option>)}
-                    </select>
-                    <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                  </div>
-                </div>
-
-                {/* Pricing Model */}
-                <div>
-                  <label className="block text-xs font-medium text-gray-600 mb-1">Pricing Model</label>
-                  <div className="relative">
-                    <select value={svc.pricingModel} onChange={(e) => updateService(i, "pricingModel", e.target.value)}
-                      className="appearance-none w-full border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer pr-8">
-                      {PRICING_MODELS.map((p) => <option key={p} value={p}>{p}</option>)}
-                    </select>
-                    <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                  </div>
-                </div>
-
-                {/* Info callout */}
-                <div className="bg-blue-50 border border-blue-100 rounded-lg px-3 py-2.5 text-xs text-blue-700 flex items-start gap-2">
-                  <Briefcase size={13} className="mt-0.5 flex-shrink-0" />
-                  <span>Service pricing and customer volumes are configured in the <strong>Revenue Streams</strong> step.</span>
-                </div>
+                </GridRow>
               </div>
             </div>
           ))}

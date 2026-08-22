@@ -1,7 +1,8 @@
-import Link from "next/link";
 import type { Metadata } from "next";
-import { Sprout, Mail, MapPin } from "lucide-react";
+import { Mail, MapPin } from "lucide-react";
 import AgriNav from "@/components/layout/AgriNav";
+import PageHero from "@/components/marketing/PageHero";
+import MarketingFooter from "@/components/marketing/MarketingFooter";
 import Reveal from "@/components/ui/Reveal";
 
 export const metadata: Metadata = {
@@ -48,80 +49,43 @@ const SECTIONS = [
 
 export default function TermsPage() {
   return (
-    <div className="min-h-screen flex flex-col bg-white">
+    <div className="flex min-h-screen flex-col bg-white dark:bg-gray-900">
       <AgriNav />
 
-      <section className="py-20 text-center bg-white relative overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="mkt-float-slow absolute rounded-full blur-3xl"
-            style={{ top: -60, left: "50%", transform: "translateX(-50%)", width: 500, height: 260, background: "rgba(46,125,50,0.06)" }}
-          />
-        </div>
-        <div className="container position-relative">
-          <div className="row justify-content-center">
-            <Reveal className="col-lg-7">
-              <p className="text-xs font-bold uppercase tracking-widest mb-4" style={{ color: "#2E7D32", letterSpacing: "0.14em" }}>
-                Legal
-              </p>
-              <h1 className="font-extrabold text-gray-900 mb-3 leading-tight" style={{ fontSize: "clamp(28px, 5vw, 48px)" }}>
-                Terms of Service
-              </h1>
-              <p className="text-gray-500" style={{ fontSize: 14 }}>Last updated: {UPDATED}</p>
+      <PageHero eyebrow="Legal" title="Terms of Service">
+        <p className="text-sm text-gray-500 dark:text-gray-400">Last updated: {UPDATED}</p>
+      </PageHero>
+
+      <section className="pb-24">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto max-w-3xl">
+            {SECTIONS.map((s, i) => (
+              <Reveal key={s.title} delay={Math.min(i * 40, 200)} className="mb-8">
+                <h2 className="mb-2.5 text-[19px] font-bold text-gray-900 dark:text-white">{s.title}</h2>
+                <p className="text-[15px] leading-relaxed text-gray-600 dark:text-gray-400">{s.body}</p>
+              </Reveal>
+            ))}
+
+            <Reveal delay={220}>
+              <div className="mt-10 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 p-5">
+                <h3 className="mb-3 text-[15px] font-bold text-gray-900 dark:text-white">Questions about these terms?</h3>
+                <div className="mb-2 flex items-center gap-2">
+                  <Mail size={14} className="flex-shrink-0 text-green-600" />
+                  <a href="mailto:logistackltd@gmail.com" className="text-sm text-gray-600 dark:text-gray-400 no-underline">
+                    logistackltd@gmail.com
+                  </a>
+                </div>
+                <div className="flex items-start gap-2">
+                  <MapPin size={14} className="mt-0.5 flex-shrink-0 text-green-600" />
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Deco Center — NYARUTARAMA, Kigali, Rwanda</span>
+                </div>
+              </div>
             </Reveal>
           </div>
         </div>
       </section>
 
-      <section className="pb-24">
-        <div className="container">
-          <div className="row justify-content-center">
-            <div className="col-lg-8">
-              {SECTIONS.map((s, i) => (
-                <Reveal key={s.title} delay={Math.min(i * 40, 200)} className="mb-8">
-                  <h2 className="font-bold text-gray-900 mb-2.5" style={{ fontSize: 19 }}>{s.title}</h2>
-                  <p className="text-gray-600 leading-relaxed" style={{ fontSize: 15 }}>{s.body}</p>
-                </Reveal>
-              ))}
-
-              <Reveal delay={220}>
-                <div
-                  className="rounded-xl p-5 mt-10"
-                  style={{ background: "#F5F7FA", border: "1px solid #E0E0E0" }}
-                >
-                  <h3 className="font-bold text-gray-900 mb-3" style={{ fontSize: 15 }}>Questions about these terms?</h3>
-                  <div className="d-flex align-items-center gap-2 mb-2">
-                    <Mail size={14} style={{ color: "#2E7D32", flexShrink: 0 }} />
-                    <a href="mailto:logistackltd@gmail.com" className="text-sm no-underline text-gray-600">
-                      logistackltd@gmail.com
-                    </a>
-                  </div>
-                  <div className="d-flex align-items-start gap-2">
-                    <MapPin size={14} style={{ color: "#2E7D32", flexShrink: 0, marginTop: 2 }} />
-                    <span className="text-sm text-gray-600">Deco Center — NYARUTARAMA, Kigali, Rwanda</span>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer className="bg-black border-t py-8" style={{ borderColor: "rgba(255,255,255,0.08)" }}>
-        <div className="container">
-          <div className="d-flex flex-column flex-sm-row align-items-center justify-content-between gap-3">
-            <Link href="/" className="d-flex align-items-center gap-2 no-underline">
-              <div style={{ width: 28, height: 28, background: "#2E7D32", borderRadius: 6, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Sprout size={13} color="white" />
-              </div>
-              <span className="font-bold text-white" style={{ fontSize: 14 }}>Agricoders</span>
-            </Link>
-            <Link href="/privacy" className="no-underline" style={{ fontSize: 13, color: "#6b7280" }}>
-              ← Privacy Policy
-            </Link>
-          </div>
-        </div>
-      </footer>
+      <MarketingFooter />
     </div>
   );
 }
