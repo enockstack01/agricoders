@@ -10,7 +10,7 @@ interface Props {
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 const cellInput =
-  "w-full border border-gray-200 dark:border-gray-700 rounded-lg px-2.5 py-2 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors";
+  "form-control form-control-sm";
 
 export default function StepKitManufacturing({ formData, update }: Props) {
   const components = formData.financial.kitComponents ?? [];
@@ -96,10 +96,10 @@ export default function StepKitManufacturing({ formData, update }: Props) {
       <p className="text-sm text-gray-500">List the components used to manufacture one IoT Smart Kit batch. Typical batch size is 10 units.</p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div className="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800 rounded-lg px-4 py-3 text-sm dark:text-green-300">
+        <div className="callout callout-success px-4 py-3 text-sm dark:text-green-300">
           <strong>Total Cost (batch):</strong><br />{fmt(totalCost)} RWF
         </div>
-        <div className="bg-blue-50 dark:bg-blue-900/10 border border-blue-100 dark:border-blue-800 rounded-lg px-4 py-3 text-sm dark:text-blue-300">
+        <div className="callout callout-info px-4 py-3 text-sm dark:text-blue-300">
           <strong>Cost Per Unit (avg):</strong><br />{fmt(unitCost)} RWF
         </div>
       </div>

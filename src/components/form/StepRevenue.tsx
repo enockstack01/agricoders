@@ -1,7 +1,7 @@
 "use client";
 import { FormSubmission, RevenuePackage } from "@/types";
 import { AddButton, RemoveButton, FormInput, FormSelect, FormCheckbox, GridRow } from "./FormField";
-import { Package, Briefcase } from "lucide-react";
+import { Package, Briefcase } from "@/components/plan/icons";
 
 interface Props {
   formData: Omit<FormSubmission, "userId">;
@@ -102,14 +102,14 @@ export default function StepRevenue({ formData, update }: Props) {
         </div>
       )}
 
-      <div className="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800 rounded-lg px-4 py-3 text-sm font-medium text-green-800 dark:text-green-300">
+      <div className="callout callout-success px-4 py-3 text-sm font-medium text-green-800 dark:text-green-300">
         Estimated Year 1 Total Revenue: {fmt(totalY1)} {cur}
       </div>
 
       {packages.map((p, i) => {
         const linkedIsService = isServiceOffering(p.product);
         return (
-          <div key={i} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800">
+          <div key={i} className="inset-panel">
             <div className="flex justify-between items-start mb-4">
               <div>
                 <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Revenue Stream #{i + 1}</span>
@@ -155,7 +155,7 @@ export default function StepRevenue({ formData, update }: Props) {
                   <input
                     value={p.product === "__other__" ? "" : p.product}
                     onChange={(e) => updatePkg(i, "product", e.target.value)}
-                    className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors mt-1"
+                    className="w-full form-control mt-1"
                     placeholder="e.g. SaaS Platform, Consulting Retainer"
                     autoFocus
                   />

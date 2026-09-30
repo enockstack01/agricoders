@@ -5,7 +5,9 @@ import Link from "next/link";
 import axios from "axios";
 import AppShell, { NavRole } from "@/components/layout/AppShell";
 import StatsCard from "@/components/ui/StatsCard";
+import { Loading, EmptyState, Modal, Stepper } from "@/components/plan/ui";
 import {
+  Sparkles,
   FileText,
   Download,
   Edit2,
@@ -23,7 +25,9 @@ import {
   ChevronDown,
   CheckCircle2,
   Send,
-} from "lucide-react";
+  Settings,
+  Zap,
+} from "@/components/plan/icons";
 
 interface Submission {
   _id: string;
@@ -70,72 +74,35 @@ function GeneratingOverlay({ docType, companyName }: { docType: string; companyN
   }, []);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-      <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-2xl p-8 w-full max-w-sm mx-4 text-center">
-        {/* Spinner */}
-        <div className="relative w-20 h-20 mx-auto mb-6">
-          <div className="absolute inset-0 rounded-full border-4 border-gray-100 dark:border-gray-800" />
-          <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-green-500 animate-spin" />
-          <div className="absolute inset-2 rounded-full bg-green-50 dark:bg-green-900/20 flex items-center justify-center">
-            {docType === "business-plan"
-              ? <FileText size={22} className="text-green-600 dark:text-green-400" />
-              : <BarChart2 size={22} className="text-green-600 dark:text-green-400" />
-            }
+    <div className="modal-overlay">
+      <div className="modal modal-sm">
+        <div className="modal-body" style={{ textAlign: "center", padding: "32px 28px" }}>
+          <div style={{ position: "relative", width: 64, height: 64, margin: "0 auto 20px" }}>
+            <div className="spinner lg" />
+            <span style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", color: "var(--primary)" }}>
+              {docType === "business-plan" ? <FileText size={22} /> : <BarChart2 size={22} />}
+            </span>
           </div>
+          <h3 className="section-title" style={{ marginBottom: 4 }}>
+            Generating {docType === "business-plan" ? "Business Plan" : "Financial Model"}
+          </h3>
+          <p className="page-subtitle" style={{ marginTop: 0, marginBottom: 20 }}>{companyName}</p>
+          <div className="progress-bar" style={{ marginBottom: 14 }}>
+            <div className="progress-bar-fill" style={{ width: `${progress}%`, transitionDuration: "2s" }} />
+          </div>
+          <p className="text-primary" style={{ fontSize: 14, fontWeight: 600, minHeight: 18, color: "var(--primary)" }}>
+            {GEN_MESSAGES[msgIdx]}
+          </p>
+          <p className="form-hint" style={{ marginTop: 10 }}>
+            This usually takes 30–90 seconds. Please do not close this page.
+          </p>
         </div>
-
-        <h3 className="font-bold text-gray-900 dark:text-white text-base mb-1">
-          Generating {docType === "business-plan" ? "Business Plan" : "Financial Model"}
-        </h3>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mb-5 truncate max-w-xs mx-auto">
-          {companyName}
-        </p>
-
-        {/* Progress bar */}
-        <div className="w-full bg-gray-100 dark:bg-gray-800 rounded-full h-1.5 mb-4 overflow-hidden">
-          <div
-            className="h-full bg-green-500 rounded-full transition-all duration-[2000ms] ease-out"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-
-        {/* Rotating status message */}
-        <p className="text-xs text-green-600 dark:text-green-400 font-medium min-h-[18px] transition-all">
-          {GEN_MESSAGES[msgIdx]}
-        </p>
-
-        <p className="text-[10px] text-gray-400 dark:text-gray-600 mt-3">
-          This usually takes 30–90 seconds. Please do not close this page.
-        </p>
       </div>
     </div>
   );
 }
 
 // ── Credits request modal ─────────────────────────────────────────────────────
-function CountStepper({ value, onChange }: { value: number; onChange: (v: number) => void }) {
-  return (
-    <div className="flex items-center gap-2">
-      <button
-        type="button"
-        onClick={() => onChange(Math.max(0, value - 1))}
-        className="w-7 h-7 rounded-full border border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-40"
-        disabled={value === 0}
-      >
-        −
-      </button>
-      <span className="w-5 text-center text-sm font-semibold text-gray-800 dark:text-gray-200">{value}</span>
-      <button
-        type="button"
-        onClick={() => onChange(value + 1)}
-        className="w-7 h-7 rounded-full border border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700"
-      >
-        +
-      </button>
-    </div>
-  );
-}
-
 function CreditsModal({ required, balance, onClose }: { required: number; balance: number; onClose: () => void }) {
   const [bpCount, setBpCount] = useState(required > 0 ? 1 : 0);
   const [fmCount, setFmCount] = useState(0);
@@ -166,118 +133,87 @@ function CreditsModal({ required, balance, onClose }: { required: number; balanc
     }
   }
 
+  if (submitted) {
+    return (
+      <Modal onClose={onClose}>
+        <EmptyState
+          icon={<CheckCircle2 size={30} />}
+          title="Request Sent!"
+          description="Your credit request has been submitted. The admin will review it shortly and credits will appear in your account once approved."
+          action={
+            <div className="page-header-actions" style={{ justifyContent: "center" }}>
+              <Link href="/plan/profile" onClick={onClose} className="btn btn-secondary">View History</Link>
+              <button onClick={onClose} className="btn btn-primary">Done</button>
+            </div>
+          }
+        />
+      </Modal>
+    );
+  }
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl w-full max-w-md p-6 border border-gray-200 dark:border-gray-700">
-        {submitted ? (
-          <div className="text-center py-4">
-            <div className="w-12 h-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mx-auto mb-4">
-              <CheckCircle2 size={24} className="text-green-600 dark:text-green-400" />
-            </div>
-            <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Request Sent!</h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mb-5">
-              Your credit request has been submitted. The admin will review it shortly and credits will
-              appear in your account once approved.
-            </p>
-            <div className="flex gap-2 justify-center">
-              <Link
-                href="/plan/profile"
-                onClick={onClose}
-                className="px-4 py-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium rounded-lg border border-gray-200 dark:border-gray-700 transition-colors"
-              >
-                View History
-              </Link>
-              <button
-                onClick={onClose}
-                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors"
-              >
-                Done
-              </button>
-            </div>
+    <Modal
+      title={required === 0 ? "Request Credits" : "Insufficient Credits"}
+      icon={<span className={`icon-tile ${required === 0 ? "green" : "orange"}`}><Coins size={16} /></span>}
+      onClose={onClose}
+      footer={
+        <>
+          <button onClick={onClose} className="btn btn-secondary">Cancel</button>
+          <button onClick={handleSubmit} disabled={!canSubmit} className="btn btn-primary">
+            {submitting ? <Loader2 size={14} className="animate-spin" /> : <Send size={14} />}
+            {submitting ? "Sending…" : "Send Request"}
+          </button>
+        </>
+      }
+    >
+      {required === 0 ? (
+        <p className="page-subtitle" style={{ marginTop: 0, marginBottom: 18 }}>
+          Select the documents you need and submit a credit request.
+        </p>
+      ) : (
+        <div className="alert-item alert-warning" style={{ marginBottom: 18 }}>
+          <AlertCircle size={16} />
+          <div className="alert-content">
+            You need <strong>{required}</strong> credits but have <strong>{balance}</strong>. Request more from your admin below.
           </div>
-        ) : (
-          <>
-            <div className="flex items-start gap-3 mb-5">
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 ${required === 0 ? "bg-green-100 dark:bg-green-900/30" : "bg-amber-100 dark:bg-amber-900/30"}`}>
-                <Coins size={20} className={required === 0 ? "text-green-600 dark:text-green-400" : "text-amber-600 dark:text-amber-400"} />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900 dark:text-white text-sm">
-                  {required === 0 ? "Request Credits" : "Insufficient Credits"}
-                </h3>
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                  {required === 0 ? (
-                    "Select the documents you need and submit a credit request."
-                  ) : (
-                    <>
-                      You need <strong>{required}</strong> credits but have{" "}
-                      <strong className="text-red-600 dark:text-red-400">{balance}</strong>. Request more from your admin below.
-                    </>
-                  )}
-                </p>
-              </div>
-            </div>
+        </div>
+      )}
 
-            <p className="text-xs font-semibold text-gray-700 dark:text-gray-300 mb-3">
-              Which documents do you need? ({CREDITS_PER_DOC} credits each)
-            </p>
-
-            <div className="space-y-3 mb-4">
-              <div className="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 px-4 py-3">
-                <div>
-                  <p className="text-xs font-medium text-gray-800 dark:text-gray-200">Business Plan (.docx)</p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500">Narrative + charts</p>
-                </div>
-                <CountStepper value={bpCount} onChange={setBpCount} />
-              </div>
-              <div className="flex items-center justify-between rounded-lg border border-gray-200 dark:border-gray-700 px-4 py-3">
-                <div>
-                  <p className="text-xs font-medium text-gray-800 dark:text-gray-200">Financial Model (.xlsx)</p>
-                  <p className="text-xs text-gray-400 dark:text-gray-500">19-sheet spreadsheet</p>
-                </div>
-                <CountStepper value={fmCount} onChange={setFmCount} />
-              </div>
-            </div>
-
-            <textarea
-              value={note}
-              onChange={(e) => setNote(e.target.value)}
-              placeholder="Add a note for the admin (optional)…"
-              rows={2}
-              className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 resize-none focus:outline-none focus:ring-2 focus:ring-green-500 mb-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
-            />
-
-            <div className="flex items-center justify-between mb-4 bg-gray-50 dark:bg-gray-800 rounded-lg px-4 py-2">
-              <span className="text-xs text-gray-600 dark:text-gray-400">Credits to request</span>
-              <span className="text-sm font-bold text-gray-900 dark:text-white">{totalCredits}</span>
-            </div>
-
-            {error && (
-              <p className="text-xs text-red-600 dark:text-red-400 mb-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg px-3 py-2">
-                {error}
-              </p>
-            )}
-
-            <div className="flex gap-2">
-              <button
-                onClick={onClose}
-                className="flex-1 py-2 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs font-medium rounded-lg border border-gray-200 dark:border-gray-700 transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSubmit}
-                disabled={!canSubmit}
-                className="flex-1 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors flex items-center justify-center gap-1.5"
-              >
-                {submitting ? <Loader2 size={12} className="animate-spin" /> : <Send size={12} />}
-                {submitting ? "Sending…" : "Send Request"}
-              </button>
-            </div>
-          </>
-        )}
+      <label className="form-label">Which documents do you need? ({CREDITS_PER_DOC} credits each)</label>
+      <div className="option-row">
+        <div>
+          <div className="title">Business Plan (.docx)</div>
+          <div className="sub">Narrative + charts</div>
+        </div>
+        <Stepper value={bpCount} onChange={setBpCount} />
       </div>
-    </div>
+      <div className="option-row">
+        <div>
+          <div className="title">Financial Model (.xlsx)</div>
+          <div className="sub">19-sheet spreadsheet</div>
+        </div>
+        <Stepper value={fmCount} onChange={setFmCount} />
+      </div>
+
+      <div className="form-group" style={{ marginTop: 16 }}>
+        <label className="form-label">Note for the admin</label>
+        <textarea
+          value={note}
+          onChange={(e) => setNote(e.target.value)}
+          placeholder="Optional…"
+          rows={2}
+          className="form-control"
+          style={{ minHeight: 60 }}
+        />
+      </div>
+
+      <div className="stat-tile tone-green" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", textAlign: "left", padding: "12px 14px" }}>
+        <span className="stat-tile-label" style={{ margin: 0 }}>Credits to request</span>
+        <span className="stat-tile-value" style={{ fontSize: 22 }}>{totalCredits}</span>
+      </div>
+
+      {error && <p className="form-error" style={{ marginTop: 12 }}>{error}</p>}
+    </Modal>
   );
 }
 
@@ -443,14 +379,14 @@ export default function Dashboard() {
 
   if (!isLoaded) return null;
 
+  const creditTone = credits === 0 ? "var(--red)" : credits !== null && credits < 10 ? "#F57F17" : "var(--primary)";
+
   return (
     <AppShell role={role} title="Dashboard" breadcrumb={[{ label: "Dashboard" }]}>
-      {/* Generating overlay */}
       {isGenerating && (
         <GeneratingOverlay docType={generatingDocType} companyName={generatingCompanyName} />
       )}
 
-      {/* Credit modal */}
       {creditModal && (
         <CreditsModal
           required={creditModal.required}
@@ -459,52 +395,35 @@ export default function Dashboard() {
         />
       )}
 
-      {/* Welcome */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
-        <div>
-          <h1 className="text-xl font-bold text-gray-900 dark:text-white">
-            Welcome back{user?.firstName ? `, ${user.firstName}` : ""}
-          </h1>
-          <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">
-            Manage your business plans and financial models
-          </p>
+      <section className="hero-banner">
+        <div style={{ minWidth: 0 }}>
+          <span className="hero-kicker"><Sparkles size={14} />Logistack Plan</span>
+          <h1>Welcome back{user?.firstName ? `, ${user.firstName}` : ""} 👋</h1>
+          <p>Manage your business plans and financial models — generate investor-ready documents in minutes.</p>
         </div>
-        <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
-          <Link
-            href="/plan/profile"
-            className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border text-sm font-medium transition-colors ${
-              credits === 0
-                ? "bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900/30"
-                : credits !== null && credits < 10
-                ? "bg-amber-50 dark:bg-amber-900/20 border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-400 hover:bg-amber-100 dark:hover:bg-amber-900/30"
-                : "bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800 text-green-700 dark:text-green-400 hover:bg-green-100 dark:hover:bg-green-900/30"
-            }`}
-            title="Credits balance — click to view profile"
-          >
-            <Coins size={14} />
-            {credits === null ? "…" : `${credits} credit${credits !== 1 ? "s" : ""}`}
-          </Link>
-          <button
-            onClick={() => setCreditModal({ required: 0, balance: credits ?? 0 })}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 text-sm font-medium transition-colors"
-          >
-            <Send size={14} className="text-green-600 dark:text-green-400" />
+        <div className="hero-actions">
+          <button onClick={() => setCreditModal({ required: 0, balance: credits ?? 0 })} className="btn btn-secondary">
+            <Send size={16} />
             Request Credits
           </button>
-          <Link
-            href="/plan/form"
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-green-600 hover:bg-green-700 text-white text-sm font-medium rounded-lg transition-colors"
-          >
-            <PlusCircle size={16} />
+          <Link href="/plan/form" className="btn btn-primary">
+            <PlusCircle size={18} />
             New Business Plan
           </Link>
         </div>
-      </div>
+      </section>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      {/* KPIs */}
+      <div className="kpi-grid">
         <StatsCard label="Total Plans" value={fmt(totalPlans)} sub="all time" icon={<FileText size={18} />} accent="green" />
         <StatsCard label="This Month" value={fmt(thisMonth)} sub="plans created" icon={<Calendar size={18} />} accent="blue" />
+        <StatsCard
+          label="Credit Balance"
+          value={credits === null ? "…" : fmt(credits)}
+          sub={credits === null ? undefined : `${Math.floor(credits / CREDITS_PER_DOC)} generation${Math.floor(credits / CREDITS_PER_DOC) === 1 ? "" : "s"} available`}
+          icon={<Coins size={18} />}
+          accent={credits === 0 ? "rose" : credits !== null && credits < 10 ? "amber" : "green"}
+        />
         <StatsCard
           label="Latest Plan"
           value={latestPlan?.companyInfo?.companyName ?? "—"}
@@ -514,181 +433,140 @@ export default function Dashboard() {
         />
       </div>
 
-      {/* Feature info row */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-        {[
-          { icon: <Layers size={15} />, title: "AI-Enhanced Documents", desc: "Our intelligent system creates the entire business plan proposal." },
-          { icon: <BarChart2 size={15} />, title: "Python Chart Engine", desc: "6 matplotlib charts embedded in your Word document automatically." },
-          { icon: <Download size={15} />, title: "Multi-Format Export", desc: "Business Plan (.docx) + 19-sheet Financial Model (.xlsx)." },
-        ].map((f) => (
-          <div key={f.title} className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-4 flex gap-3 items-start">
-            <div className="w-7 h-7 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center text-green-600 dark:text-green-400 flex-shrink-0">
-              {f.icon}
-            </div>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-gray-800 dark:text-gray-200">{f.title}</p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">{f.desc}</p>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Database error banner */}
+      {/* Database error */}
       {dbError && (
-        <div className="mb-6 rounded-xl border border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20 p-5">
-          <div className="flex items-start gap-3">
-            <AlertCircle size={20} className="text-red-500 mt-0.5 flex-shrink-0" />
-            <div className="flex-1 min-w-0">
-              <p className="font-semibold text-red-800 dark:text-red-400 text-sm">
-                {dbError.code === "CLUSTER_PAUSED" ? "MongoDB Atlas Cluster is Paused"
-                  : dbError.code === "IP_BLOCKED" ? "MongoDB Atlas IP Not Whitelisted"
-                  : "Database Connection Failed"}
+        <div className="alert-item alert-danger" style={{ marginBottom: 24, padding: 18 }}>
+          <AlertCircle size={18} />
+          <div className="alert-content">
+            <strong className="alert-kicker">
+              {dbError.code === "CLUSTER_PAUSED" ? "MongoDB Atlas cluster is paused"
+                : dbError.code === "IP_BLOCKED" ? "MongoDB Atlas IP not whitelisted"
+                : "Database connection failed"}
+            </strong>
+            <p>{dbError.message}</p>
+            {dbError.detail && <p className="mono" style={{ marginTop: 4, overflowWrap: "anywhere" }}>{dbError.detail}</p>}
+            {dbError.code === "CLUSTER_PAUSED" && (
+              <ol style={{ listStyle: "decimal", paddingLeft: 18, marginTop: 10 }}>
+                <li>Open <a href="https://cloud.mongodb.com" target="_blank" rel="noreferrer">cloud.mongodb.com</a></li>
+                <li>Click your project → find <strong>Cluster0</strong></li>
+                <li>Click <strong>Resume</strong> and wait ~2 minutes</li>
+              </ol>
+            )}
+            {dbError.code === "IP_BLOCKED" && (
+              <ol style={{ listStyle: "decimal", paddingLeft: 18, marginTop: 10 }}>
+                <li>Open <a href="https://cloud.mongodb.com" target="_blank" rel="noreferrer">cloud.mongodb.com</a></li>
+                <li>Left sidebar → <strong>Network Access</strong> → <strong>+ Add IP Address</strong></li>
+              </ol>
+            )}
+            {dbError.code === "AUTH_FAILED" && (
+              <p style={{ marginTop: 8 }}>
+                Check the <code className="cm-code">MONGODB_URI</code> in your <code className="cm-code">.env.local</code>.
               </p>
-              <p className="text-sm text-red-700 dark:text-red-400 mt-1">{dbError.message}</p>
-              {dbError.detail && (
-                <p className="text-xs text-red-500 dark:text-red-400 mt-1 font-mono break-all">{dbError.detail}</p>
-              )}
-              <div className="mt-3 bg-white dark:bg-gray-900 border border-red-200 dark:border-red-800 rounded-lg p-4 space-y-2">
-                {dbError.code === "CLUSTER_PAUSED" && (
-                  <>
-                    <p className="font-semibold text-gray-900 dark:text-white text-sm">Resume your free-tier cluster (takes ~2 min):</p>
-                    <ol className="list-decimal pl-4 space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
-                      <li>Open <a href="https://cloud.mongodb.com" target="_blank" rel="noreferrer" className="text-blue-600 dark:text-blue-400 underline font-medium">cloud.mongodb.com</a></li>
-                      <li>Click your project → find <strong>Cluster0</strong></li>
-                      <li>Click <strong>Resume</strong> and wait ~2 minutes</li>
-                    </ol>
-                  </>
-                )}
-                {dbError.code === "IP_BLOCKED" && (
-                  <>
-                    <p className="font-semibold text-gray-900 dark:text-white text-sm">Whitelist your IP address:</p>
-                    <ol className="list-decimal pl-4 space-y-1.5 text-sm text-gray-700 dark:text-gray-300">
-                      <li>Open <a href="https://cloud.mongodb.com" target="_blank" rel="noreferrer" className="text-blue-600 dark:text-blue-400 underline font-medium">cloud.mongodb.com</a></li>
-                      <li>Left sidebar → <strong>Network Access</strong> → <strong>+ Add IP Address</strong></li>
-                    </ol>
-                  </>
-                )}
-                {dbError.code === "AUTH_FAILED" && (
-                  <p className="text-sm text-gray-700 dark:text-gray-300">Check the <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs font-mono">MONGODB_URI</code> in your <code className="bg-gray-100 dark:bg-gray-800 px-1 rounded text-xs font-mono">.env.local</code>.</p>
-                )}
-                <button onClick={load} disabled={loading} className="mt-1 inline-flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white text-xs font-medium rounded-lg transition-colors">
-                  <Loader2 size={12} className={loading ? "animate-spin" : ""} />
-                  {loading ? "Connecting…" : "Retry connection"}
-                </button>
-              </div>
-            </div>
+            )}
+            <button onClick={load} disabled={loading} className="btn btn-primary btn-sm" style={{ marginTop: 12 }}>
+              <RefreshCw size={12} className={loading ? "animate-spin" : ""} />
+              {loading ? "Connecting…" : "Retry connection"}
+            </button>
           </div>
         </div>
       )}
 
-      {/* Submissions table */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 dark:border-gray-800">
-          <h2 className="font-semibold text-gray-900 dark:text-white text-sm">Your Business Plans</h2>
+      {/* Business plans table */}
+      <div className="card" style={{ marginBottom: 24 }}>
+        <div className="card-header">
+          <h3><span className="icon-tile"><FileText size={15} /></span>Your Business Plans</h3>
           {submissions.length > 0 && (
-            <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search plans…"
-                className="pl-8 pr-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm w-full sm:w-52 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
-              />
+            <div className="table-search">
+              <Search size={14} />
+              <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search plans…" />
             </div>
           )}
         </div>
 
         {loading ? (
-          <div className="flex items-center justify-center py-16 gap-2 text-gray-400 dark:text-gray-500">
-            <Loader2 size={18} className="animate-spin" />
-            <span className="text-sm">Loading…</span>
-          </div>
+          <Loading label="Loading your plans…" />
         ) : filtered.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center px-6">
-            {search ? (
-              <>
-                <AlertCircle size={32} className="text-gray-300 dark:text-gray-600 mb-3" />
-                <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">No results for &quot;{search}&quot;</p>
-                <button onClick={() => setSearch("")} className="text-xs text-green-600 dark:text-green-400 hover:underline">Clear search</button>
-              </>
-            ) : (
-              <>
-                <div className="w-14 h-14 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4">
-                  <FileText size={24} className="text-gray-400 dark:text-gray-600" />
-                </div>
-                <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-1">No plans yet</p>
-                <p className="text-xs text-gray-400 dark:text-gray-500 mb-4">Create your first business plan to get started</p>
-                <Link href="/plan/form" className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors">
-                  <PlusCircle size={13} />
+          search ? (
+            <EmptyState
+              icon={<Search size={26} />}
+              title={`No results for "${search}"`}
+              action={<button onClick={() => setSearch("")} className="btn btn-secondary btn-sm">Clear search</button>}
+            />
+          ) : (
+            <EmptyState
+              icon={<FileText size={28} />}
+              title="No plans yet"
+              description="Create your first business plan to get started."
+              action={
+                <Link href="/plan/form" className="btn btn-primary">
+                  <PlusCircle size={14} />
                   Create Business Plan
                 </Link>
-              </>
-            )}
-          </div>
+              }
+            />
+          )
         ) : (
           <>
             {/* Desktop table */}
-            <div className="hidden lg:block overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="table-responsive hidden lg:block">
+              <table className="data-table">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-                    <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Company</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide hidden md:table-cell">Industry</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide hidden lg:table-cell">Location</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Created</th>
-                    <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Business Plan</th>
-                    <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Financial Model</th>
-                    <th className="text-right px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Manage</th>
+                  <tr>
+                    <th>Company</th>
+                    <th>Industry</th>
+                    <th className="hidden 2xl:table-cell">Location</th>
+                    <th>Created</th>
+                    <th>Business Plan</th>
+                    <th>Financial Model</th>
+                    <th className="text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
+                <tbody>
                   {filtered.map((s) => {
                     const cn = s.companyInfo?.companyName || "Unnamed";
                     const meta = storedMeta[s._id] || {};
                     return (
-                      <tr key={s._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                        <td className="px-5 py-4">
-                          <div>
-                            <p className="font-medium text-gray-900 dark:text-white text-sm truncate max-w-[160px]">{cn}</p>
-                            {s.companyInfo?.productName && (
-                              <p className="text-xs text-gray-400 dark:text-gray-500 truncate max-w-[160px]">{s.companyInfo.productName}</p>
-                            )}
-                          </div>
+                      <tr key={s._id}>
+                        <td>
+                          <div className="cell-primary truncate" style={{ maxWidth: 180 }}>{cn}</div>
+                          {s.companyInfo?.productName && (
+                            <div className="cell-sub truncate" style={{ maxWidth: 180 }}>{s.companyInfo.productName}</div>
+                          )}
+                          {s.companyInfo?.location && (
+                            <div className="cell-sub truncate 2xl:hidden" style={{ maxWidth: 180 }}>{s.companyInfo.location}</div>
+                          )}
                         </td>
-                        <td className="px-4 py-4 text-gray-500 dark:text-gray-400 text-sm hidden md:table-cell">{s.companyInfo?.companyFocus || "—"}</td>
-                        <td className="px-4 py-4 text-gray-500 dark:text-gray-400 text-sm hidden lg:table-cell">{s.companyInfo?.location || "—"}</td>
-                        <td className="px-4 py-4 text-gray-500 dark:text-gray-400 text-sm whitespace-nowrap">
+                        <td className="cell-muted">{s.companyInfo?.companyFocus || "—"}</td>
+                        <td className="cell-muted hidden 2xl:table-cell">{s.companyInfo?.location || "—"}</td>
+                        <td className="cell-muted" style={{ whiteSpace: "nowrap" }}>
                           {new Date(s.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                         </td>
-                        <td className="px-5 py-4">
+                        <td>
                           <DocDropdown
                             submissionId={s._id} companyName={cn} type="business-plan" viewType="docx"
                             storedDate={meta.docx} downloading={downloading}
                             onGenerate={handleGenerate} onDownloadStored={handleDownloadStored}
                           />
                         </td>
-                        <td className="px-5 py-4">
+                        <td>
                           <DocDropdown
                             submissionId={s._id} companyName={cn} type="financial-model" viewType="xlsx"
                             storedDate={meta.xlsx} downloading={downloading}
                             onGenerate={handleGenerate} onDownloadStored={handleDownloadStored}
                           />
                         </td>
-                        <td className="px-5 py-4">
-                          <div className="flex items-center justify-end gap-1.5">
-                            <Link
-                              href={`/form?edit=${s._id}`}
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs font-medium rounded-lg transition-colors"
-                            >
-                              <Edit2 size={11} />
-                              Edit
+                        <td>
+                          <div className="table-actions">
+                            <Link href={`/plan/form?edit=${s._id}`} className="btn-icon" title="Edit plan">
+                              <Edit2 size={14} />
                             </Link>
                             <button
                               onClick={() => handleDelete(s._id)}
                               disabled={deleting === s._id}
-                              className="inline-flex items-center gap-1 px-2.5 py-1.5 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 text-xs font-medium rounded-lg transition-colors disabled:opacity-60"
+                              className="btn-icon btn-icon-danger"
+                              title="Delete plan"
                             >
-                              {deleting === s._id ? <Loader2 size={11} className="animate-spin" /> : <Trash2 size={11} />}
+                              {deleting === s._id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                             </button>
                           </div>
                         </td>
@@ -699,31 +577,31 @@ export default function Dashboard() {
               </table>
             </div>
 
-            {/* Mobile / tablet card list */}
-            <div className="lg:hidden divide-y divide-gray-100 dark:divide-gray-800">
+            {/* Mobile / tablet list */}
+            <div className="lg:hidden">
               {filtered.map((s) => {
                 const cn = s.companyInfo?.companyName || "Unnamed";
                 const meta = storedMeta[s._id] || {};
                 return (
-                  <div key={s._id} className="px-4 py-5 space-y-4">
-                    <div className="flex items-start justify-between gap-2">
-                      <div>
-                        <p className="font-medium text-gray-900 dark:text-white text-sm">{cn}</p>
-                        <p className="text-xs text-gray-400 dark:text-gray-500">
+                  <div key={s._id} className="list-row">
+                    <div style={{ display: "flex", justifyContent: "space-between", gap: 8, marginBottom: 12 }}>
+                      <div style={{ minWidth: 0 }}>
+                        <div className="cell-primary">{cn}</div>
+                        <div className="cell-sub">
                           {[s.companyInfo?.companyFocus, s.companyInfo?.location].filter(Boolean).join(" · ") || "No industry/location"}
-                        </p>
-                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{new Date(s.createdAt).toLocaleDateString()}</p>
+                        </div>
+                        <div className="cell-sub">{new Date(s.createdAt).toLocaleDateString()}</div>
                       </div>
-                      <div className="flex gap-1.5 shrink-0">
-                        <Link href={`/form?edit=${s._id}`} className="p-1.5 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 rounded-lg transition-colors">
-                          <Edit2 size={13} />
+                      <div className="table-actions" style={{ alignItems: "flex-start" }}>
+                        <Link href={`/plan/form?edit=${s._id}`} className="btn-icon" title="Edit plan">
+                          <Edit2 size={14} />
                         </Link>
-                        <button onClick={() => handleDelete(s._id)} disabled={deleting === s._id} className="p-1.5 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-600 dark:text-red-400 rounded-lg transition-colors">
-                          {deleting === s._id ? <Loader2 size={13} className="animate-spin" /> : <Trash2 size={13} />}
+                        <button onClick={() => handleDelete(s._id)} disabled={deleting === s._id} className="btn-icon btn-icon-danger" title="Delete plan">
+                          {deleting === s._id ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
                         </button>
                       </div>
                     </div>
-                    <div className="flex gap-2 flex-wrap">
+                    <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                       <DocDropdown
                         submissionId={s._id} companyName={cn} type="business-plan" viewType="docx"
                         storedDate={meta.docx} downloading={downloading}
@@ -739,17 +617,58 @@ export default function Dashboard() {
                 );
               })}
             </div>
-          </>
-        )}
 
-        {!loading && filtered.length > 0 && (
-          <div className="px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
-            <p className="text-xs text-gray-400 dark:text-gray-500">
+            <div className="card-footer">
               {filtered.length} plan{filtered.length !== 1 ? "s" : ""}
               {search ? ` matching "${search}"` : " total"}
-            </p>
-          </div>
+            </div>
+          </>
         )}
+      </div>
+
+      {/* Quick actions + what's included */}
+      <div className="chart-grid">
+        <div className="card">
+          <div className="card-header"><h3><span className="icon-tile"><Zap size={15} /></span>Quick Actions</h3></div>
+          <div className="card-body">
+            <div className="quick-actions-grid">
+              <Link href="/plan/form" className="quick-action-btn">
+                <span className="icon-tile"><PlusCircle size={15} /></span>
+                <span><span className="title" style={{ display: "block" }}>New Business Plan</span><span className="sub">Start the 10-step wizard</span></span>
+              </Link>
+              <button type="button" onClick={() => setCreditModal({ required: 0, balance: credits ?? 0 })} className="quick-action-btn" style={{ textAlign: "left" }}>
+                <span className="icon-tile"><Coins size={15} /></span>
+                <span>
+                  <span className="title" style={{ display: "block" }}>Request Credits</span>
+                  <span className="sub">Balance: <strong style={{ color: creditTone }}>{credits ?? "…"}</strong></span>
+                </span>
+              </button>
+              <Link href="/plan/profile" className="quick-action-btn">
+                <span className="icon-tile"><Settings size={15} /></span>
+                <span><span className="title" style={{ display: "block" }}>Plan Defaults</span><span className="sub">Currency, tax & loan rates</span></span>
+              </Link>
+            </div>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-header"><h3><span className="icon-tile"><Layers size={15} /></span>What&apos;s Included</h3></div>
+          <div className="card-body">
+            {[
+              { icon: <Layers size={15} />, tone: "green", title: "AI-Enhanced Documents", desc: "Our intelligent system creates the entire business plan proposal." },
+              { icon: <BarChart2 size={15} />, tone: "blue", title: "Python Chart Engine", desc: "6 matplotlib charts embedded in your Word document automatically." },
+              { icon: <Download size={15} />, tone: "purple", title: "Multi-Format Export", desc: "Business Plan (.docx) + 19-sheet Financial Model (.xlsx)." },
+            ].map((f) => (
+              <div key={f.title} className="summary-row" style={{ justifyContent: "flex-start", flexWrap: "nowrap", alignItems: "flex-start" }}>
+                <span className={`icon-tile ${f.tone}`}>{f.icon}</span>
+                <div style={{ minWidth: 0 }}>
+                  <div className="cell-primary">{f.title}</div>
+                  <div className="cell-sub" style={{ fontSize: 14 }}>{f.desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </AppShell>
   );
@@ -783,7 +702,6 @@ function DocDropdown({
   const isGenerating = downloading === genKey;
   const isDownloadingStored = downloading === storedKey;
   const isAnyLoading = !!downloading;
-  const creditCost = "5 cr";
   const ext = isDocx ? ".docx" : ".xlsx";
 
   useEffect(() => {
@@ -804,13 +722,12 @@ function DocDropdown({
 
   const handleTrigger = () => {
     if (!open && triggerRef.current) {
+      // Menu is position:fixed, so viewport coordinates are used as-is
       const rect = triggerRef.current.getBoundingClientRect();
-      const dropW = 228;
-      let left = rect.left + window.scrollX;
-      if (rect.left + dropW > window.innerWidth - 8) {
-        left = rect.right + window.scrollX - dropW;
-      }
-      setDropPos({ top: rect.bottom + window.scrollY + 4, left: Math.max(8, left) });
+      const dropW = 250;
+      let left = rect.left;
+      if (rect.left + dropW > window.innerWidth - 8) left = rect.right - dropW;
+      setDropPos({ top: rect.bottom + 6, left: Math.max(8, left) });
     }
     setOpen((o) => !o);
   };
@@ -820,63 +737,41 @@ function DocDropdown({
       <button
         ref={triggerRef}
         onClick={handleTrigger}
-        className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-colors border ${
-          isDocx
-            ? "bg-blue-50 dark:bg-blue-900/20 hover:bg-blue-100 dark:hover:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800"
-            : "bg-emerald-50 dark:bg-emerald-900/20 hover:bg-emerald-100 dark:hover:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800"
-        }`}
+        className={`badge ${isDocx ? "badge-info" : "badge-success"}`}
+        style={{ padding: "7px 10px", cursor: "pointer", fontSize: 14 }}
+        aria-expanded={open}
       >
-        {isDocx ? <FileText size={12} /> : <BarChart2 size={12} />}
-        <span>{isDocx ? "Business Plan" : "Financial Model"}</span>
-        {storedDate && <span className="text-[10px] opacity-60 hidden sm:inline">· {fmtDate(storedDate)}</span>}
-        <ChevronDown size={11} className={`transition-transform duration-150 ${open ? "rotate-180" : ""}`} />
+        {isDocx ? <FileText size={13} /> : <BarChart2 size={13} />}
+        {isDocx ? "Business Plan" : "Financial Model"}
+        {storedDate && <span style={{ opacity: 0.65, fontWeight: 500 }} className="hidden sm:inline">· {fmtDate(storedDate)}</span>}
+        <ChevronDown size={12} style={{ transition: "transform .15s", transform: open ? "rotate(180deg)" : undefined }} />
       </button>
 
       {open && (
-        <div
-          ref={dropRef}
-          style={{ position: "fixed", top: dropPos.top, left: dropPos.left, zIndex: 9999 }}
-          className="w-56 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl shadow-xl overflow-hidden"
-        >
-          <div className="p-1">
-            <button
-              onClick={() => { onGenerate(submissionId, type, companyName); setOpen(false); }}
-              disabled={isAnyLoading}
-              className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-xs transition-colors disabled:opacity-50"
-            >
-              <span className="flex items-center gap-2">
-                {isGenerating
-                  ? <Loader2 size={12} className="animate-spin text-gray-400 dark:text-gray-500" />
-                  : <RefreshCw size={12} className="text-gray-400 dark:text-gray-500" />
-                }
-                <span className="font-medium text-gray-700 dark:text-gray-300">{isGenerating ? "Generating…" : "Generate & Download"}</span>
-              </span>
-              <span className="text-gray-400 dark:text-gray-500 text-[10px]">{creditCost}</span>
-            </button>
-          </div>
-
+        <div ref={dropRef} className="dropdown-menu" style={{ position: "fixed", top: dropPos.top, left: dropPos.left, right: "auto", width: 250, zIndex: 1500 }}>
+          <button
+            onClick={() => { onGenerate(submissionId, type, companyName); setOpen(false); }}
+            disabled={isAnyLoading}
+            className="dropdown-item"
+          >
+            {isGenerating ? <Loader2 size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+            <span style={{ fontWeight: 600 }}>{isGenerating ? "Generating…" : "Generate & Download"}</span>
+            <span className="meta">{CREDITS_PER_DOC} cr</span>
+          </button>
+          <div className="dropdown-divider" />
           {storedDate ? (
-            <div className="border-t border-gray-100 dark:border-gray-800 p-1">
-              <button
-                onClick={() => { onDownloadStored(submissionId, type, companyName); setOpen(false); }}
-                disabled={isAnyLoading}
-                className="w-full flex items-center justify-between gap-2 px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 text-xs transition-colors disabled:opacity-50"
-              >
-                <span className="flex items-center gap-2">
-                  {isDownloadingStored
-                    ? <Loader2 size={12} className="animate-spin text-gray-400 dark:text-gray-500" />
-                    : <Download size={12} className="text-gray-400 dark:text-gray-500" />
-                  }
-                  <span className="text-gray-700 dark:text-gray-300">
-                    {isDownloadingStored ? "Downloading…" : `Download ${ext} · ${fmtDate(storedDate)}`}
-                  </span>
-                </span>
-                <span className="text-green-600 dark:text-green-400 text-[10px] font-medium">Free</span>
-              </button>
-            </div>
+            <button
+              onClick={() => { onDownloadStored(submissionId, type, companyName); setOpen(false); }}
+              disabled={isAnyLoading}
+              className="dropdown-item"
+            >
+              {isDownloadingStored ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
+              <span>{isDownloadingStored ? "Downloading…" : `Download ${ext} · ${fmtDate(storedDate)}`}</span>
+              <span className="meta" style={{ color: "var(--primary)", fontWeight: 700 }}>Free</span>
+            </button>
           ) : (
-            <div className="border-t border-gray-100 dark:border-gray-800 px-3 py-2">
-              <p className="text-[10px] text-gray-400 dark:text-gray-500">No stored version yet — generate one first.</p>
+            <div className="dropdown-empty" style={{ padding: "10px 16px", textAlign: "left", fontSize: 14 }}>
+              No stored version yet — generate one first.
             </div>
           )}
         </div>

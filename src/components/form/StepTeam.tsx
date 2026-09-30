@@ -32,13 +32,13 @@ export default function StepTeam({ formData, update }: Props) {
     <div className="space-y-4">
       <p className="text-sm text-gray-500">Define your management team, their roles, counts, and monthly salaries. Payroll taxes and benefits will be calculated automatically.</p>
 
-      <div className="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800 rounded-lg px-4 py-3 text-sm dark:text-green-300">
+      <div className="callout callout-success px-4 py-3 text-sm dark:text-green-300">
         <strong>Total Annual Payroll:</strong> {fmt(totalAnnualSalary)} RWF
         <span className="text-gray-500 dark:text-gray-400 ml-2">({staff.reduce((s, m) => s + m.count, 0)} staff members)</span>
       </div>
 
       {staff.map((m, i) => (
-        <div key={i} className="border border-gray-200 dark:border-gray-700 rounded-xl p-4 bg-gray-50 dark:bg-gray-800">
+        <div key={i} className="inset-panel">
           <div className="flex justify-between items-start mb-3">
             <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Staff #{i + 1}</span>
             <RemoveButton onClick={() => removeMember(i)} />

@@ -1,6 +1,7 @@
 "use client";
 import { FormSubmission } from "@/types";
 import { computeFinancials } from "@/lib/calculations";
+import { Loader2, CheckCircle2 } from "@/components/plan/icons";
 import { DataTable, DataTableColumn } from "./FormField";
 
 interface Props {
@@ -36,7 +37,7 @@ export default function StepReview({ formData, onSubmit, submitting }: Props) {
     {
       key: "metric",
       header: "Metric",
-      cellClassName: "font-medium text-gray-700 dark:text-gray-300",
+      cellClassName: "cell-primary",
       render: (row) => row.label,
     },
     ...Array.from({ length: n }, (_, i): DataTableColumn<ProjectionRow> => ({
@@ -81,24 +82,24 @@ export default function StepReview({ formData, onSubmit, submitting }: Props) {
 
   return (
     <div className="space-y-6">
-      <p className="text-sm text-gray-500 dark:text-gray-400">
+      <p className="page-subtitle" style={{ marginTop: 0 }}>
         Review the computed financial summary below. When ready, click <strong>Submit &amp; Generate Documents</strong> to save your data. You can then download your Business Plan (.docx) and Financial Model (.xlsx) from the dashboard.
       </p>
 
-      <div className="bg-green-50 dark:bg-green-900/10 border border-green-200 dark:border-green-800 rounded-xl p-5">
-        <h3 className="font-semibold text-green-800 dark:text-green-300 mb-4 text-sm">Financial Summary Preview</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+      <div>
+        <h3 className="form-section-title">Financial Summary Preview</h3>
+        <div className="stat-grid" style={{ "--stat-min": "190px" } as React.CSSProperties}>
           {summaryItems.map((item) => (
-            <div key={item.label} className="bg-white dark:bg-gray-800 rounded-lg p-3 border border-green-100 dark:border-green-900/30">
-              <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">{item.label}</p>
-              <p className="font-semibold text-gray-900 dark:text-white text-sm">{item.value}</p>
+            <div key={item.label} className="stat-tile" style={{ textAlign: "left", padding: "12px 14px" }}>
+              <div className="stat-tile-label">{item.label}</div>
+              <div className="cell-primary" style={{ overflowWrap: "anywhere" }}>{item.value}</div>
             </div>
           ))}
         </div>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-5">
-        <h3 className="font-semibold text-gray-800 dark:text-gray-200 mb-3 text-sm">{n}-Year Revenue &amp; Income Projection ({cur})</h3>
+      <div>
+        <h3 className="form-section-title">{n}-Year Revenue &amp; Income Projection ({cur})</h3>
         <DataTable
           columns={projectionColumns}
           rows={projectionRows}
@@ -106,7 +107,7 @@ export default function StepReview({ formData, onSubmit, submitting }: Props) {
         />
       </div>
 
-      <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-100 dark:border-amber-800 rounded-lg p-4 text-sm text-amber-700 dark:text-amber-300">
+      <div className="callout callout-warning p-4">
         <strong>What happens next:</strong> Your data will be saved. On the dashboard you can download:
         <ul className="mt-1 list-disc pl-4 space-y-0.5 text-xs">
           <li><strong>Business Plan (.docx)</strong> — Complete formatted Word document with all sections and financial tables</li>
@@ -114,12 +115,9 @@ export default function StepReview({ formData, onSubmit, submitting }: Props) {
         </ul>
       </div>
 
-      <button
-        onClick={onSubmit}
-        disabled={submitting}
-        className="w-full py-3 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white font-semibold rounded-xl transition-colors text-sm"
-      >
-        {submitting ? "Saving & Generating..." : "✅ Submit & Generate Documents"}
+      <button onClick={onSubmit} disabled={submitting} className="btn btn-primary btn-lg btn-block">
+        {submitting ? <Loader2 size={16} className="animate-spin" /> : <CheckCircle2 size={16} />}
+        {submitting ? "Saving & Generating..." : "Submit & Generate Documents"}
       </button>
     </div>
   );

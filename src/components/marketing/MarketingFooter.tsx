@@ -1,56 +1,64 @@
 import Link from "next/link";
-import { Sprout, Link2, Share2, GitBranch, Mail, MapPin } from "lucide-react";
+import {
+  Plant,
+  LinkedinLogo,
+  XLogo,
+  GithubLogo,
+  EnvelopeSimple,
+  MapPin,
+  ArrowRight,
+  ArrowUpRight,
+} from "@phosphor-icons/react/dist/ssr";
+import { AGRICODERS_APPS } from "@/lib/apps";
 
 const SOCIALS = [
-  { label: "LinkedIn", Icon: Link2, href: "https://linkedin.com" },
-  { label: "Twitter", Icon: Share2, href: "https://twitter.com" },
-  { label: "GitHub", Icon: GitBranch, href: "https://github.com" },
-  { label: "Email", Icon: Mail, href: "mailto:agricoders@gmail.com" },
+  { label: "LinkedIn", Icon: LinkedinLogo, href: "https://linkedin.com" },
+  { label: "X (Twitter)", Icon: XLogo, href: "https://twitter.com" },
+  { label: "GitHub", Icon: GithubLogo, href: "https://github.com" },
+  { label: "Email", Icon: EnvelopeSimple, href: "mailto:agricoders@gmail.com" },
 ];
 
-const SERVICES = [
-  "Geospatial Intelligence",
-  "Web & Mobile Apps",
-  "Digital Marketing",
-  "Business Planning",
-];
+const SERVICES = ["Geospatial Intelligence", "Web & Mobile Apps", "Digital Marketing", "Business Planning"];
 
 const COMPANY_LINKS = [
-  { label: "Our Systems", href: "/apps", external: false },
-  { label: "Logistack Plan", href: "/plan", external: false },
-  { label: "Contact", href: "mailto:agricoders@gmail.com", external: true },
-  { label: "Privacy Policy", href: "/privacy", external: false },
-  { label: "Terms of Service", href: "/terms", external: false },
+  { label: "How it works", href: "/#how-it-works" },
+  { label: "Precision agriculture", href: "/#precision" },
+  { label: "All systems", href: "/apps" },
+  { label: "Privacy Policy", href: "/privacy" },
+  { label: "Terms of Service", href: "/terms" },
 ];
 
-/** Shared Agricoders-branded footer used across the marketing site (home, apps, privacy, terms).
- *  Structurally mirrors src/components/layout/Footer.tsx (grid grid-cols-1 lg:grid-cols-5,
- *  no inline styles, sm:/lg: breakpoints) but carries Agricoders' own branding and links. */
+const linkCls =
+  "text-[15px] font-semibold text-white/60 no-underline transition-colors hover:text-white";
+
+/** Shared Agricoders footer used across the marketing site (home, apps, privacy, terms, plan landing). */
 export default function MarketingFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="border-t border-white/[0.08] bg-black">
-      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 sm:py-16 lg:px-8">
-        <div className="grid grid-cols-1 gap-10 lg:grid-cols-5 lg:gap-8">
-          {/* Brand column */}
-          <div className="lg:col-span-2">
-            <Link href="/" className="mb-3 inline-flex items-center gap-2 no-underline">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-green-600">
-                <Sprout size={15} color="white" />
-              </div>
-              <span className="font-bold text-white">Agricoders</span>
-            </Link>
-            <p className="mb-4 max-w-xs text-sm leading-relaxed text-gray-500 dark:text-gray-400">
-              Empowering farmers and agribusinesses with geospatial intelligence, intelligent
-              applications, and professional planning.
-            </p>
-            <div className="mb-4 flex items-start gap-1.5">
-              <MapPin size={13} className="mt-0.5 flex-shrink-0 text-green-400" />
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                Kigali, KG 9 Ave, Deco Center, Kigali, Rwanda
+    <footer className="relative overflow-hidden bg-[#050c07] text-white">
+      <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[900px] -translate-x-1/2 rounded-full bg-green-500/10 blur-3xl" />
+
+      <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-16 sm:px-6 sm:pt-20 lg:px-8">
+        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12 lg:gap-8">
+          {/* Brand */}
+          <div className="lg:col-span-5">
+            <Link href="/" className="group mb-5 inline-flex items-center gap-2.5 no-underline">
+              <span className="mkt-sticker flex h-11 w-11 items-center justify-center rounded-2xl">
+                <Plant size={24} weight="duotone" />
               </span>
-            </div>
+              <span className="text-xl font-black tracking-tight text-white">
+                Agri<span className="text-green-400">coders</span>
+              </span>
+            </Link>
+            <p className="mb-6 max-w-sm text-[15px] leading-relaxed text-white/60">
+              Empowering farmers and agribusinesses with geospatial intelligence, intelligent applications,
+              digital marketing and professional planning.
+            </p>
+            <p className="mb-6 flex items-start gap-2 text-sm font-semibold text-white/60">
+              <MapPin size={18} weight="duotone" className="mt-0.5 flex-shrink-0 text-green-400" />
+              KG 9 Ave, Deco Center, Kigali, Rwanda
+            </p>
             <div className="flex items-center gap-2">
               {SOCIALS.map(({ label, Icon, href }) => (
                 <a
@@ -59,73 +67,74 @@ export default function MarketingFooter() {
                   aria-label={label}
                   target={href.startsWith("http") ? "_blank" : undefined}
                   rel="noreferrer"
-                  className="flex h-10 w-10 items-center justify-center rounded-lg bg-white/5 text-gray-500 dark:text-gray-400 no-underline transition-colors hover:bg-white/10 hover:text-white"
+                  className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white/5 text-white/60 no-underline ring-1 ring-white/10 transition-all hover:-translate-y-0.5 hover:bg-green-500/20 hover:text-white"
                 >
-                  <Icon size={15} />
+                  <Icon size={20} weight="duotone" />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Nav columns */}
-          <div className="grid grid-cols-2 gap-8 lg:col-span-3 lg:pl-12">
+          {/* Link columns */}
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-7">
             <div>
-              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.1em] text-gray-400 dark:text-gray-500">
-                Services
-              </h3>
-              <ul className="space-y-2">
+              <h3 className="mb-4 text-xs font-black uppercase tracking-[0.14em] text-white/40">Services</h3>
+              <ul className="m-0 list-none space-y-3 p-0">
                 {SERVICES.map((s) => (
-                  <li key={s}>
-                    <Link
-                      href="/#services"
-                      className="text-sm text-gray-500 dark:text-gray-400 no-underline transition-colors hover:text-gray-200"
-                    >
-                      {s}
-                    </Link>
-                  </li>
+                  <li key={s}><Link href="/#services" className={linkCls}>{s}</Link></li>
                 ))}
               </ul>
             </div>
             <div>
-              <h3 className="mb-4 text-xs font-semibold uppercase tracking-[0.1em] text-gray-400 dark:text-gray-500">
-                Company
-              </h3>
-              <ul className="space-y-2">
-                {COMPANY_LINKS.map((link) =>
-                  link.external ? (
-                    <li key={link.label}>
-                      <a
-                        href={link.href}
-                        className="text-sm text-gray-500 dark:text-gray-400 no-underline transition-colors hover:text-gray-200"
-                      >
-                        {link.label}
-                      </a>
-                    </li>
-                  ) : (
-                    <li key={link.label}>
+              <h3 className="mb-4 text-xs font-black uppercase tracking-[0.14em] text-white/40">Systems</h3>
+              <ul className="m-0 list-none space-y-3 p-0">
+                {AGRICODERS_APPS.map((app) => {
+                  const external = app.href.startsWith("http");
+                  return (
+                    <li key={app.id}>
                       <Link
-                        href={link.href}
-                        className="text-sm text-gray-500 dark:text-gray-400 no-underline transition-colors hover:text-gray-200"
+                        href={app.href}
+                        target={external ? "_blank" : undefined}
+                        rel={external ? "noopener noreferrer" : undefined}
+                        className={`${linkCls} inline-flex items-center gap-1`}
                       >
-                        {link.label}
+                        {app.name}
+                        {external && <ArrowUpRight size={13} weight="bold" />}
                       </Link>
                     </li>
-                  )
-                )}
+                  );
+                })}
+              </ul>
+            </div>
+            <div className="col-span-2 sm:col-span-1">
+              <h3 className="mb-4 text-xs font-black uppercase tracking-[0.14em] text-white/40">Company</h3>
+              <ul className="m-0 list-none space-y-3 p-0">
+                {COMPANY_LINKS.map((l) => (
+                  <li key={l.label}><Link href={l.href} className={linkCls}>{l.label}</Link></li>
+                ))}
               </ul>
             </div>
           </div>
         </div>
-      </div>
 
-      <div className="border-t border-white/5">
-        <div className="mx-auto max-w-7xl px-4 py-3 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center justify-between gap-2 sm:flex-row">
-            <span className="text-xs text-gray-600 dark:text-gray-400">
-              &copy; {year} Agricoders. All rights reserved.
-            </span>
-            <span className="text-xs text-gray-600 dark:text-gray-400">Empowering agriculture with intelligence.</span>
+        {/* mini CTA */}
+        <div className="mt-14 flex flex-col items-start justify-between gap-5 rounded-[28px] border border-white/10 bg-white/[0.04] p-6 sm:flex-row sm:items-center sm:p-8">
+          <div>
+            <p className="m-0 text-xl font-black">Start your business plan today</p>
+            <p className="m-0 text-[15px] text-white/60">Investor-ready documents in under 15 minutes with Logistack Plan.</p>
           </div>
+          <Link href="/plan" className="mkt-btn-primary inline-flex flex-shrink-0 items-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-extrabold no-underline">
+            Get started
+            <ArrowRight size={16} weight="bold" />
+          </Link>
+        </div>
+
+        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-sm text-white/45 sm:flex-row">
+          <span>&copy; {year} Agricoders. All rights reserved.</span>
+          <a href="mailto:agricoders@gmail.com" className="inline-flex items-center gap-1.5 text-white/60 no-underline hover:text-white">
+            <EnvelopeSimple size={16} weight="duotone" />
+            agricoders@gmail.com
+          </a>
         </div>
       </div>
     </footer>

@@ -6,18 +6,17 @@ import axios from "axios";
 import AppShell, { NavRole } from "@/components/layout/AppShell";
 import StatsCard from "@/components/ui/StatsCard";
 import Badge, { roleBadgeVariant } from "@/components/ui/Badge";
+import { PageHeader, Loading, EmptyState, Toast, Avatar } from "@/components/plan/ui";
 import {
   Users,
   FileText,
   Shield,
   Search,
   Loader2,
-  AlertTriangle,
-  ChevronDown,
-  CheckCircle,
   RefreshCw,
   Activity,
-} from "lucide-react";
+  CheckCircle2,
+} from "@/components/plan/icons";
 
 interface AdminUser {
   id: string;
@@ -44,6 +43,8 @@ const ROLE_OPTIONS: { value: NavRole; label: string }[] = [
   { value: "admin", label: "Admin" },
   { value: "super_admin", label: "Super Admin" },
 ];
+
+const roleLabel = (r: string) => (r === "super_admin" ? "Super Admin" : r === "admin" ? "Admin" : "User");
 
 export default function SuperAdminPage() {
   const { user, isLoaded } = useUser();
@@ -118,29 +119,41 @@ export default function SuperAdminPage() {
   const adminCount = users.filter((u) => u.role === "admin").length;
   const superAdminCount = users.filter((u) => u.role === "super_admin").length;
 
-  return (
-    <AppShell
-      role={role}
-      title="User Management"
-      breadcrumb={[{ label: "Dashboard", href: "/plan/dashboard" }, { label: "Super Admin" }]}
+  const roleSelect = (u: AdminUser) => (
+    <select
+      value={u.role}
+      onChange={(e) => updateRole(u.id, e.target.value as NavRole)}
+      disabled={updating === u.id}
+      className="table-filter-select"
+      style={{ width: "100%", minWidth: 140 }}
     >
-      {/* Toast */}
-      {toast && (
-        <div className={`fixed bottom-4 right-4 z-50 flex items-center gap-2 px-4 py-3 rounded-xl shadow-lg text-sm font-medium transition-all ${
-          toast.ok ? "bg-green-600 text-white" : "bg-red-600 text-white"
-        }`}>
-          {toast.ok ? <CheckCircle size={16} /> : <AlertTriangle size={16} />}
-          {toast.msg}
-        </div>
-      )}
+      {ROLE_OPTIONS.map((opt) => (
+        <option key={opt.value} value={opt.value}>{opt.label}</option>
+      ))}
+    </select>
+  );
 
-      {/* Stats row */}
+  return (
+    <AppShell role={role} title="User Management" breadcrumb={[{ label: "Dashboard", href: "/plan/dashboard" }, { label: "User Management" }]}>
+      <Toast toast={toast} />
+
+      <PageHeader
+        title="User Management"
+        subtitle="Assign and change user roles across the platform"
+        actions={
+          <button onClick={() => { loadUsers(); loadStats(); }} className="btn btn-secondary">
+            <RefreshCw size={14} />
+            Refresh
+          </button>
+        }
+      />
+
       {loadingStats ? (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          {[...Array(4)].map((_, i) => <div key={i} className="h-20 bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse" />)}
+        <div className="kpi-grid">
+          {[...Array(4)].map((_, i) => <div key={i} className="skeleton" style={{ height: 84 }} />)}
         </div>
       ) : stats && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+        <div className="kpi-grid">
           <StatsCard label="Total Users" value={stats.totalUsers} sub="registered" icon={<Users size={18} />} accent="blue" />
           <StatsCard label="Total Plans" value={stats.totalSubmissions} sub="all time" icon={<FileText size={18} />} accent="green" />
           <StatsCard label="Admin Accounts" value={adminCount + superAdminCount} sub={`${adminCount} admin, ${superAdminCount} super`} icon={<Shield size={18} />} accent="purple" />
@@ -148,123 +161,74 @@ export default function SuperAdminPage() {
         </div>
       )}
 
-      {/* Role management */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 dark:border-gray-800">
-          <div>
-            <h2 className="font-semibold text-gray-900 dark:text-white text-sm">User Role Management</h2>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">Assign and change user roles across the platform</p>
-          </div>
-          <div className="flex flex-col sm:flex-row gap-2">
-            {/* Role filter */}
-            <div className="relative">
-              <select
-                value={roleFilter}
-                onChange={(e) => setRoleFilter(e.target.value)}
-                className="appearance-none pl-3 pr-8 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer"
-              >
-                <option value="all">All Roles</option>
-                <option value="user">Users</option>
-                <option value="admin">Admins</option>
-                <option value="super_admin">Super Admins</option>
-              </select>
-              <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+      <div className="card" style={{ marginBottom: 24 }}>
+        <div className="card-header">
+          <h3><span className="icon-tile"><Users size={15} /></span>User Role Management</h3>
+          <div className="table-toolbar-right">
+            <select value={roleFilter} onChange={(e) => setRoleFilter(e.target.value)} className="table-filter-select">
+              <option value="all">All Roles</option>
+              <option value="user">Users</option>
+              <option value="admin">Admins</option>
+              <option value="super_admin">Super Admins</option>
+            </select>
+            <div className="table-search">
+              <Search size={14} />
+              <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search users…" />
             </div>
-            {/* Search */}
-            <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search users…"
-                className="pl-8 pr-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm w-full sm:w-52 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
-              />
-            </div>
-            <button onClick={() => { loadUsers(); loadStats(); }} className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-400 dark:text-gray-500 transition-colors flex-shrink-0">
-              <RefreshCw size={14} />
-            </button>
           </div>
         </div>
 
         {loadingUsers ? (
-          <div className="flex items-center justify-center py-12 gap-2 text-gray-400 dark:text-gray-500">
-            <Loader2 size={18} className="animate-spin" />
-            <span className="text-sm">Loading users…</span>
-          </div>
+          <Loading label="Loading users…" />
+        ) : filtered.length === 0 ? (
+          <EmptyState icon={<Search size={26} />} title="No users match your filters" />
         ) : (
           <>
-            {/* Desktop table */}
-            <div className="hidden lg:block overflow-x-auto">
-              <table className="w-full text-sm">
+            <div className="table-responsive hidden lg:block">
+              <table className="data-table">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-                    <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">User</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Current Role</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Plans</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Last Active</th>
-                    <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Joined</th>
-                    <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Change Role</th>
+                  <tr>
+                    <th>User</th>
+                    <th>Current Role</th>
+                    <th>Plans</th>
+                    <th>Last Active</th>
+                    <th>Joined</th>
+                    <th>Change Role</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
+                <tbody>
                   {filtered.map((u) => {
                     const isSelf = u.id === user?.id;
                     return (
-                      <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                        <td className="px-5 py-3.5">
-                          <div className="flex items-center gap-3">
-                            {u.imageUrl
-                              ? <img src={u.imageUrl} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0" />
-                              : <div className="w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0"><Users size={12} className="text-gray-500 dark:text-gray-400" /></div>
-                            }
-                            <div className="min-w-0">
-                              <div className="flex items-center gap-1.5">
-                                <p className="font-medium text-gray-900 dark:text-white text-sm truncate max-w-[140px]">{u.name || "—"}</p>
-                                {isSelf && <span className="text-xs text-gray-400 dark:text-gray-500">(you)</span>}
+                      <tr key={u.id}>
+                        <td>
+                          <div className="user-cell">
+                            <Avatar src={u.imageUrl} name={u.name || u.email} />
+                            <div>
+                              <div className="cell-primary truncate" style={{ maxWidth: 180 }}>
+                                {u.name || "—"} {isSelf && <span className="cell-sub">(you)</span>}
                               </div>
-                              <p className="text-xs text-gray-400 dark:text-gray-500 truncate max-w-[160px]">{u.email}</p>
+                              <div className="cell-sub truncate" style={{ maxWidth: 200 }}>{u.email}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-3.5">
-                          <Badge variant={roleBadgeVariant(u.role)}>
-                            {u.role === "super_admin" ? "Super Admin" : u.role === "admin" ? "Admin" : "User"}
-                          </Badge>
+                        <td><Badge variant={roleBadgeVariant(u.role)}>{roleLabel(u.role)}</Badge></td>
+                        <td>
+                          <span className={u.submissionCount > 0 ? "cell-primary" : "cell-muted"} style={u.submissionCount > 0 ? { color: "var(--primary)" } : undefined}>
+                            {u.submissionCount}
+                          </span>
                         </td>
-                        <td className="px-4 py-3.5">
-                          <span className={`text-sm font-semibold ${u.submissionCount > 0 ? "text-green-700 dark:text-green-400" : "text-gray-400 dark:text-gray-500"}`}>{u.submissionCount}</span>
-                        </td>
-                        <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-sm">
-                          {u.lastActive ? new Date(u.lastActive).toLocaleDateString() : "—"}
-                        </td>
-                        <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-sm">
-                          {new Date(u.createdAt).toLocaleDateString()}
-                        </td>
-                        <td className="px-5 py-3.5">
+                        <td className="cell-muted">{u.lastActive ? new Date(u.lastActive).toLocaleDateString() : "—"}</td>
+                        <td className="cell-muted">{new Date(u.createdAt).toLocaleDateString()}</td>
+                        <td style={{ width: 180 }}>
                           {isSelf ? (
-                            <span className="text-xs text-gray-400 dark:text-gray-500">Cannot change own role</span>
+                            <span className="cell-sub">Cannot change own role</span>
+                          ) : updating === u.id ? (
+                            <span className="cell-sub" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
+                              <Loader2 size={13} className="animate-spin" /> Updating…
+                            </span>
                           ) : (
-                            <div className="relative w-36">
-                              {updating === u.id ? (
-                                <div className="flex items-center gap-1.5 text-xs text-gray-400 dark:text-gray-500">
-                                  <Loader2 size={13} className="animate-spin" />
-                                  Updating…
-                                </div>
-                              ) : (
-                                <>
-                                  <select
-                                    value={u.role}
-                                    onChange={(e) => updateRole(u.id, e.target.value as NavRole)}
-                                    className="appearance-none w-full pl-3 pr-8 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer"
-                                  >
-                                    {ROLE_OPTIONS.map((opt) => (
-                                      <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                    ))}
-                                  </select>
-                                  <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                                </>
-                              )}
-                            </div>
+                            roleSelect(u)
                           )}
                         </td>
                       </tr>
@@ -274,95 +238,58 @@ export default function SuperAdminPage() {
               </table>
             </div>
 
-            {/* Mobile cards */}
-            <div className="lg:hidden divide-y divide-gray-100 dark:divide-gray-800">
+            <div className="lg:hidden">
               {filtered.map((u) => {
                 const isSelf = u.id === user?.id;
                 return (
-                  <div key={u.id} className="px-4 py-4">
-                    <div className="flex items-center gap-3 mb-3">
-                      {u.imageUrl
-                        ? <img src={u.imageUrl} alt="" className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
-                        : <div className="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0"><Users size={14} className="text-gray-500 dark:text-gray-400" /></div>
-                      }
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{u.name || "—"}{isSelf ? " (you)" : ""}</p>
-                        <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{u.email}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <Badge variant={roleBadgeVariant(u.role)}>
-                            {u.role === "super_admin" ? "Super Admin" : u.role === "admin" ? "Admin" : "User"}
-                          </Badge>
-                          <span className="text-xs text-gray-400 dark:text-gray-500">{u.submissionCount} plan{u.submissionCount !== 1 ? "s" : ""}</span>
+                  <div key={u.id} className="list-row">
+                    <div className="user-cell" style={{ marginBottom: isSelf ? 0 : 12 }}>
+                      <Avatar src={u.imageUrl} name={u.name || u.email} />
+                      <div>
+                        <div className="cell-primary truncate">{u.name || "—"}{isSelf ? " (you)" : ""}</div>
+                        <div className="cell-sub truncate">{u.email}</div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
+                          <Badge variant={roleBadgeVariant(u.role)}>{roleLabel(u.role)}</Badge>
+                          <span className="cell-sub">{u.submissionCount} plan{u.submissionCount !== 1 ? "s" : ""}</span>
                         </div>
                       </div>
                     </div>
-                    {!isSelf && (
-                      <div className="relative">
-                        <select
-                          value={u.role}
-                          onChange={(e) => updateRole(u.id, e.target.value as NavRole)}
-                          disabled={updating === u.id}
-                          className="appearance-none w-full pl-3 pr-8 py-2 border border-gray-200 dark:border-gray-700 rounded-lg text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500 cursor-pointer disabled:opacity-60"
-                        >
-                          {ROLE_OPTIONS.map((opt) => (
-                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                          ))}
-                        </select>
-                        {updating === u.id
-                          ? <Loader2 size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 animate-spin" />
-                          : <ChevronDown size={13} className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
-                        }
-                      </div>
-                    )}
+                    {!isSelf && roleSelect(u)}
                   </div>
                 );
               })}
             </div>
 
-            {filtered.length === 0 && (
-              <div className="text-center py-10 text-gray-400 dark:text-gray-500 text-sm">No users match your filters.</div>
-            )}
-
-            {/* Footer */}
-            <div className="px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
-              <p className="text-xs text-gray-400 dark:text-gray-500">{filtered.length} user{filtered.length !== 1 ? "s" : ""} shown</p>
-            </div>
+            <div className="card-footer">{filtered.length} user{filtered.length !== 1 ? "s" : ""} shown</div>
           </>
         )}
       </div>
 
       {/* Role legend */}
-      <div className="mt-5 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 shadow-soft">
-        <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-3">Role Permissions</h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {[
-            {
-              role: "User", variant: "gray" as const,
-              perms: ["Create and manage own business plans", "Download generated documents", "Access personal dashboard"],
-            },
-            {
-              role: "Admin", variant: "blue" as const,
-              perms: ["All User permissions", "View all users and their plans", "Access admin analytics dashboard", "View system statistics"],
-            },
-            {
-              role: "Super Admin", variant: "purple" as const,
-              perms: ["All Admin permissions", "Change user roles", "Promote users to Admin", "Full platform control"],
-            },
-          ].map((r) => (
-            <div key={r.role} className="p-4 rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
-              <div className="mb-2">
-                <Badge variant={r.variant}>{r.role}</Badge>
+      <div className="card">
+        <div className="card-header">
+          <h3><span className="icon-tile purple"><Shield size={15} /></span>Role Permissions</h3>
+        </div>
+        <div className="card-body">
+          <div className="stat-grid" style={{ "--stat-min": "220px" } as React.CSSProperties}>
+            {[
+              { role: "User", variant: "gray" as const, perms: ["Create and manage own business plans", "Download generated documents", "Access personal dashboard"] },
+              { role: "Admin", variant: "blue" as const, perms: ["All User permissions", "View all users and their plans", "Access admin analytics dashboard", "View system statistics"] },
+              { role: "Super Admin", variant: "purple" as const, perms: ["All Admin permissions", "Change user roles", "Promote users to Admin", "Full platform control"] },
+            ].map((r) => (
+              <div key={r.role} className="stat-tile" style={{ textAlign: "left", padding: 16 }}>
+                <div style={{ marginBottom: 10 }}><Badge variant={r.variant}>{r.role}</Badge></div>
+                <ul style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                  {r.perms.map((p) => (
+                    <li key={p} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 14, color: "var(--text-light)" }}>
+                      <CheckCircle2 size={13} style={{ color: "var(--primary)", marginTop: 2, flexShrink: 0 }} />
+                      {p}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <ul className="space-y-1.5">
-                {r.perms.map((p) => (
-                  <li key={p} className="flex items-start gap-1.5 text-xs text-gray-600 dark:text-gray-400">
-                    <Shield size={11} className="text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0" />
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
     </AppShell>

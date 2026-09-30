@@ -5,30 +5,25 @@ interface Props {
   label?: string;
 }
 
+// CropManager-style column chart (pure CSS)
 export default function MiniBarChart({ data, label }: Props) {
   const entries = Object.entries(data);
   const max = Math.max(...entries.map(([, v]) => v), 1);
 
   return (
-    <div className="w-full">
-      {label && <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{label}</p>}
-      <div className="flex items-end gap-1 h-10">
+    <div>
+      {label && <p className="kpi-label">{label}</p>}
+      <div className="bar-chart">
         {entries.map(([date, count]) => (
-          <div key={date} className="flex-1 flex flex-col items-center gap-0.5 group relative">
-            <div
-              className="w-full rounded-sm bg-green-500 dark:bg-green-600 transition-all hover:bg-green-600 dark:hover:bg-green-500"
-              style={{ height: `${Math.max((count / max) * 100, count > 0 ? 10 : 2)}%` }}
-            />
-            {/* Tooltip */}
-            <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-gray-900 dark:bg-gray-700 text-white text-xs px-1.5 py-0.5 rounded whitespace-nowrap opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-10">
-              {date.slice(5)}: {count}
-            </div>
+          <div key={date} className="bar-col" title={`${date}: ${count}`}>
+            <span className="bar-value">{count}</span>
+            <div className="bar" style={{ height: `${Math.max((count / max) * 100, count > 0 ? 8 : 2)}%` }} />
+            <span className="bar-label">
+              {/* "YYYY-MM-DD" parses as UTC midnight; pin it to local time so the weekday doesn't shift */}
+              {new Date(date.length === 10 ? `${date}T00:00:00` : date).toLocaleDateString("en-GB", { weekday: "short" })}
+            </span>
           </div>
         ))}
-      </div>
-      <div className="flex justify-between mt-1">
-        <span className="text-xs text-gray-400 dark:text-gray-500">{entries[0]?.[0]?.slice(5)}</span>
-        <span className="text-xs text-gray-400 dark:text-gray-500">{entries[entries.length - 1]?.[0]?.slice(5)}</span>
       </div>
     </div>
   );

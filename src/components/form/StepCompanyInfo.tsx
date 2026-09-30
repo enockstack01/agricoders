@@ -2,7 +2,7 @@
 import { useRef } from "react";
 import { FormSubmission } from "@/types";
 import { FormInput, FormSelect, SectionTitle, GridRow } from "./FormField";
-import { Upload, X } from "lucide-react";
+import { Upload, X } from "@/components/plan/icons";
 
 interface Props {
   formData: Omit<FormSubmission, "userId">;
@@ -140,7 +140,7 @@ export default function StepCompanyInfo({ formData, update }: Props) {
             <input
               value={ci.currency}
               onChange={(e) => set("currency", e.target.value.toUpperCase())}
-              className="mt-2 w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+              className="form-control mt-2"
               placeholder="Enter currency code, e.g. MXN, JPY, BRL"
               maxLength={5}
               autoFocus
@@ -161,7 +161,7 @@ export default function StepCompanyInfo({ formData, update }: Props) {
 
       {/* Company Logo Upload */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Company Logo</label>
+        <label className="form-label">Company Logo</label>
         <p className="text-xs text-gray-400 dark:text-gray-500 mb-2">Upload your company logo to have it displayed prominently on the cover page of the generated business plan. Accepted formats: PNG, JPG, GIF, WebP. Recommended size: 300×150 px or wider.</p>
         {ci.companyLogo ? (
           <div className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg bg-gray-50 dark:bg-gray-800">

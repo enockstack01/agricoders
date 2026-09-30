@@ -245,3 +245,130 @@ html {
 .mkt-nav-link.is-active::after {
   transform: scaleX(1);
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   LANDING v2 — modern marketing primitives (Agricoders home, nav, footer)
+   ══════════════════════════════════════════════════════════════════════════ */
+:root {
+  --mkt-grad: linear-gradient(135deg, #5CC663 0%, #2E7D32 55%, #1B5E20 100%);
+  --mkt-ink: #0f1f14;
+}
+
+/* gradient headline text */
+.mkt-gradient-text {
+  background: linear-gradient(100deg, #2E7D32 0%, #43A047 35%, #00897B 70%, #2E7D32 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: mktShine 8s linear infinite;
+}
+.dark .mkt-gradient-text {
+  background-image: linear-gradient(100deg, #81C784 0%, #A5D6A7 35%, #4DD0E1 70%, #81C784 100%);
+}
+@keyframes mktShine { to { background-position: 200% center; } }
+
+/* soft mesh backgrounds */
+.mkt-mesh {
+  background:
+    radial-gradient(60% 50% at 85% 10%, rgba(102, 187, 106, 0.22), transparent 70%),
+    radial-gradient(45% 45% at 5% 30%, rgba(0, 137, 123, 0.12), transparent 70%),
+    radial-gradient(50% 60% at 50% 110%, rgba(129, 199, 132, 0.18), transparent 70%),
+    #f6faf6;
+}
+.dark .mkt-mesh {
+  background:
+    radial-gradient(60% 50% at 85% 10%, rgba(76, 175, 80, 0.20), transparent 70%),
+    radial-gradient(45% 45% at 5% 30%, rgba(0, 137, 123, 0.14), transparent 70%),
+    radial-gradient(50% 60% at 50% 110%, rgba(46, 125, 50, 0.20), transparent 70%),
+    #07100a;
+}
+/* faint dotted grid overlay */
+.mkt-grid-dots {
+  background-image: radial-gradient(rgba(15, 31, 20, 0.10) 1px, transparent 1px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+.dark .mkt-grid-dots { background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px); }
+
+/* glass surfaces */
+.mkt-glass {
+  background: rgba(255, 255, 255, 0.72);
+  backdrop-filter: saturate(1.5) blur(16px);
+  -webkit-backdrop-filter: saturate(1.5) blur(16px);
+  border: 1px solid rgba(15, 31, 20, 0.08);
+}
+.dark .mkt-glass {
+  background: rgba(17, 24, 20, 0.72);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* sticker icon tile */
+.mkt-sticker {
+  background: var(--mkt-grad);
+  color: #fff;
+  box-shadow: 0 10px 22px -8px rgba(46, 125, 50, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.group:hover .mkt-sticker { transform: rotate(-8deg) scale(1.08); }
+
+/* primary pill button */
+.mkt-btn-primary {
+  background: var(--mkt-grad);
+  color: #fff;
+  box-shadow: 0 12px 26px -10px rgba(46, 125, 50, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, filter 0.2s ease;
+}
+.mkt-btn-primary:hover { transform: translateY(-2px); filter: brightness(1.06); box-shadow: 0 18px 32px -12px rgba(46, 125, 50, 0.8); }
+.mkt-btn-primary:active { transform: scale(0.97); }
+
+/* bento card */
+.mkt-card {
+  background: #fff;
+  border: 1px solid rgba(15, 31, 20, 0.07);
+  box-shadow: 0 1px 2px rgba(16, 40, 24, 0.04), 0 10px 30px -12px rgba(16, 40, 24, 0.12);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.mkt-card:hover { transform: translateY(-4px); box-shadow: 0 2px 4px rgba(16, 40, 24, 0.05), 0 24px 48px -16px rgba(16, 40, 24, 0.22); border-color: rgba(46, 125, 50, 0.25); }
+.dark .mkt-card { background: #111814; border-color: rgba(255, 255, 255, 0.07); box-shadow: 0 10px 30px -12px rgba(0, 0, 0, 0.6); }
+.dark .mkt-card:hover { border-color: rgba(129, 199, 132, 0.3); }
+
+/* floating + drifting motion for diagram parts */
+@keyframes mktBob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+.mkt-bob { animation: mktBob 6s ease-in-out infinite; }
+.mkt-bob-slow { animation: mktBob 8s ease-in-out infinite; animation-delay: -3s; }
+
+/* flowing connector lines (SVG stroke-dasharray) */
+@keyframes mktFlow { to { stroke-dashoffset: -40; } }
+.mkt-flow { stroke-dasharray: 6 8; animation: mktFlow 1.6s linear infinite; }
+
+/* radar scan across the hero map */
+@keyframes mktScan { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } 100% { transform: translateY(210px); opacity: 0; } }
+.mkt-scan { animation: mktScan 4.5s ease-in-out infinite; }
+
+/* pulsing ring */
+@keyframes mktRing { 0% { transform: scale(0.6); opacity: 0.8; } 100% { transform: scale(2.2); opacity: 0; } }
+.mkt-ring { transform-box: fill-box; transform-origin: center; animation: mktRing 2.4s ease-out infinite; }
+
+/* process step connector (horizontal on desktop, vertical on mobile) */
+.mkt-step-line {
+  background-image: linear-gradient(90deg, #66BB6A 50%, transparent 50%);
+  background-size: 14px 2px;
+  animation: mktDashX 1.2s linear infinite;
+}
+@keyframes mktDashX { to { background-position: 14px 0; } }
+.mkt-step-line-v {
+  background-image: linear-gradient(180deg, #66BB6A 50%, transparent 50%);
+  background-size: 2px 14px;
+  animation: mktDashY 1.2s linear infinite;
+}
+@keyframes mktDashY { to { background-position: 0 14px; } }
+
+/* stop scroll behind the mobile menu sheet */
+.mkt-lock { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  .mkt-gradient-text, .mkt-bob, .mkt-bob-slow, .mkt-flow, .mkt-scan, .mkt-ring,
+  .mkt-step-line, .mkt-step-line-v { animation: none !important; }
+}

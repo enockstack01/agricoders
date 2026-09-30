@@ -90,7 +90,7 @@ export default function StepMarketAnalysis({ formData, update }: Props) {
               arr[i] = { ...arr[i], name: e.target.value };
               set("targetSegments", arr);
             }}
-            className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+            className="form-control"
             placeholder="Segment name"
           />
           <div className="md:col-span-2 flex gap-2">
@@ -101,7 +101,7 @@ export default function StepMarketAnalysis({ formData, update }: Props) {
                 arr[i] = { ...arr[i], description: e.target.value };
                 set("targetSegments", arr);
               }}
-              className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+              className="flex-1 form-control"
               placeholder="Description"
             />
             <RemoveButton onClick={() => set("targetSegments", ma.targetSegments.filter((_, idx) => idx !== i))} />
@@ -127,7 +127,7 @@ export default function StepMarketAnalysis({ formData, update }: Props) {
               arr[i] = { ...arr[i], name: e.target.value };
               set("competitors", arr);
             }}
-            className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+            className="form-control"
             placeholder="Competitor name"
           />
           <div className="md:col-span-2 flex gap-2">
@@ -138,7 +138,7 @@ export default function StepMarketAnalysis({ formData, update }: Props) {
                 arr[i] = { ...arr[i], description: e.target.value };
                 set("competitors", arr);
               }}
-              className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+              className="flex-1 form-control"
               placeholder="Description"
             />
             <RemoveButton onClick={() => set("competitors", ma.competitors.filter((_, idx) => idx !== i))} />
@@ -161,7 +161,7 @@ export default function StepMarketAnalysis({ formData, update }: Props) {
               arr[i] = e.target.value;
               set("marketingStrategies", arr);
             }}
-            className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+            className="flex-1 form-control"
             placeholder={`Marketing strategy ${i + 1}`}
           />
           <RemoveButton onClick={() => set("marketingStrategies", ma.marketingStrategies.filter((_, idx) => idx !== i))} />
@@ -183,7 +183,7 @@ export default function StepMarketAnalysis({ formData, update }: Props) {
               arr[i] = e.target.value;
               set("distributionChannels", arr);
             }}
-            className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2.5 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors"
+            className="flex-1 form-control"
             placeholder={`Channel ${i + 1}`}
           />
           <RemoveButton onClick={() => set("distributionChannels", ma.distributionChannels.filter((_, idx) => idx !== i))} />

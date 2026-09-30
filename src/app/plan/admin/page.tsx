@@ -7,6 +7,7 @@ import AppShell, { NavRole } from "@/components/layout/AppShell";
 import StatsCard from "@/components/ui/StatsCard";
 import Badge, { roleBadgeVariant } from "@/components/ui/Badge";
 import MiniBarChart from "@/components/ui/MiniBarChart";
+import { PageHeader, Loading, EmptyState, Avatar, Pager } from "@/components/plan/ui";
 import {
   Users,
   FileText,
@@ -32,7 +33,8 @@ import {
   MapPin,
   PawPrint,
   Settings,
-} from "lucide-react";
+  ListChecks,
+} from "@/components/plan/icons";
 
 interface Stats {
   totalUsers: number;
@@ -77,6 +79,9 @@ interface CreditRequestItem {
 }
 
 type Tab = "overview" | "users" | "submissions" | "credits" | "requests" | "onehealth";
+
+const roleLabel = (r: string) => (r === "super_admin" ? "Super Admin" : r === "admin" ? "Admin" : "User");
+const creditBadge = (c: number) => (c === 0 ? "badge-danger" : c < 10 ? "badge-warning" : "badge-success");
 
 export default function AdminPage() {
   const { user, isLoaded } = useUser();
@@ -163,14 +168,16 @@ export default function AdminPage() {
 
   if (!isLoaded || role === "user") return null;
 
+  const crumbs = [{ label: "Dashboard", href: "/plan/dashboard" }, { label: "Admin Panel" }];
+
   if (forbidden) {
     return (
-      <AppShell role={role} title="Admin Panel" breadcrumb={[{ label: "Dashboard", href: "/plan/dashboard" }, { label: "Admin" }]}>
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <AlertTriangle size={40} className="text-amber-400 dark:text-amber-500 mb-3" />
-          <h2 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-1">Access Denied</h2>
-          <p className="text-sm text-gray-500 dark:text-gray-400">You need Admin or Super Admin role to view this page.</p>
-        </div>
+      <AppShell role={role} title="Admin Panel" breadcrumb={crumbs}>
+        <EmptyState
+          icon={<AlertTriangle size={28} />}
+          title="Access Denied"
+          description="You need Admin or Super Admin role to view this page."
+        />
       </AppShell>
     );
   }
@@ -193,206 +200,138 @@ export default function AdminPage() {
   const totalPages = Math.ceil(submissionsTotal / 20);
 
   return (
-    <AppShell
-      role={role}
-      title="Admin Panel"
-      breadcrumb={[{ label: "Dashboard", href: "/plan/dashboard" }, { label: "Admin Panel" }]}
-    >
-      {/* Tab bar */}
-      <div className="flex items-center gap-0.5 bg-gray-100 dark:bg-gray-800 p-1 rounded-xl mb-6 w-full sm:w-auto sm:inline-flex">
+    <AppShell role={role} title="Admin Panel" breadcrumb={crumbs}>
+      <PageHeader title="Admin Panel" subtitle="Platform-wide KPIs, users, business plans, credits and disease-risk signals" />
+
+      <div className="cm-tabs">
         {TABS.map((t) => (
-          <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
-            className={`flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium transition-colors flex-1 sm:flex-none justify-center ${
-              tab === t.key ? "bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-            }`}
-          >
+          <button key={t.key} onClick={() => setTab(t.key)} className={`cm-tab ${tab === t.key ? "active" : ""}`}>
             {t.icon}
             {t.label}
-            {t.badge != null && t.badge > 0 && (
-              <span className="ml-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
-                {t.badge}
-              </span>
-            )}
+            {t.badge != null && t.badge > 0 && <span className="tab-count">{t.badge}</span>}
           </button>
         ))}
       </div>
 
       {/* ── Overview ─────────────────────────────────────── */}
       {tab === "overview" && (
-        <div className="space-y-6">
-          {loadingStats ? (
-            <div className="flex items-center justify-center py-16 gap-2 text-gray-400 dark:text-gray-500">
-              <Loader2 size={18} className="animate-spin" />
-              <span className="text-sm">Loading stats…</span>
+        loadingStats ? (
+          <Loading label="Loading stats…" />
+        ) : stats ? (
+          <>
+            <div className="kpi-grid">
+              <StatsCard label="Total Users" value={stats.totalUsers.toLocaleString()} sub="registered" icon={<Users size={18} />} accent="blue" />
+              <StatsCard label="Total Plans" value={stats.totalSubmissions.toLocaleString()} sub="all time" icon={<FileText size={18} />} accent="green" />
+              <StatsCard label="Plans This Week" value={stats.plansThisWeek.toLocaleString()} sub="last 7 days" icon={<Activity size={18} />} accent="purple" />
+              <StatsCard label="Active Users" value={stats.activeUsers.toLocaleString()} sub="have created plans" icon={<Shield size={18} />} accent="amber" />
             </div>
-          ) : stats ? (
-            <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-                <StatsCard label="Total Users" value={stats.totalUsers.toLocaleString()} sub="registered" icon={<Users size={18} />} accent="blue" />
-                <StatsCard label="Total Plans" value={stats.totalSubmissions.toLocaleString()} sub="all time" icon={<FileText size={18} />} accent="green" />
-                <StatsCard label="Plans This Week" value={stats.plansThisWeek.toLocaleString()} sub="last 7 days" icon={<Activity size={18} />} accent="purple" />
-                <StatsCard label="Active Users" value={stats.activeUsers.toLocaleString()} sub="have created plans" icon={<Shield size={18} />} accent="amber" />
-              </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
-                {/* Activity chart */}
-                <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 shadow-soft">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-semibold text-gray-900 dark:text-white text-sm">Plans Created — Last 7 Days</h3>
-                    <button onClick={loadStats} className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-400 dark:text-gray-500 transition-colors">
-                      <RefreshCw size={14} />
-                    </button>
-                  </div>
+            <div className="chart-grid">
+              <div className="chart-card">
+                <div className="chart-card-header">
+                  <h3>Plans Created — Last 7 Days</h3>
+                  <button onClick={loadStats} className="btn-icon" title="Refresh"><RefreshCw size={14} /></button>
+                </div>
+                <div className="chart-card-body">
                   <MiniBarChart data={stats.dailyCounts} />
                 </div>
+              </div>
 
-                {/* Summary table */}
-                <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl p-5 shadow-soft">
-                  <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-4">System Summary</h3>
-                  <div className="space-y-3">
-                    {[
-                      { label: "Total registered users", val: stats.totalUsers },
-                      { label: "Users with plans", val: stats.activeUsers },
-                      { label: "Inactive users (no plans)", val: stats.totalUsers - stats.activeUsers },
-                      { label: "Admin/Super Admin accounts", val: stats.admins },
-                      { label: "Plans created this week", val: stats.plansThisWeek },
-                      { label: "Avg plans per active user", val: stats.activeUsers > 0 ? (stats.totalSubmissions / stats.activeUsers).toFixed(1) : "—" },
-                    ].map((r) => (
-                      <div key={r.label} className="flex items-center justify-between py-1.5 border-b border-gray-50 dark:border-gray-800 last:border-0">
-                        <span className="text-sm text-gray-600 dark:text-gray-400">{r.label}</span>
-                        <span className="text-sm font-semibold text-gray-900 dark:text-white">{typeof r.val === "number" ? r.val.toLocaleString() : r.val}</span>
-                      </div>
-                    ))}
-                  </div>
+              <div className="chart-card">
+                <div className="chart-card-header"><h3>System Summary</h3></div>
+                <div className="chart-card-body" style={{ paddingTop: 8, paddingBottom: 8 }}>
+                  {[
+                    { label: "Total registered users", val: stats.totalUsers },
+                    { label: "Users with plans", val: stats.activeUsers },
+                    { label: "Inactive users (no plans)", val: stats.totalUsers - stats.activeUsers },
+                    { label: "Admin/Super Admin accounts", val: stats.admins },
+                    { label: "Plans created this week", val: stats.plansThisWeek },
+                    { label: "Avg plans per active user", val: stats.activeUsers > 0 ? (stats.totalSubmissions / stats.activeUsers).toFixed(1) : "—" },
+                  ].map((r) => (
+                    <div key={r.label} className="summary-row">
+                      <span className="label">{r.label}</span>
+                      <span className="value">{typeof r.val === "number" ? r.val.toLocaleString() : r.val}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
-            </>
-          ) : (
-            <div className="text-center py-12 text-gray-400 dark:text-gray-500 text-sm">Failed to load stats.</div>
-          )}
-        </div>
+            </div>
+          </>
+        ) : (
+          <EmptyState icon={<AlertTriangle size={28} />} title="Failed to load stats" action={<button onClick={loadStats} className="btn btn-secondary">Try again</button>} />
+        )
       )}
 
       {/* ── Users ────────────────────────────────────────── */}
       {tab === "users" && (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 dark:border-gray-800">
-            <h3 className="font-semibold text-gray-900 dark:text-white text-sm">All Users ({users.length})</h3>
-            <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-              <input
-                value={userSearch}
-                onChange={(e) => setUserSearch(e.target.value)}
-                placeholder="Search users…"
-                className="pl-8 pr-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm w-full sm:w-52 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
-              />
+        <div className="card">
+          <div className="card-header">
+            <h3><span className="icon-tile blue"><Users size={15} /></span>All Users ({users.length})</h3>
+            <div className="table-search">
+              <Search size={14} />
+              <input value={userSearch} onChange={(e) => setUserSearch(e.target.value)} placeholder="Search users…" />
             </div>
           </div>
 
           {loadingUsers ? (
-            <div className="flex items-center justify-center py-12 gap-2 text-gray-400 dark:text-gray-500">
-              <Loader2 size={18} className="animate-spin" />
-              <span className="text-sm">Loading users…</span>
-            </div>
+            <Loading label="Loading users…" />
           ) : (
             <>
-              <div className="hidden lg:block overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="table-responsive hidden lg:block">
+                <table className="data-table">
                   <thead>
-                    <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-                      <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">User</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide hidden xl:table-cell">User ID</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Role</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Plans</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Credits</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Last Active</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Joined</th>
+                    <tr>
+                      <th>User</th>
+                      <th className="hidden xl:table-cell">User ID</th>
+                      <th>Role</th>
+                      <th>Plans</th>
+                      <th>Credits</th>
+                      <th>Last Active</th>
+                      <th>Joined</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
+                  <tbody>
                     {filteredUsers.map((u) => (
-                      <tr key={u.id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                        <td className="px-5 py-3.5">
-                          <div className="flex items-center gap-3">
-                            {u.imageUrl ? (
-                              <img src={u.imageUrl} alt="" className="w-7 h-7 rounded-full object-cover flex-shrink-0" />
-                            ) : (
-                              <div className="w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
-                                <Users size={12} className="text-gray-500 dark:text-gray-400" />
-                              </div>
-                            )}
-                            <div className="min-w-0">
-                              <p className="font-medium text-gray-900 dark:text-white text-sm truncate">{u.name || "—"}</p>
-                              <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{u.email}</p>
+                      <tr key={u.id}>
+                        <td>
+                          <div className="user-cell">
+                            <Avatar src={u.imageUrl} name={u.name || u.email} />
+                            <div>
+                              <div className="cell-primary truncate">{u.name || "—"}</div>
+                              <div className="cell-sub truncate">{u.email}</div>
                             </div>
                           </div>
                         </td>
-                        <td className="px-4 py-3.5 hidden xl:table-cell">
-                          <span className="font-mono text-[11px] text-gray-400 dark:text-gray-500 select-all">{u.id}</span>
-                        </td>
-                        <td className="px-4 py-3.5">
-                          <Badge variant={roleBadgeVariant(u.role)}>
-                            {u.role === "super_admin" ? "Super Admin" : u.role === "admin" ? "Admin" : "User"}
-                          </Badge>
-                        </td>
-                        <td className="px-4 py-3.5">
-                          <span className={`text-sm font-semibold ${u.submissionCount > 0 ? "text-green-700 dark:text-green-400" : "text-gray-400 dark:text-gray-500"}`}>
+                        <td className="hidden xl:table-cell"><span className="mono cell-muted" style={{ userSelect: "all" }}>{u.id}</span></td>
+                        <td><Badge variant={roleBadgeVariant(u.role)}>{roleLabel(u.role)}</Badge></td>
+                        <td>
+                          <span className={u.submissionCount > 0 ? "cell-primary" : "cell-muted"} style={u.submissionCount > 0 ? { color: "var(--primary)" } : undefined}>
                             {u.submissionCount}
                           </span>
                         </td>
-                        <td className="px-4 py-3.5">
-                          <span className={`inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full ${
-                            u.credits === 0
-                              ? "bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400"
-                              : u.credits < 10
-                              ? "bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
-                              : "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-                          }`}>
-                            <Coins size={10} />
-                            {u.credits}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-sm">
-                          {u.lastActive ? new Date(u.lastActive).toLocaleDateString() : "—"}
-                        </td>
-                        <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-sm">
-                          {new Date(u.createdAt).toLocaleDateString()}
-                        </td>
+                        <td><span className={`badge ${creditBadge(u.credits)}`}><Coins size={10} />{u.credits}</span></td>
+                        <td className="cell-muted">{u.lastActive ? new Date(u.lastActive).toLocaleDateString() : "—"}</td>
+                        <td className="cell-muted">{new Date(u.createdAt).toLocaleDateString()}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
 
-              {/* Mobile user cards */}
-              <div className="lg:hidden divide-y divide-gray-100 dark:divide-gray-800">
+              <div className="lg:hidden">
                 {filteredUsers.map((u) => (
-                  <div key={u.id} className="px-4 py-3.5 flex items-center gap-3">
-                    {u.imageUrl
-                      ? <img src={u.imageUrl} alt="" className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
-                      : <div className="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0"><Users size={14} className="text-gray-500 dark:text-gray-400" /></div>
-                    }
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 dark:text-white truncate">{u.name || "—"}</p>
-                      <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{u.email}</p>
-                      <p className="text-[10px] font-mono text-gray-300 dark:text-gray-600 truncate select-all mt-0.5">{u.id}</p>
-                      <div className="flex items-center gap-2 mt-1 flex-wrap">
-                        <Badge variant={roleBadgeVariant(u.role)}>
-                          {u.role === "super_admin" ? "Super Admin" : u.role === "admin" ? "Admin" : "User"}
-                        </Badge>
-                        <span className="text-xs text-gray-400 dark:text-gray-500">{u.submissionCount} plan{u.submissionCount !== 1 ? "s" : ""}</span>
-                        <span className={`inline-flex items-center gap-1 text-xs font-semibold px-1.5 py-0.5 rounded-full ${
-                          u.credits === 0
-                            ? "bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400"
-                            : u.credits < 10
-                            ? "bg-amber-50 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"
-                            : "bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-                        }`}>
-                          <Coins size={9} />
-                          {u.credits} cr
-                        </span>
+                  <div key={u.id} className="list-row">
+                    <div className="user-cell">
+                      <Avatar src={u.imageUrl} name={u.name || u.email} />
+                      <div>
+                        <div className="cell-primary truncate">{u.name || "—"}</div>
+                        <div className="cell-sub truncate">{u.email}</div>
+                        <div className="mono cell-sub truncate" style={{ userSelect: "all" }}>{u.id}</div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6, flexWrap: "wrap" }}>
+                          <Badge variant={roleBadgeVariant(u.role)}>{roleLabel(u.role)}</Badge>
+                          <span className="cell-sub">{u.submissionCount} plan{u.submissionCount !== 1 ? "s" : ""}</span>
+                          <span className={`badge ${creditBadge(u.credits)}`}><Coins size={10} />{u.credits} cr</span>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -405,57 +344,49 @@ export default function AdminPage() {
 
       {/* ── All Submissions ───────────────────────────────── */}
       {tab === "submissions" && (
-        <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 px-5 py-4 border-b border-gray-100 dark:border-gray-800">
-            <h3 className="font-semibold text-gray-900 dark:text-white text-sm">All Business Plans ({submissionsTotal})</h3>
-            <div className="flex items-center gap-2">
-              <div className="relative">
-                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+        <div className="card">
+          <div className="card-header">
+            <h3><span className="icon-tile"><FileText size={15} /></span>All Business Plans ({submissionsTotal})</h3>
+            <div className="table-toolbar-right">
+              <div className="table-search">
+                <Search size={14} />
                 <input
                   value={submissionsSearch}
                   onChange={(e) => { setSubmissionsSearch(e.target.value); setSubmissionsPage(1); loadSubmissions(1, e.target.value); }}
                   placeholder="Search companies…"
-                  className="pl-8 pr-3 py-1.5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm w-full sm:w-52 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
                 />
               </div>
-              <button onClick={() => loadSubmissions(submissionsPage, submissionsSearch)} className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-400 dark:text-gray-500 transition-colors flex-shrink-0">
+              <button onClick={() => loadSubmissions(submissionsPage, submissionsSearch)} className="btn-icon" title="Refresh">
                 <RefreshCw size={14} />
               </button>
             </div>
           </div>
 
           {loadingSubmissions ? (
-            <div className="flex items-center justify-center py-12 gap-2 text-gray-400 dark:text-gray-500">
-              <Loader2 size={18} className="animate-spin" />
-              <span className="text-sm">Loading…</span>
-            </div>
+            <Loading />
+          ) : submissions.length === 0 ? (
+            <EmptyState icon={<FileText size={28} />} title="No business plans found" />
           ) : (
             <>
-              <div className="hidden lg:block overflow-x-auto">
-                <table className="w-full text-sm">
+              <div className="table-responsive hidden lg:block">
+                <table className="data-table">
                   <thead>
-                    <tr className="bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700">
-                      <th className="text-left px-5 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Company</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Owner</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Industry</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Currency</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Created</th>
+                    <tr>
+                      <th>Company</th>
+                      <th>Owner</th>
+                      <th>Industry</th>
+                      <th>Currency</th>
+                      <th>Created</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
+                  <tbody>
                     {submissions.map((s) => (
-                      <tr key={s._id} className="hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
-                        <td className="px-5 py-3.5">
-                          <p className="font-medium text-gray-900 dark:text-white text-sm truncate max-w-[160px]">{s.companyInfo?.companyName || "—"}</p>
-                        </td>
-                        <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-sm truncate max-w-[140px]">{s.userName}</td>
-                        <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-sm">{s.companyInfo?.companyFocus || "—"}</td>
-                        <td className="px-4 py-3.5">
-                          {s.companyInfo?.currency && (
-                            <Badge variant="gray">{s.companyInfo.currency}</Badge>
-                          )}
-                        </td>
-                        <td className="px-4 py-3.5 text-gray-500 dark:text-gray-400 text-sm whitespace-nowrap">
+                      <tr key={s._id}>
+                        <td><div className="cell-primary truncate" style={{ maxWidth: 200 }}>{s.companyInfo?.companyName || "—"}</div></td>
+                        <td className="cell-muted"><div className="truncate" style={{ maxWidth: 160 }}>{s.userName}</div></td>
+                        <td className="cell-muted">{s.companyInfo?.companyFocus || "—"}</td>
+                        <td>{s.companyInfo?.currency && <Badge variant="gray">{s.companyInfo.currency}</Badge>}</td>
+                        <td className="cell-muted" style={{ whiteSpace: "nowrap" }}>
                           {new Date(s.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                         </td>
                       </tr>
@@ -464,39 +395,21 @@ export default function AdminPage() {
                 </table>
               </div>
 
-              {/* Mobile cards */}
-              <div className="lg:hidden divide-y divide-gray-100 dark:divide-gray-800">
+              <div className="lg:hidden">
                 {submissions.map((s) => (
-                  <div key={s._id} className="px-4 py-3.5">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white">{s.companyInfo?.companyName || "—"}</p>
-                    <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">{s.userName} · {s.companyInfo?.companyFocus || "No industry"}</p>
-                    <p className="text-xs text-gray-400 dark:text-gray-500">{new Date(s.createdAt).toLocaleDateString()}</p>
+                  <div key={s._id} className="list-row">
+                    <div className="cell-primary">{s.companyInfo?.companyName || "—"}</div>
+                    <div className="cell-sub">{s.userName} · {s.companyInfo?.companyFocus || "No industry"}</div>
+                    <div className="cell-sub">{new Date(s.createdAt).toLocaleDateString()}</div>
                   </div>
                 ))}
               </div>
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex items-center justify-between px-5 py-3 border-t border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800/50">
-                  <span className="text-xs text-gray-400 dark:text-gray-500">Page {submissionsPage} of {totalPages}</span>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => { const p = submissionsPage - 1; setSubmissionsPage(p); loadSubmissions(p, submissionsSearch); }}
-                      disabled={submissionsPage <= 1}
-                      className="px-3 py-1.5 text-xs font-medium border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                    >
-                      Previous
-                    </button>
-                    <button
-                      onClick={() => { const p = submissionsPage + 1; setSubmissionsPage(p); loadSubmissions(p, submissionsSearch); }}
-                      disabled={submissionsPage >= totalPages}
-                      className="px-3 py-1.5 text-xs font-medium border border-gray-200 dark:border-gray-700 text-gray-700 dark:text-gray-300 rounded-lg disabled:opacity-40 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                    >
-                      Next
-                    </button>
-                  </div>
-                </div>
-              )}
+              <Pager
+                page={submissionsPage}
+                totalPages={totalPages}
+                onChange={(p) => { setSubmissionsPage(p); loadSubmissions(p, submissionsSearch); }}
+              />
             </>
           )}
         </div>
@@ -588,165 +501,108 @@ function AdminRequestsPanel({
     "financial-model": "Financial Model",
   };
 
-  const STATUS_COLORS: Record<string, string> = {
-    pending: "bg-amber-50 dark:bg-amber-900/20 text-amber-700 dark:text-amber-400 border-amber-200 dark:border-amber-800",
-    approved: "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800",
-    rejected: "bg-red-50 dark:bg-red-900/20 text-red-700 dark:text-red-400 border-red-200 dark:border-red-800",
+  const STATUS_BADGE: Record<string, string> = {
+    pending: "badge-warning",
+    approved: "badge-success",
+    rejected: "badge-danger",
   };
 
   return (
-    <div className="space-y-4">
-      {/* Header + filter */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div className="flex items-center gap-2 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg w-fit">
-          {(["pending", "all"] as const).map((f) => (
-            <button
-              key={f}
-              onClick={() => onFilterChange(f)}
-              className={`px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                filter === f ? "bg-white dark:bg-gray-900 text-gray-900 dark:text-white shadow-sm" : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
-              }`}
-            >
-              {f === "pending" ? "Pending" : "All Requests"}
-            </button>
-          ))}
+    <div className="card">
+      <div className="card-header">
+        <h3><span className="icon-tile orange"><Inbox size={15} /></span>Credit Requests</h3>
+        <div className="table-toolbar-right">
+          <div className="cm-tabs sm">
+            {(["pending", "all"] as const).map((f) => (
+              <button key={f} onClick={() => onFilterChange(f)} className={`cm-tab ${filter === f ? "active" : ""}`}>
+                {f === "pending" ? "Pending" : "All Requests"}
+              </button>
+            ))}
+          </div>
+          <button onClick={onRefresh} className="btn-icon" title="Refresh"><RefreshCw size={14} /></button>
         </div>
-        <button
-          onClick={onRefresh}
-          className="p-1.5 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg text-gray-400 dark:text-gray-500 transition-colors self-start sm:self-auto"
-        >
-          <RefreshCw size={14} />
-        </button>
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-16 gap-2 text-gray-400 dark:text-gray-500">
-          <Loader2 size={18} className="animate-spin" />
-          <span className="text-sm">Loading requests…</span>
-        </div>
+        <Loading label="Loading requests…" />
       ) : requests.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-20 text-center bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl">
-          <Inbox size={32} className="text-gray-300 dark:text-gray-600 mb-3" />
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400">No {filter === "pending" ? "pending" : ""} requests</p>
-          <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Users will appear here when they request credits.</p>
-        </div>
+        <EmptyState
+          icon={<Inbox size={28} />}
+          title={`No ${filter === "pending" ? "pending " : ""}requests`}
+          description="Users will appear here when they request credits."
+        />
       ) : (
-        <div className="space-y-3">
+        <div>
           {requests.map((req) => {
             const isReviewing = reviewing?.id === req._id;
             return (
-              <div
-                key={req._id}
-                className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft"
-              >
-                <div className="px-5 py-4 flex flex-col sm:flex-row sm:items-start gap-4">
-                  {/* User */}
-                  <div className="flex items-center gap-3 flex-1 min-w-0">
-                    {req.user.imageUrl ? (
-                      <img src={req.user.imageUrl} alt="" className="w-9 h-9 rounded-full object-cover flex-shrink-0" />
-                    ) : (
-                      <div className="w-9 h-9 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
-                        <Users size={14} className="text-gray-500 dark:text-gray-400" />
-                      </div>
-                    )}
-                    <div className="min-w-0">
-                      <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">{req.user.name || "—"}</p>
-                      <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{req.user.email}</p>
+              <div key={req._id} className="list-row">
+                <div className="flex flex-col md:flex-row md:items-start gap-4">
+                  <div className="user-cell" style={{ flex: 1 }}>
+                    <Avatar src={req.user.imageUrl} name={req.user.name || req.user.email} />
+                    <div>
+                      <div className="cell-primary truncate">{req.user.name || "—"}</div>
+                      <div className="cell-sub truncate">{req.user.email}</div>
                     </div>
                   </div>
 
-                  {/* Request details */}
-                  <div className="flex-1 min-w-0 space-y-1.5">
-                    <div className="flex flex-wrap gap-1.5">
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                       {req.documents.map((d, i) => (
-                        <span
-                          key={i}
-                          className="inline-flex items-center gap-1 text-xs bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 border border-blue-200 dark:border-blue-800 px-2 py-0.5 rounded-full font-medium"
-                        >
-                          <FileText size={10} />
-                          {d.count}× {DOC_LABELS[d.type] ?? d.type}
-                        </span>
+                        <span key={i} className="badge badge-info"><FileText size={10} />{d.count}× {DOC_LABELS[d.type] ?? d.type}</span>
                       ))}
-                      <span className="inline-flex items-center gap-1 text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 px-2 py-0.5 rounded-full font-semibold">
-                        <Coins size={10} />
-                        {req.creditsRequested} credits
-                      </span>
+                      <span className="badge badge-neutral"><Coins size={10} />{req.creditsRequested} credits</span>
                     </div>
-                    {req.note && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400 italic">&ldquo;{req.note}&rdquo;</p>
-                    )}
-                    {req.adminNote && (
-                      <p className="text-xs text-gray-400 dark:text-gray-500">Admin note: <span className="text-gray-600 dark:text-gray-400">{req.adminNote}</span></p>
-                    )}
-                    <p className="text-xs text-gray-400 dark:text-gray-500">
-                      <Clock size={10} className="inline mr-1" />
+                    {req.note && <p className="cell-muted" style={{ fontStyle: "italic", marginTop: 6, fontSize: 14 }}>&ldquo;{req.note}&rdquo;</p>}
+                    {req.adminNote && <p className="cell-sub" style={{ marginTop: 4 }}>Admin note: {req.adminNote}</p>}
+                    <p className="cell-sub" style={{ marginTop: 4, display: "flex", alignItems: "center", gap: 4 }}>
+                      <Clock size={10} />
                       {new Date(req.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                     </p>
                   </div>
 
-                  {/* Status + actions */}
-                  <div className="flex items-center gap-2 flex-shrink-0">
-                    <span className={`text-xs font-medium px-2 py-1 rounded-full border capitalize ${STATUS_COLORS[req.status]}`}>
-                      {req.status}
-                    </span>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0, flexWrap: "wrap" }}>
+                    <span className={`badge ${STATUS_BADGE[req.status]}`} style={{ textTransform: "capitalize" }}>{req.status}</span>
                     {req.status === "pending" && !isReviewing && (
-                      <div className="flex items-center gap-1.5">
-                        <button
-                          onClick={() => startReview(req._id, "approve")}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors"
-                        >
-                          <CheckCircle size={12} />
-                          Approve
+                      <>
+                        <button onClick={() => startReview(req._id, "approve")} className="btn btn-primary btn-sm">
+                          <CheckCircle size={13} /> Approve
                         </button>
-                        <button
-                          onClick={() => startReview(req._id, "reject")}
-                          className="inline-flex items-center gap-1 px-3 py-1.5 bg-red-50 dark:bg-red-900/20 hover:bg-red-100 dark:hover:bg-red-900/30 text-red-700 dark:text-red-400 border border-red-200 dark:border-red-800 text-xs font-medium rounded-lg transition-colors"
-                        >
-                          <XCircle size={12} />
-                          Reject
+                        <button onClick={() => startReview(req._id, "reject")} className="btn btn-secondary btn-sm" style={{ color: "var(--red)" }}>
+                          <XCircle size={13} /> Reject
                         </button>
-                      </div>
+                      </>
                     )}
                   </div>
                 </div>
 
-                {/* Inline review form */}
                 {isReviewing && (
-                  <div className={`px-5 py-4 border-t ${reviewing.action === "approve" ? "bg-green-50 dark:bg-green-900/10 border-green-100 dark:border-green-900/40" : "bg-red-50 dark:bg-red-900/10 border-red-100 dark:border-red-900/40"}`}>
-                    <p className="text-xs font-semibold mb-2 text-gray-700 dark:text-gray-300">
-                      {reviewing.action === "approve"
-                        ? `Approve and grant ${req.creditsRequested} credits to ${req.user.name}?`
-                        : `Reject this request from ${req.user.name}?`}
-                    </p>
-                    <input
-                      value={adminNote}
-                      onChange={(e) => setAdminNote(e.target.value)}
-                      placeholder="Add a note for the user (optional)…"
-                      className="w-full text-xs border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600 mb-3"
-                    />
-                    {error && (
-                      <p className="text-xs text-red-600 dark:text-red-400 mb-2">{error}</p>
-                    )}
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={cancelReview}
-                        disabled={submitting}
-                        className="px-3 py-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={confirmReview}
-                        disabled={submitting}
-                        className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white rounded-lg transition-colors disabled:opacity-60 ${
-                          reviewing.action === "approve"
-                            ? "bg-green-600 hover:bg-green-700"
-                            : "bg-red-600 hover:bg-red-700"
-                        }`}
-                      >
-                        {submitting && <Loader2 size={11} className="animate-spin" />}
-                        {reviewing.action === "approve" ? "Confirm Approve" : "Confirm Reject"}
-                      </button>
+                  <div className={`alert-item ${reviewing.action === "approve" ? "alert-success" : "alert-danger"}`} style={{ marginTop: 14 }}>
+                    <div className="alert-content">
+                      <strong className="alert-kicker">
+                        {reviewing.action === "approve"
+                          ? `Approve and grant ${req.creditsRequested} credits to ${req.user.name}?`
+                          : `Reject this request from ${req.user.name}?`}
+                      </strong>
+                      <input
+                        value={adminNote}
+                        onChange={(e) => setAdminNote(e.target.value)}
+                        placeholder="Add a note for the user (optional)…"
+                        className="form-control"
+                        style={{ margin: "8px 0 10px" }}
+                      />
+                      {error && <p className="form-error" style={{ marginBottom: 8 }}>{error}</p>}
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <button onClick={cancelReview} disabled={submitting} className="btn btn-secondary btn-sm">Cancel</button>
+                        <button
+                          onClick={confirmReview}
+                          disabled={submitting}
+                          className={`btn btn-sm ${reviewing.action === "approve" ? "btn-primary" : "btn-danger"}`}
+                        >
+                          {submitting && <Loader2 size={12} className="animate-spin" />}
+                          {reviewing.action === "approve" ? "Confirm Approve" : "Confirm Reject"}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -760,6 +616,55 @@ function AdminRequestsPanel({
 }
 
 // ── Admin Credits Panel ───────────────────────────────────────────────────────
+
+function ResultAlert({ result }: { result: { ok: boolean; message: string } | null }) {
+  if (!result) return null;
+  return (
+    <div className={`alert-item ${result.ok ? "alert-success" : "alert-danger"}`}>
+      {result.ok ? <CheckCircle size={15} /> : <AlertCircle size={15} />}
+      <div className="alert-content">{result.message}</div>
+    </div>
+  );
+}
+
+function CollapsibleCard({
+  open,
+  onToggle,
+  tone,
+  icon,
+  title,
+  sub,
+  children,
+}: {
+  open: boolean;
+  onToggle: () => void;
+  tone: string;
+  icon: React.ReactNode;
+  title: string;
+  sub: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="card">
+      <button
+        type="button"
+        onClick={onToggle}
+        className="card-header"
+        style={{ width: "100%", textAlign: "left", borderBottom: open ? undefined : "none", cursor: "pointer", flexWrap: "nowrap" }}
+      >
+        <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
+          <span className={`icon-tile ${tone}`}>{icon}</span>
+          <span>
+            {title}
+            <span className="cell-sub" style={{ display: "block", fontWeight: 500 }}>{sub}</span>
+          </span>
+        </span>
+        <ChevronDown size={16} style={{ color: "var(--text-light)", flexShrink: 0, transform: open ? "rotate(180deg)" : undefined, transition: "transform .2s" }} />
+      </button>
+      {open && <div className="card-body">{children}</div>}
+    </div>
+  );
+}
 
 function AdminCreditsPanel() {
   // Assign state
@@ -880,271 +785,159 @@ function AdminCreditsPanel() {
   const maxDeduct = balance ?? 0;
 
   return (
-    <div className="space-y-1.5 max-w-xl">
-
+    <div style={{ maxWidth: 680, display: "flex", flexDirection: "column", gap: 16 }}>
       {/* ── Assign Credits ──────────────────────────── */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
-        <button
-          type="button"
-          onClick={() => toggle("assign")}
-          className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors text-left"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-green-50 dark:bg-green-900/20 flex items-center justify-center flex-shrink-0">
-              <Coins size={14} className="text-green-600 dark:text-green-400" />
+      <CollapsibleCard
+        open={openSection === "assign"} onToggle={() => toggle("assign")}
+        tone="green" icon={<Coins size={15} />} title="Assign Credits" sub="Add credits to a user account"
+      >
+        <form onSubmit={handleAssign}>
+          <div className="form-group">
+            <label className="form-label">User Account ID<span className="required">*</span></label>
+            <input value={assignUserId} onChange={(e) => setAssignUserId(e.target.value)} placeholder="user_2abc123def..." required className="form-control mono" />
+            <p className="form-hint">User can find this in Profile → Account.</p>
+          </div>
+          <div className="form-row-3 form-group">
+            <div>
+              <label className="form-label">Credits<span className="required">*</span></label>
+              <input type="number" min={1} value={assignCredits} onChange={(e) => setAssignCredits(e.target.value)} placeholder="50" required className="form-control" />
             </div>
             <div>
-              <p className="font-semibold text-gray-900 dark:text-white text-sm leading-tight">Assign Credits</p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 leading-tight mt-0.5">Add credits to a user account</p>
+              <label className="form-label">Amount</label>
+              <input type="number" min={0} step={0.01} value={paymentAmount} onChange={(e) => setPaymentAmount(e.target.value)} placeholder="0.00" className="form-control" />
+            </div>
+            <div>
+              <label className="form-label">Currency</label>
+              <select value={currency} onChange={(e) => setCurrency(e.target.value)} className="form-control">
+                {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              </select>
             </div>
           </div>
-          <ChevronDown size={14} className={`text-gray-400 dark:text-gray-500 transition-transform flex-shrink-0 ${openSection === "assign" ? "rotate-180" : ""}`} />
-        </button>
-        {openSection === "assign" && (
-          <form onSubmit={handleAssign} className="px-5 pb-5 pt-3 border-t border-gray-100 dark:border-gray-800 space-y-3">
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">User Account ID <span className="text-red-500">*</span></label>
-              <input
-                value={assignUserId}
-                onChange={(e) => setAssignUserId(e.target.value)}
-                placeholder="user_2abc123def..."
-                required
-                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
-              />
-              <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">User can find this in Profile → Account.</p>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-              <div>
-                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Credits <span className="text-red-500">*</span></label>
-                <input
-                  type="number" min={1} value={assignCredits}
-                  onChange={(e) => setAssignCredits(e.target.value)}
-                  placeholder="50" required
-                  className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Amount</label>
-                <input
-                  type="number" min={0} step={0.01} value={paymentAmount}
-                  onChange={(e) => setPaymentAmount(e.target.value)}
-                  placeholder="0.00"
-                  className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Currency</label>
-                <select
-                  value={currency} onChange={(e) => setCurrency(e.target.value)}
-                  className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-green-500"
-                >
-                  {CURRENCIES.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Note</label>
-              <input
-                value={assignNote} onChange={(e) => setAssignNote(e.target.value)}
-                placeholder="e.g. Monthly subscription payment"
-                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
-              />
-            </div>
-            {assignResult && (
-              <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${assignResult.ok ? "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400" : "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400"}`}>
-                {assignResult.ok ? <CheckCircle size={14} className="mt-0.5 flex-shrink-0" /> : <AlertCircle size={14} className="mt-0.5 flex-shrink-0" />}
-                {assignResult.message}
-              </div>
-            )}
-            <div className="flex items-center justify-between gap-3 pt-0.5">
-              <p className="text-xs text-gray-400 dark:text-gray-500">1 credit = $1</p>
-              <button
-                type="submit" disabled={assignSubmitting}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
-              >
-                {assignSubmitting ? <Loader2 size={13} className="animate-spin" /> : <Coins size={13} />}
-                {assignSubmitting ? "Assigning…" : "Assign Credits"}
-              </button>
-            </div>
-          </form>
-        )}
-      </div>
+          <div className="form-group">
+            <label className="form-label">Note</label>
+            <input value={assignNote} onChange={(e) => setAssignNote(e.target.value)} placeholder="e.g. Monthly subscription payment" className="form-control" />
+          </div>
+          <ResultAlert result={assignResult} />
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12, marginTop: 14 }}>
+            <span className="form-hint" style={{ margin: 0 }}>1 credit = $1</span>
+            <button type="submit" disabled={assignSubmitting} className="btn btn-primary">
+              {assignSubmitting ? <Loader2 size={14} className="animate-spin" /> : <Coins size={14} />}
+              {assignSubmitting ? "Assigning…" : "Assign Credits"}
+            </button>
+          </div>
+        </form>
+      </CollapsibleCard>
 
       {/* ── Lookup Credits ──────────────────────────── */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
-        <button
-          type="button"
-          onClick={() => toggle("lookup")}
-          className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors text-left"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center flex-shrink-0">
-              <Search size={14} className="text-blue-600 dark:text-blue-400" />
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900 dark:text-white text-sm leading-tight">Lookup User Credits</p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 leading-tight mt-0.5">Check balance and transaction history</p>
-            </div>
-          </div>
-          <ChevronDown size={14} className={`text-gray-400 dark:text-gray-500 transition-transform flex-shrink-0 ${openSection === "lookup" ? "rotate-180" : ""}`} />
-        </button>
-        {openSection === "lookup" && (
-          <div className="px-5 pb-5 pt-3 border-t border-gray-100 dark:border-gray-800">
-            <form onSubmit={handleLookup} className="flex gap-2 mb-3">
-              <input
-                value={lookupId}
-                onChange={(e) => setLookupId(e.target.value)}
-                placeholder="Paste User Account ID…"
-                className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
-              />
-              <button
-                type="submit" disabled={looking}
-                className="inline-flex items-center gap-1.5 px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
-              >
-                {looking ? <Loader2 size={13} className="animate-spin" /> : <Search size={13} />}
-                Lookup
-              </button>
-            </form>
-            {lookupError && (
-              <div className="flex items-center gap-2 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-sm text-red-700 dark:text-red-400 mb-3">
-                <AlertCircle size={14} /> {lookupError}
-              </div>
-            )}
-            {lookupData && (
-              <>
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg mb-3">
-                  <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">Current Balance</span>
-                  <span className="text-xl font-bold text-gray-900 dark:text-white">{lookupData.credits} credits</span>
-                </div>
-                {lookupData.transactions.length > 0 ? (
-                  <div>
-                    <p className="text-xs font-semibold text-gray-400 dark:text-gray-500 uppercase tracking-wide mb-1.5">Recent Transactions</p>
-                    <div className="divide-y divide-gray-100 dark:divide-gray-800 border border-gray-200 dark:border-gray-800 rounded-lg overflow-hidden max-h-56 overflow-y-auto">
-                      {lookupData.transactions.map((tx, i) => (
-                        <div key={i} className="flex items-center justify-between px-3 py-2 bg-white dark:bg-gray-900 text-xs">
-                          <div className="flex items-center gap-2">
-                            <span className={`px-1.5 py-0.5 rounded-full font-medium ${tx.credits > 0 ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"}`}>
-                              {tx.credits > 0 ? `+${tx.credits}` : tx.credits}
-                            </span>
-                            <span className="text-gray-600 dark:text-gray-400 capitalize">{tx.type}</span>
-                            {tx.paymentAmount && <span className="text-gray-400 dark:text-gray-500">({tx.paymentAmount} {tx.currency})</span>}
-                          </div>
-                          <div className="flex items-center gap-1.5 text-gray-400 dark:text-gray-500">
-                            <span>→ {tx.balanceAfter}</span>
-                            <Clock size={10} />
-                            <span>{new Date(tx.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })}</span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                ) : (
-                  <p className="text-xs text-gray-400 dark:text-gray-500">No transactions yet for this account.</p>
-                )}
-              </>
-            )}
-          </div>
+      <CollapsibleCard
+        open={openSection === "lookup"} onToggle={() => toggle("lookup")}
+        tone="blue" icon={<Search size={15} />} title="Lookup User Credits" sub="Check balance and transaction history"
+      >
+        <form onSubmit={handleLookup} style={{ display: "flex", gap: 8, marginBottom: 14 }}>
+          <input value={lookupId} onChange={(e) => setLookupId(e.target.value)} placeholder="Paste User Account ID…" className="form-control mono" />
+          <button type="submit" disabled={looking} className="btn btn-blue">
+            {looking ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
+            Lookup
+          </button>
+        </form>
+        {lookupError && (
+          <div className="alert-item alert-danger"><AlertCircle size={15} /><div className="alert-content">{lookupError}</div></div>
         )}
-      </div>
+        {lookupData && (
+          <>
+            <div className="stat-tile tone-blue" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", textAlign: "left", marginBottom: 14 }}>
+              <span className="stat-tile-label" style={{ margin: 0 }}>Current Balance</span>
+              <span className="stat-tile-value" style={{ fontSize: 24 }}>{lookupData.credits} credits</span>
+            </div>
+            {lookupData.transactions.length > 0 ? (
+              <>
+                <label className="form-label">Recent Transactions</label>
+                <div className="table-responsive" style={{ maxHeight: 240 }}>
+                  <table className="data-table compact">
+                    <tbody>
+                      {lookupData.transactions.map((tx, i) => (
+                        <tr key={i}>
+                          <td><span className={`badge ${tx.credits > 0 ? "badge-success" : "badge-danger"}`}>{tx.credits > 0 ? `+${tx.credits}` : tx.credits}</span></td>
+                          <td style={{ textTransform: "capitalize" }}>
+                            {tx.type}
+                            {tx.paymentAmount && <span className="cell-sub"> ({tx.paymentAmount} {tx.currency})</span>}
+                          </td>
+                          <td className="cell-muted text-right" style={{ whiteSpace: "nowrap" }}>
+                            → {tx.balanceAfter} · {new Date(tx.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "2-digit" })}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </>
+            ) : (
+              <p className="form-hint">No transactions yet for this account.</p>
+            )}
+          </>
+        )}
+      </CollapsibleCard>
 
       {/* ── Dismiss Credits ─────────────────────────── */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
-        <button
-          type="button"
-          onClick={() => toggle("deduct")}
-          className="w-full px-5 py-3.5 flex items-center justify-between gap-3 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors text-left"
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-7 h-7 rounded-lg bg-red-50 dark:bg-red-900/20 flex items-center justify-center flex-shrink-0">
-              <AlertCircle size={14} className="text-red-500 dark:text-red-400" />
-            </div>
-            <div>
-              <p className="font-semibold text-gray-900 dark:text-white text-sm leading-tight">Dismiss Credits</p>
-              <p className="text-xs text-gray-400 dark:text-gray-500 leading-tight mt-0.5">Remove credits from a user account</p>
-            </div>
+      <CollapsibleCard
+        open={openSection === "deduct"} onToggle={() => toggle("deduct")}
+        tone="red" icon={<AlertCircle size={15} />} title="Dismiss Credits" sub="Remove credits from a user account"
+      >
+        <form onSubmit={handleCheck} className="form-group">
+          <label className="form-label">User Account ID<span className="required">*</span></label>
+          <div style={{ display: "flex", gap: 8 }}>
+            <input
+              value={deductUserId}
+              onChange={(e) => { setDeductUserId(e.target.value); setBalance(null); setDeductResult(null); }}
+              placeholder="user_2abc123def..."
+              required
+              className="form-control mono"
+            />
+            <button type="submit" disabled={checking || !deductUserId.trim()} className="btn btn-secondary">
+              {checking ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
+              {checking ? "Checking…" : "Check Balance"}
+            </button>
           </div>
-          <ChevronDown size={14} className={`text-gray-400 dark:text-gray-500 transition-transform flex-shrink-0 ${openSection === "deduct" ? "rotate-180" : ""}`} />
-        </button>
-        {openSection === "deduct" && (
-          <div className="px-5 pb-5 pt-3 border-t border-gray-100 dark:border-gray-800 space-y-3">
-            <form onSubmit={handleCheck} className="space-y-2">
-              <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">User Account ID <span className="text-red-500">*</span></label>
-              <div className="flex gap-2">
-                <input
-                  value={deductUserId}
-                  onChange={(e) => { setDeductUserId(e.target.value); setBalance(null); setDeductResult(null); }}
-                  placeholder="user_2abc123def..."
-                  required
-                  className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-red-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                />
+          {checkError && (
+            <div className="alert-item alert-danger" style={{ marginTop: 10 }}><AlertCircle size={15} /><div className="alert-content">{checkError}</div></div>
+          )}
+        </form>
+        {balance !== null && (
+          <form onSubmit={handleDeduct}>
+            <div className={`stat-tile ${balance === 0 ? "" : "tone-orange"}`} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", textAlign: "left", marginBottom: 14 }}>
+              <span className="stat-tile-label" style={{ margin: 0 }}>Current Balance</span>
+              <span className="stat-tile-value" style={{ fontSize: 24, color: balance === 0 ? "var(--red)" : undefined }}>{balance} credits</span>
+            </div>
+            {balance === 0 ? (
+              <p className="form-hint" style={{ textAlign: "center" }}>This user has no credits to dismiss.</p>
+            ) : (
+              <>
+                <div className="form-row form-group">
+                  <div>
+                    <label className="form-label">Credits to Dismiss<span className="required">*</span></label>
+                    <input type="number" min={1} max={maxDeduct} value={deductAmt} onChange={(e) => setDeductAmt(e.target.value)} placeholder={`1 – ${maxDeduct}`} required className="form-control" />
+                    <p className="form-hint">Max {maxDeduct}</p>
+                  </div>
+                  <div>
+                    <label className="form-label">Reason</label>
+                    <input value={deductNote} onChange={(e) => setDeductNote(e.target.value)} placeholder="e.g. Correction" className="form-control" />
+                  </div>
+                </div>
+                <ResultAlert result={deductResult} />
                 <button
-                  type="submit" disabled={checking || !deductUserId.trim()}
-                  className="inline-flex items-center gap-1.5 px-3 py-2 bg-gray-900 dark:bg-gray-700 hover:bg-black dark:hover:bg-gray-600 disabled:opacity-50 text-white text-xs font-medium rounded-lg transition-colors whitespace-nowrap"
+                  type="submit"
+                  disabled={deductSubmitting || !deductAmt || parseInt(deductAmt) < 1 || parseInt(deductAmt) > maxDeduct}
+                  className="btn btn-danger btn-block"
+                  style={{ marginTop: 14 }}
                 >
-                  {checking ? <Loader2 size={12} className="animate-spin" /> : <Search size={12} />}
-                  {checking ? "Checking…" : "Check Balance"}
+                  {deductSubmitting ? <Loader2 size={14} className="animate-spin" /> : <AlertCircle size={14} />}
+                  {deductSubmitting ? "Dismissing…" : "Dismiss Credits"}
                 </button>
-              </div>
-              {checkError && (
-                <div className="flex items-center gap-2 p-2.5 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-xs text-red-700 dark:text-red-400">
-                  <AlertCircle size={13} /> {checkError}
-                </div>
-              )}
-            </form>
-            {balance !== null && (
-              <form onSubmit={handleDeduct} className="space-y-3 pt-2 border-t border-gray-100 dark:border-gray-800">
-                <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-800 rounded-lg">
-                  <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">Current Balance</span>
-                  <span className={`text-xl font-bold ${balance === 0 ? "text-red-500 dark:text-red-400" : "text-gray-900 dark:text-white"}`}>
-                    {balance} credits
-                  </span>
-                </div>
-                {balance === 0 ? (
-                  <p className="text-xs text-gray-400 dark:text-gray-500 text-center py-1">This user has no credits to dismiss.</p>
-                ) : (
-                  <>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Credits to Dismiss <span className="text-red-500">*</span></label>
-                        <input
-                          type="number" min={1} max={maxDeduct} value={deductAmt}
-                          onChange={(e) => setDeductAmt(e.target.value)}
-                          placeholder={`1 – ${maxDeduct}`} required
-                          className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                        />
-                        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Max {maxDeduct}</p>
-                      </div>
-                      <div>
-                        <label className="block text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">Reason</label>
-                        <input
-                          value={deductNote} onChange={(e) => setDeductNote(e.target.value)}
-                          placeholder="e.g. Correction"
-                          className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-red-400 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-200 placeholder:text-gray-400 dark:placeholder:text-gray-600"
-                        />
-                      </div>
-                    </div>
-                    {deductResult && (
-                      <div className={`flex items-start gap-2 p-3 rounded-lg text-sm ${deductResult.ok ? "bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-400" : "bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400"}`}>
-                        {deductResult.ok ? <CheckCircle size={14} className="mt-0.5 flex-shrink-0" /> : <AlertCircle size={14} className="mt-0.5 flex-shrink-0" />}
-                        {deductResult.message}
-                      </div>
-                    )}
-                    <button
-                      type="submit"
-                      disabled={deductSubmitting || !deductAmt || parseInt(deductAmt) < 1 || parseInt(deductAmt) > maxDeduct}
-                      className="w-full flex items-center justify-center gap-2 py-2.5 bg-red-600 hover:bg-red-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
-                    >
-                      {deductSubmitting ? <Loader2 size={14} className="animate-spin" /> : <AlertCircle size={14} />}
-                      {deductSubmitting ? "Dismissing…" : "Dismiss Credits"}
-                    </button>
-                  </>
-                )}
-              </form>
+              </>
             )}
-          </div>
+          </form>
         )}
-      </div>
-
+      </CollapsibleCard>
     </div>
   );
 }
@@ -1192,11 +985,12 @@ interface OneHealthRecordRow {
   recordedAt: string;
 }
 
-const OH_SEVERITY_STYLE: Record<OneHealthAlert["severity"], { badge: "rose" | "amber" | "blue" | "gray"; dot: string }> = {
-  critical: { badge: "rose", dot: "bg-rose-500" },
-  high: { badge: "amber", dot: "bg-amber-500" },
-  medium: { badge: "blue", dot: "bg-blue-500" },
-  low: { badge: "gray", dot: "bg-gray-400" },
+// CropManager alert tones per severity
+const OH_SEVERITY_STYLE: Record<OneHealthAlert["severity"], { badge: "rose" | "amber" | "blue" | "gray"; alert: string }> = {
+  critical: { badge: "rose", alert: "alert-danger" },
+  high: { badge: "amber", alert: "alert-warning" },
+  medium: { badge: "blue", alert: "alert-info" },
+  low: { badge: "gray", alert: "alert-success" },
 };
 
 const OH_TYPE_LABEL: Record<OneHealthAlert["type"], string> = {
@@ -1293,46 +1087,39 @@ function OneHealthPanel() {
   };
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between gap-3 flex-wrap">
-        <p className="text-sm text-gray-500 dark:text-gray-400">
+    <>
+      <div className="page-header" style={{ marginBottom: 16 }}>
+        <p className="page-subtitle" style={{ marginTop: 0 }}>
           Disease risk signals synced automatically from LivestockPro every few minutes.
         </p>
-        <button
-          onClick={handleSync}
-          disabled={syncing}
-          className="flex items-center gap-2 px-4 py-2 bg-green-600 hover:bg-green-700 disabled:opacity-60 text-white text-sm font-medium rounded-lg transition-colors"
-        >
+        <button onClick={handleSync} disabled={syncing} className="btn btn-primary">
           {syncing ? <Loader2 size={15} className="animate-spin" /> : <RefreshCw size={15} />}
           Sync now
         </button>
       </div>
 
       {summary?.sync.status === "not_configured" && (
-        <div className="flex items-start gap-3 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl px-4 py-3 text-sm text-amber-800 dark:text-amber-400">
-          <Settings size={16} className="flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="font-semibold">LivestockPro connection not configured yet</p>
-            <p className="mt-0.5">
-              Set <code className="font-mono">LIVESTOCK_API_URL</code> and <code className="font-mono">LIVESTOCK_API_KEY</code> once
-              LivestockPro exposes the records feed — this dashboard will start syncing automatically.
-            </p>
+        <div className="alert-item alert-warning" style={{ marginBottom: 20 }}>
+          <Settings size={16} />
+          <div className="alert-content">
+            <strong className="alert-kicker">LivestockPro connection not configured yet</strong>
+            Set <code className="cm-code">LIVESTOCK_API_URL</code> and <code className="cm-code">LIVESTOCK_API_KEY</code> once
+            LivestockPro exposes the records feed — this dashboard will start syncing automatically.
           </div>
         </div>
       )}
 
       {summary?.sync.status === "error" && (
-        <div className="flex items-start gap-3 bg-rose-50 dark:bg-rose-900/20 border border-rose-200 dark:border-rose-800 rounded-xl px-4 py-3 text-sm text-rose-800 dark:text-rose-400">
-          <AlertTriangle size={16} className="flex-shrink-0 mt-0.5" />
-          <div>
-            <p className="font-semibold">Last sync failed</p>
-            <p className="mt-0.5">{summary.sync.lastRunError ?? "Unknown error"}</p>
+        <div className="alert-item alert-danger" style={{ marginBottom: 20 }}>
+          <AlertTriangle size={16} />
+          <div className="alert-content">
+            <strong className="alert-kicker">Last sync failed</strong>
+            {summary.sync.lastRunError ?? "Unknown error"}
           </div>
         </div>
       )}
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="kpi-grid">
         <StatsCard label="Open alerts" value={summary?.openAlerts ?? "—"} icon={<ShieldAlert size={18} />} accent="rose" />
         <StatsCard label="Zoonotic risk (open)" value={summary?.zoonoticOpenAlerts ?? "—"} icon={<Skull size={18} />} accent="amber" />
         <StatsCard label="Records synced" value={summary?.totalRecordsSynced ?? "—"} icon={<Database size={18} />} accent="blue" />
@@ -1345,80 +1132,59 @@ function OneHealthPanel() {
         />
       </div>
 
-      {/* Filters */}
-      <div className="flex items-center gap-2 flex-wrap">
-        {(["open", "reviewed", "dismissed", "all"] as const).map((s) => (
-          <button
-            key={s}
-            onClick={() => setStatusFilter(s)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
-              statusFilter === s ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900" : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
-          >
-            {s}
-          </button>
-        ))}
-        <span className="w-px h-5 bg-gray-200 dark:bg-gray-700 mx-1" />
-        {(["all", "critical", "high", "medium", "low"] as const).map((s) => (
-          <button
-            key={s}
-            onClick={() => setSeverityFilter(s)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium capitalize transition-colors ${
-              severityFilter === s ? "bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900" : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700"
-            }`}
-          >
-            {s}
-          </button>
-        ))}
-      </div>
+      <div className="card">
+        <div className="card-header">
+          <h3><span className="icon-tile red"><ListChecks size={15} /></span>Risk Alerts</h3>
+          <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+            {(["open", "reviewed", "dismissed", "all"] as const).map((s) => (
+              <button key={s} onClick={() => setStatusFilter(s)} className={`chip ${statusFilter === s ? "active" : ""}`}>{s}</button>
+            ))}
+            <span style={{ width: 1, height: 20, background: "var(--border)", margin: "0 4px" }} />
+            {(["all", "critical", "high", "medium", "low"] as const).map((s) => (
+              <button key={s} onClick={() => setSeverityFilter(s)} className={`chip ${severityFilter === s ? "active" : ""}`}>{s}</button>
+            ))}
+          </div>
+        </div>
 
-      {/* Alert list */}
-      <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-xl overflow-hidden shadow-soft">
         {loading ? (
-          <div className="flex items-center justify-center py-16 text-gray-400 dark:text-gray-500">
-            <Loader2 size={20} className="animate-spin" />
-          </div>
+          <Loading label="Loading alerts…" />
         ) : alerts.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-16 text-center px-4">
-            <ShieldAlert size={28} className="text-gray-300 dark:text-gray-600 mb-3" />
-            <p className="text-sm font-medium text-gray-600 dark:text-gray-400">No {statusFilter !== "all" ? statusFilter : ""} alerts</p>
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">Risk signals detected from LivestockPro data will appear here.</p>
-          </div>
+          <EmptyState
+            icon={<ShieldAlert size={28} />}
+            title={`No ${statusFilter !== "all" ? statusFilter + " " : ""}alerts`}
+            description="Risk signals detected from LivestockPro data will appear here."
+          />
         ) : (
-          <div className="divide-y divide-gray-100 dark:divide-gray-800">
+          <div className="card-body">
             {alerts.map((a) => {
               const style = OH_SEVERITY_STYLE[a.severity];
               const isOpen = expanded === a._id;
               return (
-                <div key={a._id}>
-                  <button
-                    onClick={() => toggleExpand(a)}
-                    className="w-full flex items-start gap-3 px-4 py-3.5 text-left hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors"
-                  >
-                    <span className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${style.dot}`} />
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <p className="text-sm font-semibold text-gray-900 dark:text-white">{a.title}</p>
+                <div key={a._id} className={`alert-item ${style.alert}`} style={{ flexDirection: "column", gap: 0, cursor: "pointer" }} onClick={() => toggleExpand(a)}>
+                  <div style={{ display: "flex", gap: 12, width: "100%", alignItems: "flex-start" }}>
+                    <div className="alert-content">
+                      <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                        <span className="cell-primary">{a.title}</span>
                         {a.zoonotic && <Badge variant="rose">Zoonotic</Badge>}
                         <Badge variant={style.badge}>{a.severity}</Badge>
                         <Badge variant="gray">{OH_TYPE_LABEL[a.type]}</Badge>
                       </div>
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">{a.description}</p>
-                      <div className="flex items-center gap-3 mt-2 text-[11px] text-gray-400 dark:text-gray-500 flex-wrap">
-                        {a.district && <span className="flex items-center gap-1"><MapPin size={11} />{a.district}</span>}
-                        <span className="flex items-center gap-1"><PawPrint size={11} />{a.species.join(", ")}</span>
+                      <p className="cell-muted" style={{ fontSize: 14, marginTop: 4 }}>{a.description}</p>
+                      <div className="cell-sub" style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 6, flexWrap: "wrap" }}>
+                        {a.district && <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><MapPin size={11} />{a.district}</span>}
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><PawPrint size={11} />{a.species.join(", ")}</span>
                         <span>{a.farmIds.length} farm{a.farmIds.length === 1 ? "" : "s"}</span>
                         <span>Detected {ohFmtDate(a.detectedAt)}</span>
                       </div>
                     </div>
-                    <div className="flex items-center gap-1.5 flex-shrink-0">
+                    <div style={{ display: "flex", alignItems: "center", gap: 2, flexShrink: 0 }}>
                       {a.status === "open" && (
                         <>
                           <button
                             onClick={(e) => { e.stopPropagation(); updateStatus(a._id, "reviewed"); }}
                             disabled={updating === a._id}
                             title="Mark reviewed"
-                            className="p-1.5 rounded-lg text-gray-400 dark:text-gray-500 hover:text-green-600 dark:hover:text-green-400 hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors"
+                            className="btn-icon"
                           >
                             <CheckCircle2 size={16} />
                           </button>
@@ -1426,37 +1192,39 @@ function OneHealthPanel() {
                             onClick={(e) => { e.stopPropagation(); updateStatus(a._id, "dismissed"); }}
                             disabled={updating === a._id}
                             title="Dismiss"
-                            className="p-1.5 rounded-lg text-gray-400 dark:text-gray-500 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors"
+                            className="btn-icon btn-icon-danger"
                           >
                             <XCircle size={16} />
                           </button>
                         </>
                       )}
-                      {isOpen ? <ChevronUp size={16} className="text-gray-400 dark:text-gray-500" /> : <ChevronDown size={16} className="text-gray-400 dark:text-gray-500" />}
+                      {isOpen ? <ChevronUp size={16} style={{ color: "var(--text-light)" }} /> : <ChevronDown size={16} style={{ color: "var(--text-light)" }} />}
                     </div>
-                  </button>
+                  </div>
 
                   {isOpen && (
-                    <div className="px-4 pb-4 pl-9">
+                    <div style={{ width: "100%", marginTop: 12 }} onClick={(e) => e.stopPropagation()}>
                       {loadingRecords ? (
-                        <div className="flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500 py-3">
+                        <span className="cell-sub" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
                           <Loader2 size={13} className="animate-spin" /> Loading records…
-                        </div>
+                        </span>
                       ) : (
-                        <div className="border border-gray-100 dark:border-gray-800 rounded-lg overflow-hidden">
-                          {records.map((r) => (
-                            <div key={r._id} className="px-3 py-2 text-xs border-b last:border-b-0 border-gray-100 dark:border-gray-800 flex items-center justify-between gap-3 flex-wrap">
-                              <div>
-                                <span className="font-medium text-gray-700 dark:text-gray-300">{r.species}</span>
-                                <span className="text-gray-400 dark:text-gray-500"> · {r.farmName ?? r.farmId ?? "Unknown farm"}</span>
-                                {r.diagnosis && <span className="text-gray-500 dark:text-gray-400"> · {r.diagnosis}</span>}
-                                {r.symptoms?.length > 0 && (
-                                  <span className="text-gray-400 dark:text-gray-500"> · {r.symptoms.join(", ")}</span>
-                                )}
-                              </div>
-                              <span className="text-gray-400 dark:text-gray-500 flex-shrink-0">{ohFmtDate(r.recordedAt)}</span>
-                            </div>
-                          ))}
+                        <div className="table-responsive">
+                          <table className="data-table compact">
+                            <tbody>
+                              {records.map((r) => (
+                                <tr key={r._id}>
+                                  <td>
+                                    <span className="cell-primary">{r.species}</span>
+                                    <span className="cell-muted"> · {r.farmName ?? r.farmId ?? "Unknown farm"}</span>
+                                    {r.diagnosis && <span className="cell-muted"> · {r.diagnosis}</span>}
+                                    {r.symptoms?.length > 0 && <span className="cell-sub"> · {r.symptoms.join(", ")}</span>}
+                                  </td>
+                                  <td className="cell-muted text-right" style={{ whiteSpace: "nowrap" }}>{ohFmtDate(r.recordedAt)}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
                         </div>
                       )}
                     </div>
@@ -1467,28 +1235,8 @@ function OneHealthPanel() {
           </div>
         )}
 
-        {total > 20 && (
-          <div className="flex items-center justify-between px-4 py-3 border-t border-gray-100 dark:border-gray-800 text-xs text-gray-500 dark:text-gray-400">
-            <span>Page {page} of {Math.ceil(total / 20)}</span>
-            <div className="flex gap-2">
-              <button
-                disabled={page <= 1}
-                onClick={() => loadAlerts(page - 1)}
-                className="px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700 disabled:opacity-40"
-              >
-                Prev
-              </button>
-              <button
-                disabled={page >= Math.ceil(total / 20)}
-                onClick={() => loadAlerts(page + 1)}
-                className="px-2.5 py-1 rounded-md border border-gray-200 dark:border-gray-700 disabled:opacity-40"
-              >
-                Next
-              </button>
-            </div>
-          </div>
-        )}
+        <Pager page={page} totalPages={Math.ceil(total / 20)} onChange={(p) => loadAlerts(p)} />
       </div>
-    </div>
+    </>
   );
 }

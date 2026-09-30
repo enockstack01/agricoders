@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Nunito, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import "./globals.css";
 
-const geistSans = Inter({
+// Site-wide rounded "sticky" typeface — matches the Logistack Plan app (Nunito, heavy weights)
+const geistSans = Nunito({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
 });
 
 const geistMono = Geist_Mono({

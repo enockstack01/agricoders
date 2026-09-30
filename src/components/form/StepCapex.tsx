@@ -10,7 +10,7 @@ interface Props {
 const fmt = (n: number) => n.toLocaleString("en-US");
 
 const cellInput =
-  "w-full border border-gray-200 dark:border-gray-700 rounded-lg px-2.5 py-2 text-sm text-gray-900 dark:text-gray-100 bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-colors";
+  "form-control form-control-sm";
 
 export default function StepCapex({ formData, update }: Props) {
   const capex = formData.financial.capex;
@@ -94,7 +94,7 @@ export default function StepCapex({ formData, update }: Props) {
     <div className="space-y-4">
       <p className="text-sm text-gray-500">Capital expenses are one-time investments in equipment and infrastructure. Also used as the initial investment for financial calculations.</p>
 
-      <div className="bg-green-50 dark:bg-green-900/10 border border-green-100 dark:border-green-800 rounded-lg px-4 py-3 text-sm dark:text-green-300">
+      <div className="callout callout-success px-4 py-3 text-sm dark:text-green-300">
         <strong>Total CAPEX (Initial Investment):</strong> {fmt(total)} RWF
       </div>
 

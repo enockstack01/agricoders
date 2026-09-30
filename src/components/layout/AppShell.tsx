@@ -1,24 +1,29 @@
 "use client";
-import { useState } from "react";
+// Logistack Plan app shell — the CropManager layout: fixed green-gradient sidebar with
+// labelled sections + collapse toggle, white fixed topbar, padded content column.
+import { Fragment, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, useClerk, useUser } from "@clerk/nextjs";
 import {
   LayoutDashboard,
   Users,
-  Shield,
   PlusCircle,
   Menu,
-  X,
   BarChart2,
+  ChevronLeft,
   ChevronRight,
-  Layers,
   UserCircle,
-} from "lucide-react";
+  LogOut,
+  Moon,
+  Sun,
+  Shield,
+  Home,
+  Coins,
+} from "@/components/plan/icons";
 import NotificationBell from "@/components/ui/NotificationBell";
-import ThemeToggle from "@/components/ui/ThemeToggle";
-
-const YEAR = new Date().getFullYear();
+import { useTheme } from "@/contexts/ThemeContext";
+import { LogoMark } from "@/components/plan/ui";
 
 export type NavRole = "user" | "admin" | "super_admin";
 
@@ -29,13 +34,28 @@ interface NavItem {
   roles: NavRole[];
 }
 
-const NAV_ITEMS: NavItem[] = [
-  { label: "Dashboard",       href: "/plan/dashboard",   icon: <LayoutDashboard size={18} />, roles: ["user", "admin", "super_admin"] },
-  { label: "New Plan",        href: "/plan/form",         icon: <PlusCircle size={18} />,      roles: ["user", "admin", "super_admin"] },
-  { label: "Admin Panel",     href: "/plan/admin",        icon: <BarChart2 size={18} />,       roles: ["admin", "super_admin"] },
-  { label: "User Management", href: "/plan/super-admin",  icon: <Users size={18} />,           roles: ["super_admin"] },
-  { label: "Profile",         href: "/plan/profile",      icon: <UserCircle size={18} />,      roles: ["user", "admin", "super_admin"] },
+const ALL: NavRole[] = ["user", "admin", "super_admin"];
+
+const SECTIONS: { label?: string; items: NavItem[] }[] = [
+  { items: [{ label: "Dashboard", href: "/plan/dashboard", icon: <LayoutDashboard />, roles: ALL }] },
+  {
+    label: "Planning",
+    items: [{ label: "New Business Plan", href: "/plan/form", icon: <PlusCircle />, roles: ALL }],
+  },
+  {
+    label: "Administration",
+    items: [
+      { label: "Admin Panel", href: "/plan/admin", icon: <BarChart2 />, roles: ["admin", "super_admin"] },
+      { label: "User Management", href: "/plan/super-admin", icon: <Users />, roles: ["super_admin"] },
+    ],
+  },
+  {
+    label: "Account",
+    items: [{ label: "Profile & Settings", href: "/plan/profile", icon: <UserCircle />, roles: ALL }],
+  },
 ];
+
+const ROLE_LABEL: Record<NavRole, string> = { user: "Planner", admin: "Admin", super_admin: "Super Admin" };
 
 interface Props {
   role: NavRole;
@@ -44,181 +64,163 @@ interface Props {
   breadcrumb?: { label: string; href?: string }[];
 }
 
-interface RoleBadge {
-  label: string;
-  cls: string;
-}
-
-function SidebarContent({
-  visibleNav,
-  pathname,
-  roleBadge,
-  onNavigate,
-}: {
-  visibleNav: NavItem[];
-  pathname: string;
-  roleBadge: RoleBadge | null;
-  onNavigate: () => void;
-}) {
-  return (
-    <div className="flex flex-col h-full">
-      {/* Logo */}
-      <div className="flex items-center gap-2.5 px-5 py-5 border-b border-gray-100 dark:border-gray-800">
-        <div className="w-8 h-8 rounded-lg bg-green-600 flex items-center justify-center flex-shrink-0">
-          <Layers size={16} className="text-white" />
-        </div>
-        <span className="font-bold text-gray-900 dark:text-white text-base tracking-tight">Logistack Plan</span>
-      </div>
-
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-0.5 overflow-y-auto">
-        {visibleNav.map((item) => {
-          const active = pathname === item.href || pathname.startsWith(item.href + "/");
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={onNavigate}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                active
-                  ? "bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400"
-                  : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white"
-              }`}
-            >
-              <span className={active ? "text-green-600 dark:text-green-400" : "text-gray-400 dark:text-gray-500"}>
-                {item.icon}
-              </span>
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Bottom: role badge */}
-      {roleBadge && (
-        <div className="px-4 py-3 border-t border-gray-100 dark:border-gray-800">
-          <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full border ${roleBadge.cls}`}>
-            <Shield size={11} />
-            {roleBadge.label}
-          </span>
-        </div>
-      )}
-    </div>
-  );
-}
-
 export default function AppShell({ role, children, title, breadcrumb }: Props) {
   const pathname = usePathname();
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { signOut } = useClerk();
+  const { user } = useUser();
+  const { theme, toggle } = useTheme();
+  const [collapsed, setCollapsed] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
-  const visibleNav = NAV_ITEMS.filter((n) => n.roles.includes(role));
+  const sections = SECTIONS
+    .map((s) => ({ ...s, items: s.items.filter((i) => i.roles.includes(role)) }))
+    .filter((s) => s.items.length > 0);
 
-  const roleBadge: RoleBadge | null =
-    role === "super_admin"
-      ? { label: "Super Admin", cls: "bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 border-purple-200 dark:border-purple-800" }
-      : role === "admin"
-      ? { label: "Admin", cls: "bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 border-blue-200 dark:border-blue-800" }
-      : null;
+  const crumbs = breadcrumb && breadcrumb.length > 0 ? breadcrumb : title ? [{ label: title }] : [];
+  const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
   return (
-    <div className="flex h-screen bg-gray-50 dark:bg-gray-950 overflow-hidden">
-      {/* Desktop sidebar */}
-      <aside className="hidden lg:flex flex-col w-60 bg-white dark:bg-gray-900 border-r border-gray-200 dark:border-gray-800 flex-shrink-0">
-        <SidebarContent visibleNav={visibleNav} pathname={pathname} roleBadge={roleBadge} onNavigate={() => setSidebarOpen(false)} />
-      </aside>
+    <div className="cm-app">
+      <div className="app-layout">
+        <div className={`sidebar-overlay ${mobileOpen ? "active" : ""}`} onClick={() => setMobileOpen(false)} />
 
-      {/* Mobile sidebar overlay */}
-      {sidebarOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 flex">
-          <div className="fixed inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
-          <aside className="relative w-72 max-w-[85vw] bg-white dark:bg-gray-900 shadow-xl z-50 flex flex-col">
-            <button
-              onClick={() => setSidebarOpen(false)}
-              className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
-            >
-              <X size={18} />
-            </button>
-            <SidebarContent visibleNav={visibleNav} pathname={pathname} roleBadge={roleBadge} onNavigate={() => setSidebarOpen(false)} />
-          </aside>
-        </div>
-      )}
-
-      {/* Main content */}
-      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        {/* Top bar */}
-        <header className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 px-4 lg:px-6 h-14 flex items-center justify-between flex-shrink-0">
-          <div className="flex items-center gap-3 min-w-0">
-            {/* Mobile menu toggle */}
-            <button
-              onClick={() => setSidebarOpen(true)}
-              className="lg:hidden p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 flex-shrink-0"
-            >
-              <Menu size={20} />
-            </button>
-
-            {/* Breadcrumb / Title */}
-            {breadcrumb && breadcrumb.length > 0 ? (
-              <nav className="flex items-center gap-1 text-sm min-w-0" aria-label="breadcrumb">
-                {breadcrumb.map((b, i) => (
-                  <span key={i} className="flex items-center gap-1 min-w-0">
-                    {i > 0 && <ChevronRight size={14} className="text-gray-300 dark:text-gray-600 flex-shrink-0" />}
-                    {b.href ? (
-                      <Link href={b.href} className="text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 truncate">
-                        {b.label}
-                      </Link>
-                    ) : (
-                      <span className="text-gray-900 dark:text-white font-medium truncate">{b.label}</span>
-                    )}
-                  </span>
-                ))}
-              </nav>
-            ) : title ? (
-              <h1 className="text-sm font-semibold text-gray-900 dark:text-white truncate">{title}</h1>
-            ) : null}
+        <aside className={`sidebar ${collapsed ? "sidebar-collapsed" : ""} ${mobileOpen ? "sidebar-mobile-open" : ""}`}>
+          <div className="sidebar-header">
+            <div className="sidebar-logo-icon">
+              <LogoMark size={20} />
+            </div>
+            <div className="sidebar-logo-text">
+              Logistack<span>Plan</span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-1 flex-shrink-0">
-            <Link
-              href="/plan/form"
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-green-600 hover:bg-green-700 text-white text-xs font-medium rounded-lg transition-colors mr-1"
-            >
-              <PlusCircle size={14} />
-              New Plan
+          <nav className="sidebar-nav">
+            {role !== "user" && (
+              <div className="sidebar-role">
+                <span className="badge">
+                  <Shield size={11} />
+                  {ROLE_LABEL[role]}
+                </span>
+              </div>
+            )}
+            {sections.map((section, i) => (
+              <Fragment key={section.label ?? i}>
+                {section.label && <div className="sidebar-label">{section.label}</div>}
+                {section.items.map((item) => {
+                  const active = pathname === item.href || pathname.startsWith(item.href + "/");
+                  return (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={active ? "nav-active" : undefined}
+                      title={collapsed ? item.label : undefined}
+                    >
+                      {item.icon}
+                      <span className="sidebar-nav-text">{item.label}</span>
+                    </Link>
+                  );
+                })}
+              </Fragment>
+            ))}
+
+            <div className="sidebar-label">Session</div>
+            <Link href="/" title={collapsed ? "Agricoders home" : undefined}>
+              <Home />
+              <span className="sidebar-nav-text">Agricoders Home</span>
             </Link>
-            <ThemeToggle />
-            <NotificationBell />
-            <div className="ml-1">
-              <UserButton />
-            </div>
-          </div>
-        </header>
+            <button type="button" onClick={() => signOut({ redirectUrl: "/plan" })} title={collapsed ? "Logout" : undefined}>
+              <LogOut />
+              <span className="sidebar-nav-text">Logout</span>
+            </button>
+          </nav>
 
-        {/* Scrollable page content */}
-        <main className="flex-1 overflow-y-auto flex flex-col">
-          <div className="flex-1 px-4 lg:px-6 py-6 max-w-7xl mx-auto w-full">
-            {children}
+          <div className="sidebar-footer">
+            <button className="sidebar-toggle" onClick={() => setCollapsed((c) => !c)}>
+              {collapsed ? <ChevronRight size={16} /> : <ChevronLeft size={16} />}
+              <span className="sidebar-nav-text">Collapse</span>
+            </button>
           </div>
-          {/* App footer */}
-          <div className="bg-gray-950 border-t border-gray-800 px-4 lg:px-6 py-4 mt-auto">
-            <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <div className="w-5 h-5 rounded bg-green-600 flex items-center justify-center flex-shrink-0">
-                  <Layers size={11} className="text-white" />
+        </aside>
+
+        <main className={`main-content ${collapsed ? "main-content-expanded" : ""}`}>
+          <header className="topbar">
+            <div className="topbar-left">
+              <button className="mobile-menu-btn" onClick={() => setMobileOpen(true)} aria-label="Open menu">
+                <Menu size={20} />
+              </button>
+              {crumbs.length > 0 && (
+                <nav className="topbar-breadcrumb" aria-label="breadcrumb">
+                  {crumbs.map((b, i) => (
+                    <Fragment key={i}>
+                      {i > 0 && <ChevronRight size={14} className="sep" />}
+                      {b.href ? (
+                        <Link href={b.href} className="topbar-hide-sm">{b.label}</Link>
+                      ) : (
+                        <span className="current">{b.label}</span>
+                      )}
+                    </Fragment>
+                  ))}
+                </nav>
+              )}
+            </div>
+
+            <div className="topbar-right">
+              <Link href="/plan/form" className="btn btn-primary btn-sm topbar-hide-sm" style={{ marginRight: 4 }}>
+                <PlusCircle size={14} />
+                New Plan
+              </Link>
+              <button
+                className="topbar-btn"
+                onClick={toggle}
+                title="Toggle Dark Mode"
+                aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+              >
+                {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+              </button>
+              <NotificationBell />
+              <div className="topbar-user">
+                <div className="topbar-user-info">
+                  <div className="topbar-user-name">{user?.fullName || user?.firstName || "User"}</div>
+                  <div className="topbar-user-role">{ROLE_LABEL[role]}</div>
                 </div>
-                <span className="text-xs font-semibold text-gray-400">Logistack Plan</span>
-                <span className="text-gray-700 text-xs hidden sm:inline">·</span>
-                <span className="text-xs text-gray-600 hidden sm:inline">AI-Powered Business Planning Platform</span>
-              </div>
-              <div className="flex items-center gap-4 text-xs text-gray-600">
-                <a href="/api/health" target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-gray-400 transition-colors">
-                  <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
-                  System Status
-                </a>
-                <span className="text-gray-700">&copy; {YEAR} Logistack Plan</span>
+                <UserButton />
               </div>
             </div>
-          </div>
+          </header>
+
+          <div className="main-content-inner">{children}</div>
         </main>
+
+        {/* Mobile bottom tab bar (≤768px) — Snapchat-style, raised centre "new plan" button */}
+        <nav className="bottom-nav" aria-label="Primary">
+          <Link href="/plan/dashboard" className={isActive("/plan/dashboard") ? "active" : undefined}>
+            <LayoutDashboard />
+            Home
+          </Link>
+          {role === "user" ? (
+            <Link href="/plan/profile">
+              <Coins />
+              Credits
+            </Link>
+          ) : (
+            <Link href="/plan/admin" className={isActive("/plan/admin") ? "active" : undefined}>
+              <BarChart2 />
+              Admin
+            </Link>
+          )}
+          <Link href="/plan/form" className="bottom-nav-cta" aria-label="New business plan">
+            <span className="cta-bubble"><PlusCircle /></span>
+          </Link>
+          <Link href="/plan/profile" className={isActive("/plan/profile") ? "active" : undefined}>
+            <UserCircle />
+            Profile
+          </Link>
+          <a href="#menu" onClick={(e) => { e.preventDefault(); setMobileOpen(true); }}>
+            <Menu />
+            More
+          </a>
+        </nav>
       </div>
     </div>
   );
