@@ -1,5 +1,5 @@
 "use client";
-// Logistack Plan app shell — the CropManager layout: fixed green-gradient sidebar with
+// Agriplan app shell — the CropManager layout: fixed green-gradient sidebar with
 // labelled sections + collapse toggle, white fixed topbar, padded content column.
 import { Fragment, useState } from "react";
 import Link from "next/link";
@@ -90,7 +90,7 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
               <LogoMark size={20} />
             </div>
             <div className="sidebar-logo-text">
-              Logistack<span>Plan</span>
+              Agri<span>plan</span>
             </div>
           </div>
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Chart generator for Logistackplan business plan documents.
+Chart generator for Agriplan business plan documents.
 Reads financial data as JSON from stdin, outputs base64-encoded PNG charts as JSON.
 
 Usage: echo '<json>' | python generate_charts.py

@@ -702,7 +702,7 @@ function AdminCreditsPanel() {
 
   const CURRENCIES = ["USD", "EUR", "GBP", "RWF", "KES", "NGN", "ZAR", "UGX", "TZS"];
 
-  const handleAssign = async (e: React.FormEvent) => {
+  const handleAssign = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!assignUserId.trim() || !assignCredits) return;
     setAssignSubmitting(true);
@@ -725,7 +725,7 @@ function AdminCreditsPanel() {
     }
   };
 
-  const handleLookup = async (e: React.FormEvent) => {
+  const handleLookup = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!lookupId.trim()) return;
     setLooking(true);
@@ -741,7 +741,7 @@ function AdminCreditsPanel() {
     }
   };
 
-  const handleCheck = async (e: React.FormEvent) => {
+  const handleCheck = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!deductUserId.trim()) return;
     setChecking(true);
@@ -759,7 +759,7 @@ function AdminCreditsPanel() {
     }
   };
 
-  const handleDeduct = async (e: React.FormEvent) => {
+  const handleDeduct = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!deductUserId.trim() || !deductAmt || balance === null) return;
     setDeductSubmitting(true);

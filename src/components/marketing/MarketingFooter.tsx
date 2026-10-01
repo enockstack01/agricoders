@@ -121,7 +121,7 @@ export default function MarketingFooter() {
         <div className="mt-14 flex flex-col items-start justify-between gap-5 rounded-[28px] border border-white/10 bg-white/[0.04] p-6 sm:flex-row sm:items-center sm:p-8">
           <div>
             <p className="m-0 text-xl font-black">Start your business plan today</p>
-            <p className="m-0 text-[15px] text-white/60">Investor-ready documents in under 15 minutes with Logistack Plan.</p>
+            <p className="m-0 text-[15px] text-white/60">Investor-ready documents in under 15 minutes with Agriplan.</p>
           </div>
           <Link href="/plan" className="mkt-btn-primary inline-flex flex-shrink-0 items-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-extrabold no-underline">
             Get started

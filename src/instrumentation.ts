@@ -1,7 +1,6 @@
 const SYNC_INTERVAL_MS = 3 * 60 * 1000; // every 3 minutes
 
 declare global {
-  // eslint-disable-next-line no-var
   var __oneHealthPollerStarted: boolean | undefined;
 }
 

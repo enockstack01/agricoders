@@ -1,6 +1,10 @@
-import { spawnSync } from "child_process";
-import path from "path";
+import type { spawnSync as SpawnSync } from "child_process";
 import { FinancialResults } from "@/types";
+
+// child_process is loaded at runtime rather than statically imported: Turbopack analyses static
+// spawnSync() calls and, because the command here is dynamic, traced the entire project into the
+// business-plan route ("Encountered unexpected file in NFT list"). Requires Node >= 20.16.
+const { spawnSync } = process.getBuiltinModule("child_process") as { spawnSync: typeof SpawnSync };
 
 export interface ChartImages {
   revenue?: Buffer;
@@ -48,7 +52,10 @@ export async function generateCharts(
     return {};
   }
 
-  const scriptPath = path.join(process.cwd(), "src", "scripts", "generate_charts.py");
+  // Relative to the server's working directory (spawnSync's default cwd) — the same location as
+  // path.join(process.cwd(), ...), but statically resolvable so the build doesn't trace the whole
+  // project. The script ships to production via the Dockerfile (COPY src/scripts).
+  const scriptPath = "src/scripts/generate_charts.py";
 
   // Build a slim payload containing only what the Python script needs
   const payload = JSON.stringify({

@@ -6,7 +6,7 @@ import Reveal from "@/components/ui/Reveal";
 import type { AppEntry } from "@/lib/apps";
 
 const ICON_MAP: Record<string, React.ReactNode> = {
-  logistackplan: <Layers size={26} color="white" />,
+  agriplan: <Layers size={26} color="white" />,
   livestockpro: <PawPrint size={26} color="white" />,
 };
 

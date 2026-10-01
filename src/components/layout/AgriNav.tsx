@@ -25,7 +25,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { AGRICODERS_APPS } from "@/lib/apps";
 
 const APP_ICONS: Record<string, React.ReactNode> = {
-  logistackplan: <Stack size={20} weight="duotone" />,
+  agriplan: <Stack size={20} weight="duotone" />,
   livestockpro: <PawPrint size={20} weight="duotone" />,
 };
 

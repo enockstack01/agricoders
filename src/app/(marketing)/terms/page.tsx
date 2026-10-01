@@ -7,7 +7,7 @@ import Reveal from "@/components/ui/Reveal";
 
 export const metadata: Metadata = {
   title: "Terms of Service — Agricoders",
-  description: "The terms that govern your use of Logistack Plan and Agricoders products.",
+  description: "The terms that govern your use of Agriplan and Agricoders products.",
 };
 
 const UPDATED = "August 21, 2026";
@@ -15,7 +15,7 @@ const UPDATED = "August 21, 2026";
 const SECTIONS = [
   {
     title: "1. Acceptance of terms",
-    body: `By creating an account or using Logistack Plan, LivestockPro, or any other Agricoders product, you agree to these Terms of Service. If you do not agree, please do not use our products.`,
+    body: `By creating an account or using Agriplan, LivestockPro, or any other Agricoders product, you agree to these Terms of Service. If you do not agree, please do not use our products.`,
   },
   {
     title: "2. Your account",
@@ -27,7 +27,7 @@ const SECTIONS = [
   },
   {
     title: "4. Generated content",
-    body: `Business plans, financial models, and other documents you generate through Logistack Plan are yours to use for your own business purposes. We do not claim ownership over the specific business information you provide or the documents generated from it. Because content is AI-assisted, you are responsible for reviewing generated documents for accuracy before relying on them, e.g. for investor or regulatory submissions.`,
+    body: `Business plans, financial models, and other documents you generate through Agriplan are yours to use for your own business purposes. We do not claim ownership over the specific business information you provide or the documents generated from it. Because content is AI-assisted, you are responsible for reviewing generated documents for accuracy before relying on them, e.g. for investor or regulatory submissions.`,
   },
   {
     title: "5. Payments",

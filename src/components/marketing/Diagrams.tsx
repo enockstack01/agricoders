@@ -134,7 +134,7 @@ export function PrecisionLayers() {
    3. Ecosystem — hub-and-spoke with flowing data between services & systems
    ───────────────────────────────────────────────────────────────────────────── */
 const NODES = [
-  { x: 110, y: 90, label: "Logistack Plan", sub: "Business plans", Icon: Stack, grad: ["#66BB6A", "#1B5E20"] },
+  { x: 110, y: 90, label: "Agriplan", sub: "Business plans", Icon: Stack, grad: ["#66BB6A", "#1B5E20"] },
   { x: 490, y: 90, label: "LivestockPro", sub: "Herd management", Icon: PawPrint, grad: ["#F6B26B", "#B45309"] },
   { x: 110, y: 330, label: "Geospatial tools", sub: "Location intelligence", Icon: GlobeHemisphereEast, grad: ["#64B5F6", "#1565C0"] },
   { x: 490, y: 330, label: "Digital marketing", sub: "Market reach", Icon: Megaphone, grad: ["#CE93D8", "#7B1FA2"] },
@@ -143,7 +143,7 @@ const NODES = [
 export function Ecosystem() {
   const hub = { x: 300, y: 210 };
   return (
-    <svg viewBox="0 0 600 420" className="h-auto w-full overflow-visible" role="img" aria-label="Diagram: Agricoders connects Logistack Plan, LivestockPro, geospatial tools and digital marketing">
+    <svg viewBox="0 0 600 420" className="h-auto w-full overflow-visible" role="img" aria-label="Diagram: Agricoders connects Agriplan, LivestockPro, geospatial tools and digital marketing">
       <defs>
         {NODES.map((n, i) => (
           <linearGradient key={i} id={`eco-g${i}`} x1="0" y1="0" x2="1" y2="1">

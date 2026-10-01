@@ -397,7 +397,7 @@ export default function Dashboard() {
 
       <section className="hero-banner">
         <div style={{ minWidth: 0 }}>
-          <span className="hero-kicker"><Sparkles size={14} />Logistack Plan</span>
+          <span className="hero-kicker"><Sparkles size={14} />Agriplan</span>
           <h1>Welcome back{user?.firstName ? `, ${user.firstName}` : ""} 👋</h1>
           <p>Manage your business plans and financial models — generate investor-ready documents in minutes.</p>
         </div>

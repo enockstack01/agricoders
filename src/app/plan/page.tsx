@@ -176,7 +176,7 @@ export default function Home() {
               </Reveal>
               <Reveal delay={80}>
                 <p className="mb-10 text-lg leading-relaxed text-gray-400 dark:text-gray-500 sm:text-xl">
-                  Logistack Plan uses Artificial Intelligence to instantly produce a complete{" "}
+                  Agriplan uses Artificial Intelligence to instantly produce a complete{" "}
                   <strong className="text-white">Business Plan</strong> and a full{" "}
                   <strong className="text-white">Financial Model</strong>{" "}
                   so you can focus on building your business, not writing documents.
@@ -540,7 +540,7 @@ export default function Home() {
                 Your next business plan should not take weeks
               </h2>
               <p className="mx-auto mb-9 max-w-[520px] leading-relaxed text-white/90">
-                Join entrepreneurs and consultants who use Logistack Plan to produce professional
+                Join entrepreneurs and consultants who use Agriplan to produce professional
                 business documents in a single session and present with confidence.
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row">
@@ -571,7 +571,7 @@ export default function Home() {
                 <div className="flex h-[30px] w-[30px] items-center justify-center rounded-lg bg-green-600">
                   <Layers size={14} color="white" />
                 </div>
-                <span className="font-bold text-white">Logistack Plan</span>
+                <span className="font-bold text-white">Agriplan</span>
               </div>
               <p className="mb-3 max-w-[300px] text-sm leading-relaxed text-gray-500 dark:text-gray-400">
                 Logistack Ltd — AI-powered business planning and financial modelling for agribusinesses and entrepreneurs.

@@ -32,7 +32,7 @@ export default function AuthScreen({ mode = "sign-in" }: { mode?: "sign-in" | "s
           <div className="auth-split-brand-icon">
             <LogoMark size={56} />
           </div>
-          <h1>Logistack Plan</h1>
+          <h1>Agriplan</h1>
           <p>
             Turn your business data into professional business plans and financial models — generated
             automatically, ready for investors and lenders.
@@ -57,7 +57,7 @@ export default function AuthScreen({ mode = "sign-in" }: { mode?: "sign-in" | "s
               <span className="auth-split-mobile-logo">
                 <LogoMark size={22} />
               </span>
-              Logistack Plan
+              Agriplan
             </div>
             <h2>{isSignUp ? "Create your account" : "Welcome"}</h2>
             <p className="subtitle">

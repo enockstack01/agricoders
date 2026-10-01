@@ -88,10 +88,10 @@ export default function Footer() {
               <div className="w-8 h-8 rounded-lg bg-green-600 group-hover:bg-green-500 flex items-center justify-center flex-shrink-0 transition-colors">
                 <Layers size={16} className="text-white" />
               </div>
-              <span className="font-bold text-white text-base tracking-tight">Logistack Plan</span>
+              <span className="font-bold text-white text-base tracking-tight">Agriplan</span>
             </Link>
             <p className="text-sm leading-relaxed text-gray-500 mb-5">
-              Logistack Plan generates professional business plans and financial models using AI and Python charts.
+              Agriplan generates professional business plans and financial models using AI and Python charts.
             </p>
 
             {/* Social links */}
@@ -186,7 +186,7 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-1 text-xs text-gray-600">
-            <span>&copy; {YEAR} Logistack Plan. All rights reserved.</span>
+            <span>&copy; {YEAR} Agriplan. All rights reserved.</span>
             <span className="hidden sm:inline text-gray-700">·</span>
             <span>Built for founders, consultants &amp; financial analysts</span>
           </div>

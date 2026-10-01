@@ -6,7 +6,6 @@ interface OneHealthCache {
 }
 
 declare global {
-  // eslint-disable-next-line no-var
   var onehealthMongoose: OneHealthCache | undefined;
 }
 
@@ -15,7 +14,7 @@ global.onehealthMongoose = cached;
 
 /** Separate MongoDB cluster dedicated to the One Health intelligence dashboard's own data
  *  (synced livestock records, computed risk alerts, sync state) — kept apart from the
- *  primary Logistack Plan database. */
+ *  primary Agriplan database. */
 export async function connectOneHealthDB(): Promise<mongoose.Connection> {
   const uri = process.env.LIVESTOCK_MONGODB_URI;
   if (!uri) {

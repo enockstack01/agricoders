@@ -1,7 +1,7 @@
 /**
  * One-time bootstrap script: sets roles in Clerk publicMetadata.
  *
- * Usage (from the logistackplan directory):
+ * Usage (from the project root):
  *   node scripts/seed-roles.mjs
  *
  * Reads CLERK_SECRET_KEY from .env.local automatically.

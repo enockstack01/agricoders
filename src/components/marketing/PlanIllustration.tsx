@@ -1,4 +1,4 @@
-/** Abstract "business plan generation" scene for the Logistack Plan hero — a document panel
+/** Abstract "business plan generation" scene for the Agriplan hero — a document panel
  *  turning into a financial model, with a revenue chart and a floating NPV/IRR readout. Pure
  *  inline SVG, no external assets, matching the brand palette exactly. */
 export default function PlanIllustration() {

@@ -255,7 +255,9 @@ function FormPageContent() {
         // Editing an existing submission — load it directly
         try {
           const r = await axios.get(`/api/submissions/${editId}`);
-          const { _id, userId, createdAt, updatedAt, __v, ...rest } = r.data;
+          // drop database-only fields before loading the submission into the form
+          const rest = { ...r.data };
+          for (const key of ["_id", "userId", "createdAt", "updatedAt", "__v"]) delete rest[key];
           if (rest.financial && !rest.financial.products) rest.financial.products = [];
           if (rest.financial && !rest.financial.services)  rest.financial.services  = [];
           if (rest.companyInfo && !rest.companyInfo.currency) rest.companyInfo.currency = "USD";
@@ -268,7 +270,7 @@ function FormPageContent() {
       setLoadingEdit(false);
     };
     init();
-  }, [editId]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [editId]);
 
   const update = <K extends keyof Omit<FormSubmission, "userId">>(
     key: K,

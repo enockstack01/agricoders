@@ -1,5 +1,5 @@
 "use client";
-// Logistack Plan icon set — Phosphor duotone icons exposed under the lucide-style names the
+// Agriplan icon set — Phosphor duotone icons exposed under the lucide-style names the
 // app already uses, so pages only swap their import path. Small UI glyphs (chevrons, ×, +,
 // spinners) render in the "bold" weight; everything else is two-tone "duotone".
 import type { CSSProperties } from "react";

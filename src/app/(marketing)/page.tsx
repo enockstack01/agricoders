@@ -34,14 +34,14 @@ export const metadata: Metadata = {
 };
 
 const APP_ICONS: Record<string, React.ReactNode> = {
-  logistackplan: <Stack size={30} weight="duotone" />,
+  agriplan: <Stack size={30} weight="duotone" />,
   livestockpro: <PawPrint size={30} weight="duotone" />,
 };
 
 const STATS = [
   { value: "4", label: "Integrated services", sub: "for every agribusiness need" },
   { value: String(AGRICODERS_APPS.filter((a) => a.status === "live").length), label: "Live systems", sub: "built and running today" },
-  { value: "<15", suffix: " min", label: "To a business plan", sub: "with Logistack Plan" },
+  { value: "<15", suffix: " min", label: "To a business plan", sub: "with Agriplan" },
   { value: "19", label: "Sheet financial model", sub: "NPV, IRR & payback" },
 ];
 
@@ -145,7 +145,7 @@ export default function AgricodersPage() {
                     className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-900/10 bg-white px-8 py-4 text-base font-extrabold text-gray-900 no-underline shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-white/15 dark:bg-white/5 dark:text-white"
                   >
                     <Stack size={20} weight="duotone" className="text-green-600 dark:text-green-400" />
-                    Try Logistack Plan
+                    Try Agriplan
                   </Link>
                 </div>
               </Reveal>
@@ -234,7 +234,7 @@ export default function AgricodersPage() {
                   </span>
                   <h3 className="mb-3 text-[24px] font-black leading-tight">Agribusiness Planning &amp; Financial Modelling</h3>
                   <p className="mb-0 text-[15.5px] leading-relaxed text-white/85">
-                    Logistack Plan generates investor-ready business plans and 19-sheet financial models in
+                    Agriplan generates investor-ready business plans and 19-sheet financial models in
                     under 15 minutes — narrative, charts and projections included.
                   </p>
                 </div>
@@ -249,7 +249,7 @@ export default function AgricodersPage() {
                     href="/plan"
                     className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-[15px] font-extrabold text-green-800 no-underline shadow-lg transition-transform hover:-translate-y-0.5"
                   >
-                    Try Logistack Plan
+                    Try Agriplan
                     <ArrowRight size={16} weight="bold" />
                   </Link>
                 </div>

@@ -3,7 +3,7 @@ import { Nunito, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import "./globals.css";
 
-// Site-wide rounded "sticky" typeface — matches the Logistack Plan app (Nunito, heavy weights)
+// Site-wide rounded "sticky" typeface — matches the Agriplan app (Nunito, heavy weights)
 const geistSans = Nunito({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Logistack Plan – Business Plan Generator",
+  title: "Agriplan – Business Plan Generator",
   description: "Generate professional business plans and financial models automatically with AI and Python charts.",
 };
 

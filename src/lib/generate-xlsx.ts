@@ -6,7 +6,6 @@ const GREEN       = "2E8B57";
 const DARK_GREEN  = "1A5C3A";
 const LIGHT_GREEN = "E8F5E9";
 const BLUE_HDR    = "1E3A5F";
-const AMBER       = "FFF3CD";
 const NUM_FMT     = "#,##0.00";
 const INT_FMT     = "#,##0";
 const PCT_FMT     = "0.00%";
@@ -141,7 +140,7 @@ export async function generateFinancialModelXlsx(
   results: FinancialResults
 ): Promise<Buffer> {
   const wb = new ExcelJS.Workbook();
-  wb.creator = data.companyInfo.authorName || "Logistack Plan";
+  wb.creator = data.companyInfo.authorName || "Agriplan";
   wb.created = wb.modified = new Date();
 
   const { financial: fin, staff } = data;
@@ -164,7 +163,7 @@ export async function generateFinancialModelXlsx(
   const wsInp = wb.addWorksheet("Inputs");
   wsInp.columns = [{ width: 35 }, { width: 25 }, { width: 45 }];
 
-  title(wsInp, 1, 1, "Logistack Plan — Financial Model Inputs");
+  title(wsInp, 1, 1, "Agriplan — Financial Model Inputs");
   wsInp.getCell(1, 3).value = `Generated: ${new Date().toLocaleDateString()}`;
 
   const inp = (row: number, label: string, val_: string | number, desc: string, numFmt?: string) => {
@@ -530,7 +529,6 @@ export async function generateFinancialModelXlsx(
   }
 
   const CF_NET_Y = Array.from({ length: n }, (_, yr) => R("Cash Flow", netCFRow,  2 + yr));
-  const CF_END_Y = Array.from({ length: n }, (_, yr) => R("Cash Flow", endBalRow, 2 + yr));
 
   // ══════════════════════════════════════════════════════════════════
   // SHEET 8 — Income Statement
@@ -1000,7 +998,6 @@ export async function generateFinancialModelXlsx(
     [wsEBCR,  "F0FFF4"],
   ];
   sheetColors.forEach(([ws, col]) => {
-    ws.getSheetValues;
     (ws as unknown as { tabColor?: { argb: string } }).tabColor = { argb: `FF${col}` };
   });
 

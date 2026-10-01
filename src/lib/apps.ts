@@ -13,8 +13,8 @@ export interface AppEntry {
 
 export const AGRICODERS_APPS: AppEntry[] = [
   {
-    id: "logistackplan",
-    name: "Logistack Plan",
+    id: "agriplan",
+    name: "Agriplan",
     tagline: "AI Business Plan & Financial Model Generator",
     description:
       "Generate investor-ready business plans and 19-sheet financial models in under 15 minutes. Fully written, formatted, and ready to submit.",

@@ -1,5 +1,5 @@
 "use client";
-// CropManager-style building blocks for the Logistack Plan app.
+// CropManager-style building blocks for the Agriplan app.
 // Markup mirrors Crop-Manager/client/src/components/ui.jsx; styles live in app/plan/cropmanager.css.
 import { useEffect } from "react";
 import { Layers, X, CheckCircle2, AlertTriangle, Inbox } from "@/components/plan/icons";
