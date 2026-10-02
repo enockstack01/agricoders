@@ -1,7 +1,7 @@
 "use client";
-// Agriplan icon set — Phosphor duotone icons exposed under the lucide-style names the
-// app already uses, so pages only swap their import path. Small UI glyphs (chevrons, ×, +,
-// spinners) render in the "bold" weight; everything else is two-tone "duotone".
+// Agriplan icon set — Phosphor icons exposed under the lucide-style names the
+// app already uses. Default weight is "fill", matching CropManager's Font Awesome solid set;
+// small UI glyphs (chevrons, ×, +, spinners) render "bold".
 import type { CSSProperties } from "react";
 import {
   TrendUp, TrendDown, Minus as PhMinus, Bell as PhBell, Coins as PhCoins, FileText as PhFileText, X as PhX,
@@ -26,7 +26,7 @@ export interface IconProps {
   weight?: "thin" | "light" | "regular" | "bold" | "fill" | "duotone";
 }
 
-function make(Ph: PhIcon, defaultWeight: IconProps["weight"] = "duotone") {
+function make(Ph: PhIcon, defaultWeight: IconProps["weight"] = "fill") {
   function Icon({ size = 18, className, style, weight }: IconProps) {
     return <Ph size={size} weight={weight ?? defaultWeight} className={className} style={style} aria-hidden="true" />;
   }
@@ -49,7 +49,7 @@ export const Sun = make(PhSun);
 export const Bell = make(PhBell);
 export const Search = make(MagnifyingGlass, "bold");
 
-// small glyphs (bold reads better than duotone at 12-16px)
+// small glyphs (bold reads better than fill at 12-16px)
 export const ChevronLeft = make(CaretLeft, "bold");
 export const ChevronRight = make(CaretRight, "bold");
 export const ChevronDown = make(CaretDown, "bold");

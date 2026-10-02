@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "Agriplan",
+    "slug": "agriplan",
+    "owner": "enockstack",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "agriplan",
+    "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.agricoders.agriplan"
+    },
+    "android": {
+      "package": "com.agricoders.agriplan",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundImage": "./assets/adaptive-icon-bg.png",
+        "monochromeImage": "./assets/adaptive-icon-mono.png",
+        "backgroundColor": "#2E7D32"
+      }
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180,
+          "resizeMode": "contain",
+          "backgroundColor": "#2E7D32",
+          "dark": {
+            "image": "./assets/splash-icon-dark.png",
+            "backgroundColor": "#0F1A10"
+          }
+        }
+      ],
+      "@react-native-community/datetimepicker",
+      "expo-font",
+      "expo-status-bar",
+      "expo-web-browser",
+      "expo-sharing"
+    ],
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

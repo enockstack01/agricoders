@@ -5,9 +5,8 @@ import Link from "next/link";
 import axios from "axios";
 import AppShell, { NavRole } from "@/components/layout/AppShell";
 import StatsCard from "@/components/ui/StatsCard";
-import { Loading, EmptyState, Modal, Stepper } from "@/components/plan/ui";
+import { PageHeader, Loading, EmptyState, Modal, Stepper } from "@/components/plan/ui";
 import {
-  Sparkles,
   FileText,
   Download,
   Edit2,
@@ -90,7 +89,7 @@ function GeneratingOverlay({ docType, companyName }: { docType: string; companyN
           <div className="progress-bar" style={{ marginBottom: 14 }}>
             <div className="progress-bar-fill" style={{ width: `${progress}%`, transitionDuration: "2s" }} />
           </div>
-          <p className="text-primary" style={{ fontSize: 14, fontWeight: 600, minHeight: 18, color: "var(--primary)" }}>
+          <p className="text-primary" style={{ fontSize: 12, fontWeight: 600, minHeight: 18, color: "var(--primary)" }}>
             {GEN_MESSAGES[msgIdx]}
           </p>
           <p className="form-hint" style={{ marginTop: 10 }}>
@@ -209,7 +208,7 @@ function CreditsModal({ required, balance, onClose }: { required: number; balanc
 
       <div className="stat-tile tone-green" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", textAlign: "left", padding: "12px 14px" }}>
         <span className="stat-tile-label" style={{ margin: 0 }}>Credits to request</span>
-        <span className="stat-tile-value" style={{ fontSize: 22 }}>{totalCredits}</span>
+        <span className="stat-tile-value" style={{ fontSize: 18 }}>{totalCredits}</span>
       </div>
 
       {error && <p className="form-error" style={{ marginTop: 12 }}>{error}</p>}
@@ -395,23 +394,22 @@ export default function Dashboard() {
         />
       )}
 
-      <section className="hero-banner">
-        <div style={{ minWidth: 0 }}>
-          <span className="hero-kicker"><Sparkles size={14} />Agriplan</span>
-          <h1>Welcome back{user?.firstName ? `, ${user.firstName}` : ""} 👋</h1>
-          <p>Manage your business plans and financial models — generate investor-ready documents in minutes.</p>
-        </div>
-        <div className="hero-actions">
-          <button onClick={() => setCreditModal({ required: 0, balance: credits ?? 0 })} className="btn btn-secondary">
-            <Send size={16} />
-            Request Credits
-          </button>
-          <Link href="/plan/form" className="btn btn-primary">
-            <PlusCircle size={18} />
-            New Business Plan
-          </Link>
-        </div>
-      </section>
+      <PageHeader
+        title={`Welcome back${user?.firstName ? `, ${user.firstName}` : ""}`}
+        subtitle="Manage your business plans and financial models"
+        actions={
+          <>
+            <button onClick={() => setCreditModal({ required: 0, balance: credits ?? 0 })} className="btn btn-secondary">
+              <Send size={14} style={{ color: "var(--primary)" }} />
+              Request Credits
+            </button>
+            <Link href="/plan/form" className="btn btn-primary">
+              <PlusCircle size={15} />
+              New Business Plan
+            </Link>
+          </>
+        }
+      />
 
       {/* KPIs */}
       <div className="kpi-grid">
@@ -663,7 +661,7 @@ export default function Dashboard() {
                 <span className={`icon-tile ${f.tone}`}>{f.icon}</span>
                 <div style={{ minWidth: 0 }}>
                   <div className="cell-primary">{f.title}</div>
-                  <div className="cell-sub" style={{ fontSize: 14 }}>{f.desc}</div>
+                  <div className="cell-sub" style={{ fontSize: 12 }}>{f.desc}</div>
                 </div>
               </div>
             ))}
@@ -738,7 +736,7 @@ function DocDropdown({
         ref={triggerRef}
         onClick={handleTrigger}
         className={`badge ${isDocx ? "badge-info" : "badge-success"}`}
-        style={{ padding: "7px 10px", cursor: "pointer", fontSize: 14 }}
+        style={{ padding: "7px 10px", cursor: "pointer", fontSize: 12 }}
         aria-expanded={open}
       >
         {isDocx ? <FileText size={13} /> : <BarChart2 size={13} />}
@@ -770,7 +768,7 @@ function DocDropdown({
               <span className="meta" style={{ color: "var(--primary)", fontWeight: 700 }}>Free</span>
             </button>
           ) : (
-            <div className="dropdown-empty" style={{ padding: "10px 16px", textAlign: "left", fontSize: 14 }}>
+            <div className="dropdown-empty" style={{ padding: "10px 16px", textAlign: "left", fontSize: 12 }}>
               No stored version yet — generate one first.
             </div>
           )}

@@ -553,7 +553,7 @@ function AdminRequestsPanel({
                       ))}
                       <span className="badge badge-neutral"><Coins size={10} />{req.creditsRequested} credits</span>
                     </div>
-                    {req.note && <p className="cell-muted" style={{ fontStyle: "italic", marginTop: 6, fontSize: 14 }}>&ldquo;{req.note}&rdquo;</p>}
+                    {req.note && <p className="cell-muted" style={{ fontStyle: "italic", marginTop: 6, fontSize: 12 }}>&ldquo;{req.note}&rdquo;</p>}
                     {req.adminNote && <p className="cell-sub" style={{ marginTop: 4 }}>Admin note: {req.adminNote}</p>}
                     <p className="cell-sub" style={{ marginTop: 4, display: "flex", alignItems: "center", gap: 4 }}>
                       <Clock size={10} />
@@ -652,7 +652,7 @@ function CollapsibleCard({
         className="card-header"
         style={{ width: "100%", textAlign: "left", borderBottom: open ? undefined : "none", cursor: "pointer", flexWrap: "nowrap" }}
       >
-        <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 18, fontWeight: 800, color: "var(--text)" }}>
+        <span style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 15, fontWeight: 600, color: "var(--text)" }}>
           <span className={`icon-tile ${tone}`}>{icon}</span>
           <span>
             {title}
@@ -847,7 +847,7 @@ function AdminCreditsPanel() {
           <>
             <div className="stat-tile tone-blue" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", textAlign: "left", marginBottom: 14 }}>
               <span className="stat-tile-label" style={{ margin: 0 }}>Current Balance</span>
-              <span className="stat-tile-value" style={{ fontSize: 24 }}>{lookupData.credits} credits</span>
+              <span className="stat-tile-value" style={{ fontSize: 20 }}>{lookupData.credits} credits</span>
             </div>
             {lookupData.transactions.length > 0 ? (
               <>
@@ -906,7 +906,7 @@ function AdminCreditsPanel() {
           <form onSubmit={handleDeduct}>
             <div className={`stat-tile ${balance === 0 ? "" : "tone-orange"}`} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", textAlign: "left", marginBottom: 14 }}>
               <span className="stat-tile-label" style={{ margin: 0 }}>Current Balance</span>
-              <span className="stat-tile-value" style={{ fontSize: 24, color: balance === 0 ? "var(--red)" : undefined }}>{balance} credits</span>
+              <span className="stat-tile-value" style={{ fontSize: 20, color: balance === 0 ? "var(--red)" : undefined }}>{balance} credits</span>
             </div>
             {balance === 0 ? (
               <p className="form-hint" style={{ textAlign: "center" }}>This user has no credits to dismiss.</p>
@@ -1169,7 +1169,7 @@ function OneHealthPanel() {
                         <Badge variant={style.badge}>{a.severity}</Badge>
                         <Badge variant="gray">{OH_TYPE_LABEL[a.type]}</Badge>
                       </div>
-                      <p className="cell-muted" style={{ fontSize: 14, marginTop: 4 }}>{a.description}</p>
+                      <p className="cell-muted" style={{ fontSize: 12, marginTop: 4 }}>{a.description}</p>
                       <div className="cell-sub" style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 6, flexWrap: "wrap" }}>
                         {a.district && <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><MapPin size={11} />{a.district}</span>}
                         <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><PawPrint size={11} />{a.species.join(", ")}</span>

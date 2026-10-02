@@ -188,7 +188,7 @@ export default function ProfilePage() {
           <div className="user-cell" style={{ marginBottom: 18 }}>
             <Avatar src={user?.imageUrl} name={user?.fullName ?? undefined} size="lg" />
             <div>
-              <div className="cell-primary" style={{ fontSize: 18 }}>{user?.fullName || "—"}</div>
+              <div className="cell-primary" style={{ fontSize: 15 }}>{user?.fullName || "—"}</div>
               <div className="cell-muted" style={{ overflowWrap: "anywhere" }}>{user?.primaryEmailAddress?.emailAddress || "—"}</div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6, flexWrap: "wrap" }}>
                 {role !== "user" && (

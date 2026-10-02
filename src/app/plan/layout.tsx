@@ -1,19 +1,19 @@
 import { ClerkProvider } from "@clerk/nextjs";
-import { Nunito } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./cropmanager.css";
 
-// Rounded "sticker" type: Nunito's soft, rounded terminals at heavy weights (Snapchat-like feel)
-const stickyFont = Nunito({
-  variable: "--font-snap",
+// CropManager's typeface (Inter 400–800), exposed to cropmanager.css as --font-cm
+const cmFont = Inter({
+  variable: "--font-cm",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800", "900"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
 export default function PlanLayout({ children }: { children: React.ReactNode }) {
   return (
     <ClerkProvider>
-      <div className={stickyFont.variable}>{children}</div>
+      <div className={cmFont.variable}>{children}</div>
     </ClerkProvider>
   );
 }

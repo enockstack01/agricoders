@@ -136,7 +136,7 @@ function CreditGate({ credits, required, onBack }: { credits: number; required: 
 
             <div className="summary-row">
               <span className="label">Credits to request</span>
-              <span className="value" style={{ fontSize: 18 }}>{totalCredits}</span>
+              <span className="value" style={{ fontSize: 16 }}>{totalCredits}</span>
             </div>
 
             {error && <p className="form-error">{error}</p>}

@@ -170,7 +170,7 @@ interface DataTableProps<T> {
 export function DataTable<T>({ columns, rows, rowKey, emptyMessage = "No entries yet.", mobileActions }: DataTableProps<T>) {
   if (rows.length === 0) {
     return (
-      <div className="inset-panel" style={{ textAlign: "center", color: "var(--text-light)", fontSize: 15, padding: "24px 14px" }}>
+      <div className="inset-panel" style={{ textAlign: "center", color: "var(--text-light)", fontSize: 13, padding: "24px 14px" }}>
         {emptyMessage}
       </div>
     );

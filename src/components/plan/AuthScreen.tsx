@@ -9,7 +9,7 @@ import { LogoMark } from "@/components/plan/ui";
 // brand the Clerk form; our own sign-in / sign-up switch link replaces Clerk's card footer
 const appearance = {
   layout: { socialButtonsVariant: "blockButton" as const, socialButtonsPlacement: "top" as const },
-  variables: { colorPrimary: "#2E7D32", borderRadius: "12px", fontFamily: "var(--font-snap), 'Nunito', system-ui, sans-serif", fontSize: "15px" },
+  variables: { colorPrimary: "#2E7D32", borderRadius: "10px", fontFamily: "var(--font-cm), Inter, system-ui, sans-serif" },
   elements: {
     footerAction: { display: "none" },
     socialButtonsBlockButton: { minHeight: "46px", fontWeight: 600 },

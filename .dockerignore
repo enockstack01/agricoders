@@ -27,3 +27,6 @@ Thumbs.db
 Dockerfile*
 docker-compose*
 .dockerignore
+
+# Expo mobile app — not part of the website image
+mobile

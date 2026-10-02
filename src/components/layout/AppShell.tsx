@@ -19,7 +19,6 @@ import {
   Sun,
   Shield,
   Home,
-  Coins,
 } from "@/components/plan/icons";
 import NotificationBell from "@/components/ui/NotificationBell";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -77,7 +76,6 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
     .filter((s) => s.items.length > 0);
 
   const crumbs = breadcrumb && breadcrumb.length > 0 ? breadcrumb : title ? [{ label: title }] : [];
-  const isActive = (href: string) => pathname === href || pathname.startsWith(href + "/");
 
   return (
     <div className="cm-app">
@@ -191,36 +189,6 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
 
           <div className="main-content-inner">{children}</div>
         </main>
-
-        {/* Mobile bottom tab bar (≤768px) — Snapchat-style, raised centre "new plan" button */}
-        <nav className="bottom-nav" aria-label="Primary">
-          <Link href="/plan/dashboard" className={isActive("/plan/dashboard") ? "active" : undefined}>
-            <LayoutDashboard />
-            Home
-          </Link>
-          {role === "user" ? (
-            <Link href="/plan/profile">
-              <Coins />
-              Credits
-            </Link>
-          ) : (
-            <Link href="/plan/admin" className={isActive("/plan/admin") ? "active" : undefined}>
-              <BarChart2 />
-              Admin
-            </Link>
-          )}
-          <Link href="/plan/form" className="bottom-nav-cta" aria-label="New business plan">
-            <span className="cta-bubble"><PlusCircle /></span>
-          </Link>
-          <Link href="/plan/profile" className={isActive("/plan/profile") ? "active" : undefined}>
-            <UserCircle />
-            Profile
-          </Link>
-          <a href="#menu" onClick={(e) => { e.preventDefault(); setMobileOpen(true); }}>
-            <Menu />
-            More
-          </a>
-        </nav>
       </div>
     </div>
   );

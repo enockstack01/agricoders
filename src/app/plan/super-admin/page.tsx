@@ -281,7 +281,7 @@ export default function SuperAdminPage() {
                 <div style={{ marginBottom: 10 }}><Badge variant={r.variant}>{r.role}</Badge></div>
                 <ul style={{ display: "flex", flexDirection: "column", gap: 6 }}>
                   {r.perms.map((p) => (
-                    <li key={p} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 14, color: "var(--text-light)" }}>
+                    <li key={p} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 12, color: "var(--text-light)" }}>
                       <CheckCircle2 size={13} style={{ color: "var(--primary)", marginTop: 2, flexShrink: 0 }} />
                       {p}
                     </li>
