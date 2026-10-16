@@ -372,3 +372,16 @@ html {
   .mkt-gradient-text, .mkt-bob, .mkt-bob-slow, .mkt-flow, .mkt-scan, .mkt-ring,
   .mkt-step-line, .mkt-step-line-v { animation: none !important; }
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   AGRICODERS BRAND (pitch-deck identity) — scoped to the home page wrapper.
+   Forest #1B5E20 · Green #2E7D32 · Amber #F9A825 · Card #F3F8F3 / #D5E3D6 · Ink #111611 · Calibri
+   ══════════════════════════════════════════════════════════════════════════ */
+.brand-deck {
+  font-family: Calibri, Carlito, "Segoe UI", Arial, sans-serif;
+}
+.brand-deck .mkt-sticker {
+  background: #1B5E20;
+  box-shadow: none;
+}
+.brand-deck .mkt-pulse-dot { background: #F9A825; }

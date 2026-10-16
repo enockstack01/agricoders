@@ -1,6 +1,5 @@
 import Link from "next/link";
 import {
-  Plant,
   LinkedinLogo,
   XLogo,
   GithubLogo,
@@ -10,6 +9,7 @@ import {
   ArrowUpRight,
 } from "@phosphor-icons/react/dist/ssr";
 import { AGRICODERS_APPS } from "@/lib/apps";
+import BrandMark from "./BrandMark";
 
 const SOCIALS = [
   { label: "LinkedIn", Icon: LinkedinLogo, href: "https://linkedin.com" },
@@ -21,8 +21,9 @@ const SOCIALS = [
 const SERVICES = ["Geospatial Intelligence", "Web & Mobile Apps", "Digital Marketing", "Business Planning"];
 
 const COMPANY_LINKS = [
-  { label: "How it works", href: "/#how-it-works" },
-  { label: "Precision agriculture", href: "/#precision" },
+  { label: "Our vision", href: "/#vision" },
+  { label: "Roadmap", href: "/#roadmap" },
+    { label: "Services", href: "/#services" },
   { label: "All systems", href: "/apps" },
   { label: "Privacy Policy", href: "/privacy" },
   { label: "Terms of Service", href: "/terms" },
@@ -44,12 +45,8 @@ export default function MarketingFooter() {
           {/* Brand */}
           <div className="lg:col-span-5">
             <Link href="/" className="group mb-5 inline-flex items-center gap-2.5 no-underline">
-              <span className="mkt-sticker flex h-11 w-11 items-center justify-center rounded-2xl">
-                <Plant size={24} weight="duotone" />
-              </span>
-              <span className="text-xl font-black tracking-tight text-white">
-                Agri<span className="text-green-400">coders</span>
-              </span>
+              <BrandMark size={44} />
+              <span className="text-xl font-black uppercase tracking-[0.18em] text-white">Agricoders</span>
             </Link>
             <p className="mb-6 max-w-sm text-[15px] leading-relaxed text-white/60">
               Empowering farmers and agribusinesses with geospatial intelligence, intelligent applications,

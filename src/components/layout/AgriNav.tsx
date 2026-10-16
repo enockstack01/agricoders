@@ -5,7 +5,6 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import {
-  Plant,
   Stack,
   ArrowRight,
   ArrowUpRight,
@@ -23,6 +22,7 @@ import {
 } from "@phosphor-icons/react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { AGRICODERS_APPS } from "@/lib/apps";
+import BrandMark from "@/components/marketing/BrandMark";
 
 const APP_ICONS: Record<string, React.ReactNode> = {
   agriplan: <Stack size={20} weight="duotone" />,
@@ -30,18 +30,18 @@ const APP_ICONS: Record<string, React.ReactNode> = {
 };
 
 const SERVICE_LINKS = [
-  { title: "Geospatial Intelligence", desc: "Field-level maps & spatial planning", Icon: GlobeHemisphereEast, tone: "from-emerald-400 to-green-700" },
-  { title: "Web & Mobile Apps", desc: "Production-grade agri platforms", Icon: DeviceMobile, tone: "from-sky-400 to-blue-700" },
-  { title: "Digital Marketing", desc: "SEO, content & campaigns", Icon: Megaphone, tone: "from-amber-300 to-orange-600" },
-  { title: "Business Planning", desc: "Investor-ready plans & models", Icon: ChartBar, tone: "from-fuchsia-400 to-purple-700" },
+  { title: "Geospatial Intelligence", desc: "Field-level maps & spatial planning", Icon: GlobeHemisphereEast, tone: "from-green-600 to-green-800" },
+  { title: "Web & Mobile Apps", desc: "Production-grade agri platforms", Icon: DeviceMobile, tone: "from-green-700 to-green-900" },
+  { title: "Digital Marketing", desc: "SEO, content & campaigns", Icon: Megaphone, tone: "from-amber-400 to-amber-500" },
+  { title: "Business Planning", desc: "Investor-ready plans & models", Icon: ChartBar, tone: "from-green-500 to-green-700" },
 ];
 
 // in-page sections on the home page (scroll-spy targets)
 const SECTIONS = [
+  { id: "vision", label: "Vision" },
+  { id: "systems", label: "Products" },
   { id: "services", label: "Services" },
-  { id: "how-it-works", label: "How it works" },
-  { id: "precision", label: "Precision" },
-  { id: "systems", label: "Systems" },
+  { id: "roadmap", label: "Roadmap" },
 ];
 
 function ThemeButton() {
@@ -131,11 +131,9 @@ export default function AgriNav() {
         <div className="flex h-16 items-center justify-between gap-3 pl-3 pr-2 sm:pl-4">
           {/* Logo */}
           <Link href="/" className="group flex flex-shrink-0 items-center gap-2.5 no-underline" onClick={() => setOpen(false)}>
-            <span className="mkt-sticker flex h-10 w-10 items-center justify-center rounded-2xl">
-              <Plant size={22} weight="duotone" />
-            </span>
-            <span className="text-lg font-black tracking-tight text-gray-900 dark:text-white">
-              Agri<span className="text-green-600 dark:text-green-400">coders</span>
+            <BrandMark size={40} />
+            <span className="text-lg font-black uppercase tracking-[0.18em] text-green-800 dark:text-white">
+              Agricoders
             </span>
           </Link>
 
@@ -188,8 +186,8 @@ export default function AgriNav() {
               </div>
             </div>
 
-            <Link href={href("how-it-works")} className={linkCls(active === "how-it-works")}>How it works</Link>
-            <Link href={href("precision")} className={linkCls(active === "precision")}>Precision</Link>
+            <Link href={href("vision")} className={linkCls(active === "vision")}>Vision</Link>
+            <Link href={href("roadmap")} className={linkCls(active === "roadmap")}>Roadmap</Link>
 
             {/* Systems dropdown */}
             <div className="relative" onMouseEnter={() => setMenu("systems")} onMouseLeave={() => setMenu(null)}>

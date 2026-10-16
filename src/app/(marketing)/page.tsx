@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import {
   Stack,
@@ -9,437 +10,531 @@ import {
   DeviceMobile,
   Megaphone,
   ChartBar,
-  MapTrifold,
-  Crosshair,
-  TrendUp,
   Leaf,
-  Sparkle,
   PawPrint,
-  Lightning,
   EnvelopeSimple,
   Plant,
+  AppleLogo,
+  AndroidLogo,
+  Notebook,
+  Virus,
+  Pill,
+  Bank,
+  ClipboardText,
+  ShieldCheck,
+  TrendUp,
+  CurrencyCircleDollar,
+  Target,
+  Flag,
+  Handshake,
 } from "@phosphor-icons/react/dist/ssr";
 import AgriNav from "@/components/layout/AgriNav";
 import Reveal from "@/components/ui/Reveal";
 import CountUp from "@/components/ui/CountUp";
-import HeroIllustration from "@/components/marketing/HeroIllustration";
 import MarketingFooter from "@/components/marketing/MarketingFooter";
-import { ProcessFlow, PrecisionLayers, Ecosystem } from "@/components/marketing/Diagrams";
-import { AGRICODERS_APPS } from "@/lib/apps";
 
 export const metadata: Metadata = {
-  title: "Agricoders — Geospatial Intelligence, Apps & Agribusiness Planning",
+  title: "Agricoders — Building the Future of Digital Agriculture",
   description:
-    "Agricoders empowers farmers and agribusinesses with location intelligence, intelligent web and mobile applications, digital marketing, and professional business planning.",
+    "Agricoders is building the operating system for African agriculture: CropManager, LivestockPro and Agriplan, made in Kigali by Logistack Ltd for African farmers.",
 };
 
-const APP_ICONS: Record<string, React.ReactNode> = {
-  agriplan: <Stack size={30} weight="duotone" />,
-  livestockpro: <PawPrint size={30} weight="duotone" />,
-};
+/* Brand tokens, taken from the Agricoders pitch decks */
+const FOREST = "#1B5E20";
+const AMBER = "#F9A825";
 
-const STATS = [
-  { value: "4", label: "Integrated services", sub: "for every agribusiness need" },
-  { value: String(AGRICODERS_APPS.filter((a) => a.status === "live").length), label: "Live systems", sub: "built and running today" },
-  { value: "<15", suffix: " min", label: "To a business plan", sub: "with Agriplan" },
-  { value: "19", label: "Sheet financial model", sub: "NPV, IRR & payback" },
+const PROBLEM_STATS = [
+  { big: "~½", desc: "of sub-Saharan Africa's workforce farms" },
+  { big: "~80%", desc: "of the region's food comes from small farms" },
+  { big: "< ½", desc: "of the global average cereal yield" },
+];
+
+const PROBLEMS = [
+  { Icon: Notebook, title: "Lost records", desc: "Farm data lives in notebooks and memory." },
+  { Icon: Virus, title: "Late diagnosis", desc: "Disease is spotted after the losses." },
+  { Icon: Pill, title: "Guesswork treatment", desc: "Few vets or agronomists to advise." },
+  { Icon: Bank, title: "No access to finance", desc: "No records or plans to show a bank." },
+];
+
+const VALUES = [
+  "Precision over guesswork",
+  "Built for African agriculture",
+  "Simplicity: plain language, sensible defaults",
+  "Farmer data belongs to the farmer",
+];
+
+const PRODUCTS = [
+  { id: "cropmanager", Icon: Plant, name: "CropManager", desc: "Run every crop cycle on data", href: "/apps", status: "Rolling out" },
+  { id: "livestockpro", Icon: PawPrint, name: "LivestockPro", desc: "Know the herd, protect its health", href: "https://livestockpro.agricoders.com/", status: "Live" },
+  { id: "agriplan", Icon: CurrencyCircleDollar, name: "Agriplan", desc: "Bankable business plans in 15 minutes", href: "/plan", status: "Live" },
+];
+
+const LOOP = [
+  { Icon: ClipboardText, label: "Record", amber: false },
+  { Icon: ShieldCheck, label: "Protect", amber: true },
+  { Icon: TrendUp, label: "Plan", amber: false },
+  { Icon: CurrencyCircleDollar, label: "Grow", amber: false },
 ];
 
 const SERVICES = [
-  {
-    Icon: GlobeHemisphereEast,
-    title: "Geospatial & Location Intelligence",
-    desc: "Location intelligence advisory, open-source spatial planning tools and Agtech consultancy that give agribusinesses a precise, data-driven view of every field.",
-    features: ["Open-source spatial planning tools", "GIS & remote-sensing advisory", "Agtech consultancy services"],
-    tone: "from-emerald-400 to-green-700",
-    span: "lg:col-span-2",
-  },
-  {
-    Icon: DeviceMobile,
-    title: "Web & Mobile App Development",
-    desc: "Intelligent, production-grade web and mobile applications purpose-built for agribusinesses.",
-    features: ["Custom agribusiness platforms", "iOS & Android apps", "API-first architecture"],
-    tone: "from-sky-400 to-blue-700",
-    span: "",
-  },
-  {
-    Icon: Megaphone,
-    title: "Digital Marketing Services",
-    desc: "Targeted content, SEO, social media and performance marketing tailored to the agri-sector.",
-    features: ["Agribusiness SEO & content", "Social & paid campaigns", "Brand positioning"],
-    tone: "from-amber-300 to-orange-600",
-    span: "",
-  },
-] as const;
-
-const PRECISION_POINTS = [
-  "Identify your highest-potential land zones first",
-  "Reduce wasted inputs on low-yield areas",
-  "Maximise revenue per hectare with spatial intelligence",
+  { Icon: ChartBar, title: "Business Planning", desc: "Investor-ready plans and financial models, with expert-customised packages." },
+  { Icon: GlobeHemisphereEast, title: "Geospatial Intelligence", desc: "Location advisory, open-source spatial tools and Agtech consultancy." },
+  { Icon: DeviceMobile, title: "Web & Mobile Apps", desc: "Production-grade, offline-first apps for cooperatives, processors and NGOs." },
+  { Icon: Megaphone, title: "Digital Marketing", desc: "SEO, content and campaigns that connect agribusinesses with buyers." },
 ];
 
-const PRECISION_CARDS = [
-  { Icon: MapTrifold, title: "Field-level spatial planning", desc: "Map every plot, zone and boundary. Know exactly where to plant, irrigate and intervene." },
-  { Icon: Crosshair, title: "Focus where it matters", desc: "Surface the highest-impact areas so effort goes where returns are greatest." },
-  { Icon: TrendUp, title: "Productivity & profitability", desc: "Align inputs with spatial data for higher yields, lower waste and stronger margins." },
-  { Icon: Leaf, title: "Built for African agriculture", desc: "Designed around variable soils, mixed crops and smallholder-to-commercial realities." },
+const SPOTLIGHTS = [
+  {
+    name: "CropManager",
+    sub: "Every field, crop cycle, input, harvest and sale in one place",
+    stats: [
+      { n: "18", l: "farm modules" },
+      { n: "9", l: "agronomic calculators" },
+    ],
+    bullets: ["Higher yields", "Lower input costs", "Crop disease diagnosis", "Bankable season records"],
+    img: "/brand/cropmanager-dashboard.webp",
+    h: 722,
+    flip: false,
+  },
+  {
+    name: "LivestockPro",
+    sub: "Health, breeding, feeding, production and money for every animal",
+    stats: [
+      { n: "8", l: "management areas" },
+      { n: "10", l: "languages, works offline" },
+    ],
+    bullets: ["Earlier warning of disease", "Offline-first mobile app", "One Health surveillance", "Records lenders trust"],
+    img: "/brand/livestockpro-dashboard.webp",
+    h: 725,
+    flip: true,
+  },
 ];
 
-function Eyebrow({ children }: { children: React.ReactNode }) {
+const ROADMAP = [
+  {
+    phase: "Delivered",
+    items: [
+      "Agriplan live: 19-sheet model, six charts, 100+ currencies",
+      "LivestockPro on web and offline-first mobile, with One Health surveillance",
+      "CropManager v2.0: 18 modules, 9 calculators, web and mobile apps",
+    ],
+  },
+  {
+    phase: "Near term",
+    items: ["Public cloud deployment of CropManager", "Offline-first CropManager mobile app", "Google Play and App Store releases"],
+  },
+  {
+    phase: "Medium term",
+    items: [
+      "Local languages: Swahili, French, Hausa, Kinyarwanda",
+      "Multi-currency and regional settings",
+      "Mobile-money integration",
+      "One Agricoders account across products",
+    ],
+  },
+  {
+    phase: "Longer term",
+    items: ["Weather, satellite and soil data", "SMS / USSD companion for basic phones", "Marketplace and lender connections"],
+  },
+];
+
+const AUDIENCES = [
+  "Smallholder farmers",
+  "Commercial & dairy farms",
+  "Cooperatives & producer groups",
+  "Veterinary & extension officers",
+  "Lenders, insurers & buyers",
+  "Government & public-health bodies",
+];
+
+/** Section title block in the deck style: bold forest-green title with a muted subtitle underneath. */
+function SectionTitle({ title, sub, light = false, center = false }: { title: string; sub?: string; light?: boolean; center?: boolean }) {
   return (
-    <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-green-600/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-green-700 dark:bg-green-400/10 dark:text-green-300">
-      <Sparkle size={14} weight="fill" />
-      {children}
+    <Reveal className={`mb-12 ${center ? "mx-auto max-w-3xl text-center" : "max-w-3xl"}`}>
+      <h2 className={`mb-3 text-balance text-[clamp(1.9rem,4.2vw,3rem)] font-bold leading-tight tracking-tight ${light ? "text-white" : "text-[#1B5E20] dark:text-green-300"}`}>
+        {title}
+      </h2>
+      {sub && <p className={`m-0 text-lg ${light ? "text-green-100/80" : "text-gray-500 dark:text-gray-400"}`}>{sub}</p>}
+    </Reveal>
+  );
+}
+
+/** Dark-green circular icon badge, as on the deck's cards. */
+function Badge({ Icon, amber = false, size = 56 }: { Icon: React.ElementType; amber?: boolean; size?: number }) {
+  return (
+    <span
+      className="flex flex-shrink-0 items-center justify-center rounded-full"
+      style={{ width: size, height: size, background: amber ? AMBER : FOREST, color: amber ? "#111611" : "#fff" }}
+    >
+      <Icon size={size * 0.5} weight="fill" />
     </span>
   );
 }
 
+const CARD = "rounded-2xl border border-[#D5E3D6] bg-[#F3F8F3] dark:border-white/10 dark:bg-white/[0.04]";
+
 export default function AgricodersPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white text-gray-900 dark:bg-[#07100a] dark:text-white">
+    <div className="brand-deck flex min-h-screen flex-col bg-white text-[#111611] dark:bg-[#0c140d] dark:text-white">
       {/* sticky nav lives at the page root so it stays pinned for the whole scroll */}
       <AgriNav />
 
-      {/* ═════ HERO ═════ (pulled up under the floating nav so the mesh shows behind it) */}
-      <div className="mkt-mesh relative -mt-[84px] overflow-hidden pt-[84px]">
-        <div className="mkt-grid-dots pointer-events-none absolute inset-0" />
+      {/* ═════ HERO — deck cover: forest green, amber accents ═════ */}
+      <div className="relative -mt-[84px] overflow-hidden bg-[#1B5E20] pt-[84px] text-white">
+        <div className="pointer-events-none absolute -right-40 -top-40 h-[560px] w-[560px] rounded-full bg-white/[0.04]" />
+        <div className="pointer-events-none absolute -bottom-52 left-1/3 h-[520px] w-[520px] rounded-full bg-black/10" />
 
-        <section className="relative mx-auto max-w-7xl px-4 pb-20 pt-12 sm:px-6 sm:pt-16 lg:px-8 lg:pb-28 lg:pt-20">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
-            <div className="text-center lg:text-left">
+        <section className="relative mx-auto max-w-7xl px-4 pb-24 pt-14 sm:px-6 sm:pt-20 lg:px-8 lg:pb-32 lg:pt-24">
+          <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1fr_1.05fr]">
+            <div>
               <Reveal>
-                <Link
-                  href="/plan"
-                  className="group mb-7 inline-flex items-center gap-2 rounded-full border border-green-600/15 bg-white/80 py-1.5 pl-1.5 pr-4 text-sm font-bold text-gray-700 no-underline shadow-sm backdrop-blur transition-colors hover:border-green-600/40 dark:border-white/10 dark:bg-white/5 dark:text-gray-200"
-                >
-                  <span className="mkt-sticker inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-black">
-                    <Lightning size={13} weight="fill" /> New
-                  </span>
-                  Business plans in under 15 minutes
-                  <ArrowRight size={14} weight="bold" className="transition-transform group-hover:translate-x-0.5" />
-                </Link>
+                <p className="mb-5 text-sm font-bold uppercase tracking-[0.28em] text-[#F9A825]">Agricoders</p>
               </Reveal>
               <Reveal delay={60}>
-                <h1 className="mb-6 text-balance text-[clamp(2.4rem,6vw,4.4rem)] font-black leading-[1.04] tracking-tight">
-                  Empowering farmers with{" "}
-                  <span className="mkt-gradient-text">intelligence &amp; technology</span>
+                <h1 className="mb-5 text-balance text-[clamp(2.5rem,6vw,4.6rem)] font-bold leading-[1.05] tracking-tight">
+                  Building the future of digital agriculture
                 </h1>
               </Reveal>
               <Reveal delay={120}>
-                <p className="mx-auto mb-9 max-w-xl text-lg leading-relaxed text-gray-600 dark:text-gray-300 sm:text-xl lg:mx-0">
-                  Location intelligence, intelligent apps, digital marketing and professional business
-                  planning — so every agribusiness operates with precision and grows with confidence.
+                <p className="mb-6 max-w-xl text-xl leading-relaxed text-green-50/90 sm:text-2xl">
+                  The operating system for African agriculture.
                 </p>
+                <p className="mb-8 max-w-xl text-lg font-bold text-[#F9A825]">Built by Logistack Ltd for African farmers</p>
               </Reveal>
               <Reveal delay={180}>
-                <div className="mb-10 flex flex-col justify-center gap-3 sm:flex-row lg:justify-start">
+                <div className="mb-10 flex flex-col gap-3 sm:flex-row">
                   <a
-                    href="#services"
-                    className="mkt-btn-primary inline-flex items-center justify-center gap-2.5 rounded-full px-8 py-4 text-base font-extrabold no-underline"
+                    href="#vision"
+                    className="inline-flex items-center justify-center gap-2.5 rounded-full bg-[#F9A825] px-8 py-4 text-base font-bold text-[#111611] no-underline shadow-lg transition-transform hover:-translate-y-0.5"
                   >
-                    Explore our services
+                    See our agenda
                     <ArrowRight size={18} weight="bold" />
                   </a>
                   <Link
                     href="/plan"
-                    className="inline-flex items-center justify-center gap-2 rounded-full border border-gray-900/10 bg-white px-8 py-4 text-base font-extrabold text-gray-900 no-underline shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md dark:border-white/15 dark:bg-white/5 dark:text-white"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 px-8 py-4 text-base font-bold text-white no-underline transition-all hover:-translate-y-0.5 hover:bg-white/10"
                   >
-                    <Stack size={20} weight="duotone" className="text-green-600 dark:text-green-400" />
+                    <Stack size={20} weight="duotone" />
                     Try Agriplan
                   </Link>
                 </div>
               </Reveal>
               <Reveal delay={240}>
-                <ul className="m-0 flex list-none flex-wrap items-center justify-center gap-2 p-0 lg:justify-start">
-                  {["Geospatial Intelligence", "Web & Mobile Apps", "Digital Marketing", "Business Planning"].map((t) => (
-                    <li
-                      key={t}
-                      className="inline-flex items-center gap-1.5 rounded-full bg-white/70 px-3.5 py-1.5 text-sm font-bold text-gray-700 shadow-sm dark:bg-white/5 dark:text-gray-300"
-                    >
-                      <CheckCircle size={16} weight="fill" className="text-green-600 dark:text-green-400" />
-                      {t}
-                    </li>
-                  ))}
-                </ul>
+                <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-base font-bold">
+                  <span className="text-sm font-normal text-green-100/80">Every product runs on</span>
+                  <span className="inline-flex items-center gap-2"><GlobeHemisphereEast size={22} weight="fill" /> Web</span>
+                  <span className="inline-flex items-center gap-2"><AppleLogo size={22} weight="fill" /> iOS</span>
+                  <span className="inline-flex items-center gap-2"><AndroidLogo size={22} weight="fill" /> Android</span>
+                </div>
               </Reveal>
             </div>
 
+            {/* product device + product pills, as on the deck cover */}
             <Reveal delay={150}>
-              <div className="mx-auto w-full max-w-[560px] lg:mr-0">
-                <HeroIllustration />
+              <div className="mx-auto w-full max-w-[620px]">
+                <div className="overflow-hidden rounded-xl border-[6px] border-[#111611] bg-[#111611] shadow-2xl">
+                  <Image
+                    src="/brand/cropmanager-dashboard.webp"
+                    alt="CropManager dashboard"
+                    width={1400}
+                    height={722}
+                    className="h-auto w-full"
+                    priority
+                  />
+                </div>
+                <ul className="m-0 mt-6 flex list-none flex-wrap justify-center gap-3 p-0">
+                  {[
+                    { Icon: Plant, label: "CropManager" },
+                    { Icon: PawPrint, label: "LivestockPro" },
+                    { Icon: CurrencyCircleDollar, label: "Agriplan" },
+                  ].map(({ Icon, label }) => (
+                    <li key={label} className="inline-flex items-center gap-2 rounded-full bg-[#F9A825] px-4 py-2 text-sm font-bold text-[#111611]">
+                      <Icon size={18} weight="fill" /> {label}
+                    </li>
+                  ))}
+                </ul>
               </div>
             </Reveal>
           </div>
         </section>
       </div>
 
-      {/* ═════ STATS ═════ */}
-      <section className="relative z-10 -mt-10 px-4 sm:px-6 lg:px-8">
-        <div className="mkt-card mx-auto grid max-w-6xl grid-cols-2 gap-px overflow-hidden rounded-[28px] !bg-gray-100 p-0 hover:!translate-y-0 dark:!bg-white/5 lg:grid-cols-4">
-          {STATS.map((s) => (
-            <div key={s.label} className="bg-white px-5 py-7 text-center dark:bg-[#111814] sm:px-8">
-              <div className="mb-1 text-[clamp(2rem,4vw,2.9rem)] font-black leading-none tracking-tight text-green-700 dark:text-green-400">
-                <CountUp value={s.value} />
-                {"suffix" in s && <span className="text-[0.55em]">{s.suffix}</span>}
+      {/* ═════ PROBLEM — "Africa's largest employer runs on guesswork" ═════ */}
+      <section id="gap" className="scroll-mt-24 py-24 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionTitle
+            title="Africa's largest employer runs on guesswork"
+            sub="The gap between a thriving farm and a struggling one is information"
+          />
+
+          <div className="mb-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
+            {PROBLEM_STATS.map((s, i) => (
+              <Reveal key={s.big} delay={i * 80}>
+                <div className="flex items-center gap-5">
+                  <span className="text-[clamp(2.4rem,4.5vw,3.4rem)] font-bold leading-none text-[#F9A825]">
+                    {s.big.match(/\d/) ? <CountUp value={s.big} /> : s.big}
+                  </span>
+                  <span className="text-[15px] leading-snug text-gray-600 dark:text-gray-300">{s.desc}</span>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {PROBLEMS.map(({ Icon, title, desc }, i) => (
+              <Reveal key={title} delay={i * 80}>
+                <div className={`${CARD} h-full p-6`}>
+                  <div className="mb-5"><Badge Icon={Icon} /></div>
+                  <h3 className="mb-2 text-xl font-bold">{title}</h3>
+                  <p className="m-0 text-[15px] leading-relaxed text-gray-600 dark:text-gray-300">{desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+          <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">Sources: FAO, IFAD, World Bank, African Development Bank; rounded estimates.</p>
+        </div>
+      </section>
+
+      {/* ═════ VISION & AGENDA — forest section ═════ */}
+      <section id="vision" className="scroll-mt-24 bg-[#1B5E20] py-24 text-white sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
+            <div>
+              <SectionTitle
+                light
+                title="Every African farmer running their farm as a business"
+                sub="Knowing what they produce, what it costs and what it earns, and using that knowledge to grow more, waste less, access finance and feed the continent."
+              />
+              <ul className="m-0 flex list-none flex-col gap-4 p-0">
+                {VALUES.map((v, i) => (
+                  <Reveal key={v} delay={i * 70}>
+                    <li className="flex items-center gap-3 text-lg font-bold">
+                      <CheckCircle size={26} weight="fill" className="flex-shrink-0 text-[#F9A825]" />
+                      {v}
+                    </li>
+                  </Reveal>
+                ))}
+              </ul>
+            </div>
+
+            <Reveal delay={100}>
+              <div className="rounded-2xl border border-white/15 bg-[#2E7D32]/40 p-7 sm:p-9">
+                <div className="mb-4 flex items-center gap-3">
+                  <Badge Icon={Target} amber size={48} />
+                  <p className="m-0 text-sm font-bold uppercase tracking-[0.2em] text-[#F9A825]">Our mission</p>
+                </div>
+                <p className="m-0 text-xl leading-relaxed">
+                  Empower farmers and agribusinesses with geospatial intelligence, intelligent applications and
+                  professional planning, so every investment of land, labour, capital and inputs achieves the
+                  greatest possible productivity and profitability.
+                </p>
               </div>
-              <div className="text-base font-extrabold">{s.label}</div>
-              <div className="text-sm text-gray-500 dark:text-gray-400">{s.sub}</div>
+            </Reveal>
+          </div>
+        </div>
+      </section>
+
+      {/* ═════ ONE PLATFORM, THREE PRODUCTS ═════ */}
+      <section id="systems" className="scroll-mt-24 py-24 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionTitle title="One platform, three products" sub="Every product on web, iOS and Android" />
+
+          <div className="mb-6 grid grid-cols-1 gap-5 md:grid-cols-3">
+            {PRODUCTS.map(({ id, Icon, name, desc, href, status }, i) => {
+              const external = href.startsWith("http");
+              return (
+                <Reveal key={id} delay={i * 90}>
+                  <article className={`${CARD} group flex h-full flex-col p-7`}>
+                    <div className="mb-6 flex items-center justify-between">
+                      <Badge Icon={Icon} size={64} />
+                      <span
+                        className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${
+                          status === "Live" ? "bg-[#1B5E20] text-white" : "bg-[#F9A825] text-[#111611]"
+                        }`}
+                      >
+                        {status === "Live" && <span className="mkt-pulse-dot inline-block h-1.5 w-1.5 rounded-full" />}
+                        {status}
+                      </span>
+                    </div>
+                    <h3 className="mb-2 text-2xl font-bold">{name}</h3>
+                    <p className="mb-6 text-base text-gray-600 dark:text-gray-300">{desc}</p>
+                    <Link
+                      href={href}
+                      target={external ? "_blank" : undefined}
+                      rel={external ? "noopener noreferrer" : undefined}
+                      className="mt-auto inline-flex items-center gap-2 text-[15px] font-bold text-[#1B5E20] no-underline dark:text-green-300"
+                    >
+                      {status === "Live" ? `Open ${name}` : "Learn more"}
+                      {external ? <ArrowUpRight size={16} weight="bold" /> : <ArrowRight size={16} weight="bold" />}
+                    </Link>
+                  </article>
+                </Reveal>
+              );
+            })}
+          </div>
+
+          {/* Record > Protect > Plan > Grow loop band */}
+          <Reveal delay={120}>
+            <div className="flex flex-col items-stretch gap-4 rounded-2xl bg-[#1B5E20] px-6 py-6 text-white sm:flex-row sm:items-center sm:justify-between sm:px-10">
+              {LOOP.map(({ Icon, label, amber }, i) => (
+                <div key={label} className="flex items-center gap-4 sm:gap-6">
+                  <span
+                    className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full"
+                    style={{ background: amber ? AMBER : "#fff", color: amber ? "#111611" : FOREST }}
+                  >
+                    <Icon size={24} weight="fill" />
+                  </span>
+                  <span className="text-xl font-bold">{label}</span>
+                  {i < LOOP.length - 1 && <ArrowRight size={22} weight="bold" className="hidden text-[#F9A825] sm:ml-2 sm:block lg:ml-6" />}
+                </div>
+              ))}
+            </div>
+          </Reveal>
+          <p className="mt-4 text-[15px] italic text-[#1B5E20] dark:text-green-300">
+            Records cut losses, become bankable plans, and unlock finance to grow: a loop that repeats every season.
+          </p>
+        </div>
+      </section>
+
+      {/* ═════ PRODUCT SPOTLIGHT: CropManager + LivestockPro — forest ═════ */}
+      <section className="bg-[#1B5E20] py-24 text-white sm:py-28">
+        <div className="mx-auto flex max-w-7xl flex-col gap-24 px-4 sm:px-6 lg:px-8">
+          {SPOTLIGHTS.map((p) => (
+            <div key={p.name} className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[0.9fr_1.1fr]">
+              <Reveal className={p.flip ? "lg:order-2" : ""}>
+                <h2 className="mb-2 text-[clamp(1.9rem,4vw,2.8rem)] font-bold leading-tight">{p.name}</h2>
+                <p className="mb-8 text-lg text-green-100/80">{p.sub}</p>
+                <div className="mb-8 flex flex-col gap-3">
+                  {p.stats.map((s) => (
+                    <div key={s.l} className="flex items-center gap-5 rounded-xl bg-[#2E7D32]/45 px-6 py-4">
+                      <span className="w-14 text-4xl font-bold text-[#F9A825]"><CountUp value={s.n} /></span>
+                      <span className="text-lg">{s.l}</span>
+                    </div>
+                  ))}
+                </div>
+                <ul className="m-0 flex list-none flex-col gap-3 p-0">
+                  {p.bullets.map((b) => (
+                    <li key={b} className="flex items-center gap-3 text-lg font-bold">
+                      <CheckCircle size={24} weight="fill" className="flex-shrink-0 text-[#F9A825]" />
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+              <Reveal delay={120} className={p.flip ? "lg:order-1" : ""}>
+                <div className="overflow-hidden rounded-xl border-[6px] border-[#111611] bg-[#111611] shadow-2xl">
+                  <Image src={p.img} alt={`${p.name} dashboard`} width={1400} height={p.h} className="h-auto w-full" />
+                </div>
+              </Reveal>
             </div>
           ))}
         </div>
       </section>
 
-      {/* ═════ SERVICES (bento) ═════ */}
+      {/* ═════ SERVICES ═════ */}
       <section id="services" className="scroll-mt-24 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto mb-14 max-w-2xl text-center">
-            <Eyebrow>What we do</Eyebrow>
-            <h2 className="mb-4 text-balance text-[clamp(2rem,4.5vw,3.2rem)] font-black leading-tight tracking-tight">
-              Four services. <span className="mkt-gradient-text">One agribusiness partner.</span>
-            </h2>
-            <p className="text-lg text-gray-500 dark:text-gray-400">
-              Integrated services that cover every digital need of a modern agribusiness.
-            </p>
-          </Reveal>
+          <SectionTitle
+            title="Four services, one agribusiness partner"
+            sub="Alongside our products, our team works hand in hand with clients, from sourcing the right figures to onboarding a whole cooperative."
+          />
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {SERVICES.map(({ Icon, title, desc }, i) => (
+              <Reveal key={title} delay={i * 80}>
+                <article className={`${CARD} h-full p-6`}>
+                  <div className="mb-5"><Badge Icon={Icon} /></div>
+                  <h3 className="mb-2 text-xl font-bold">{title}</h3>
+                  <p className="m-0 text-[15px] leading-relaxed text-gray-600 dark:text-gray-300">{desc}</p>
+                </article>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
 
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-            {SERVICES.map(({ Icon, title, desc, features, tone, span }, i) => (
-              <Reveal key={title} delay={i * 80} className={span}>
-                <article className="mkt-card group flex h-full flex-col rounded-[28px] p-7 sm:p-9">
-                  <span className={`mb-6 flex h-16 w-16 items-center justify-center rounded-[22px] bg-gradient-to-br ${tone} text-white shadow-[0_14px_28px_-12px_rgba(16,40,24,0.6)] transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110`}>
-                    <Icon size={34} weight="duotone" />
-                  </span>
-                  <h3 className="mb-3 text-[22px] font-black leading-tight">{title}</h3>
-                  <p className="mb-6 text-[15.5px] leading-relaxed text-gray-500 dark:text-gray-400">{desc}</p>
-                  <ul className="m-0 mt-auto flex list-none flex-wrap gap-2 p-0">
-                    {features.map((f) => (
-                      <li key={f} className="inline-flex items-center gap-1.5 rounded-full bg-gray-100 px-3 py-1.5 text-[13px] font-bold text-gray-700 dark:bg-white/5 dark:text-gray-300">
-                        <CheckCircle size={15} weight="fill" className="text-green-600 dark:text-green-400" />
-                        {f}
+      {/* ═════ ROADMAP ═════ */}
+      <section id="roadmap" className="scroll-mt-24 border-y border-[#D5E3D6] bg-[#F3F8F3] py-24 dark:border-white/10 dark:bg-white/[0.03] sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionTitle
+            title="What we have shipped, and what comes next"
+            sub="We release when it is useful, then improve continuously with farmers and partners."
+          />
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+            {ROADMAP.map((r, i) => (
+              <Reveal key={r.phase} delay={i * 90}>
+                <article className="h-full overflow-hidden rounded-2xl border border-[#D5E3D6] bg-white dark:border-white/10 dark:bg-[#111814]">
+                  <div className={`flex items-center gap-3 px-6 py-4 ${i === 0 ? "bg-[#1B5E20] text-white" : "bg-white text-[#1B5E20] dark:bg-transparent dark:text-green-300"}`}>
+                    {i === 0 ? <CheckCircle size={22} weight="fill" className="text-[#F9A825]" /> : <Flag size={22} weight="fill" className="text-[#F9A825]" />}
+                    <h3 className="m-0 text-lg font-bold">{r.phase}</h3>
+                  </div>
+                  <ul className="m-0 flex list-none flex-col gap-3 p-6 pt-4">
+                    {r.items.map((it) => (
+                      <li key={it} className="flex items-start gap-2.5 text-[15px] leading-snug text-gray-700 dark:text-gray-300">
+                        <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-[#2E7D32]" />
+                        {it}
                       </li>
                     ))}
                   </ul>
                 </article>
               </Reveal>
             ))}
-
-            {/* Featured: Business planning (wide, dark gradient) */}
-            <Reveal delay={260} className="md:col-span-2 lg:col-span-2">
-              <article className="group relative flex h-full flex-col justify-between gap-8 overflow-hidden rounded-[28px] p-7 text-white shadow-[0_24px_60px_-24px_rgba(27,94,32,0.8)] sm:p-9 md:flex-row md:items-center" style={{ background: "linear-gradient(135deg, #1B5E20 0%, #2E7D32 50%, #43A047 100%)" }}>
-                <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-white/10" />
-                <div className="pointer-events-none absolute -bottom-28 right-40 h-56 w-56 rounded-full bg-white/[0.06]" />
-                <div className="relative max-w-lg">
-                  <span className="mb-6 flex h-16 w-16 items-center justify-center rounded-[22px] bg-white/15 text-white ring-1 ring-white/25 transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-110">
-                    <ChartBar size={34} weight="duotone" />
-                  </span>
-                  <h3 className="mb-3 text-[24px] font-black leading-tight">Agribusiness Planning &amp; Financial Modelling</h3>
-                  <p className="mb-0 text-[15.5px] leading-relaxed text-white/85">
-                    Agriplan generates investor-ready business plans and 19-sheet financial models in
-                    under 15 minutes — narrative, charts and projections included.
-                  </p>
-                </div>
-                <div className="relative flex flex-col gap-3 md:min-w-[220px]">
-                  {["Investor-ready business plans", "19-sheet Excel financial models", "Professional narrative generation"].map((f) => (
-                    <span key={f} className="inline-flex items-center gap-2 text-[15px] font-bold">
-                      <CheckCircle size={18} weight="fill" className="text-green-200" />
-                      {f}
-                    </span>
-                  ))}
-                  <Link
-                    href="/plan"
-                    className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-[15px] font-extrabold text-green-800 no-underline shadow-lg transition-transform hover:-translate-y-0.5"
-                  >
-                    Try Agriplan
-                    <ArrowRight size={16} weight="bold" />
-                  </Link>
-                </div>
-              </article>
-            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* ═════ HOW IT WORKS ═════ */}
-      <section id="how-it-works" className="scroll-mt-24 border-y border-gray-100 bg-gray-50/70 py-24 dark:border-white/5 dark:bg-white/[0.02] sm:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <Reveal className="mx-auto mb-16 max-w-2xl text-center">
-            <Eyebrow>How we work</Eyebrow>
-            <h2 className="mb-4 text-balance text-[clamp(2rem,4.5vw,3.2rem)] font-black leading-tight tracking-tight">
-              From the field to the <span className="mkt-gradient-text">bottom line</span>
-            </h2>
-            <p className="text-lg text-gray-500 dark:text-gray-400">
-              One journey, four steps — each powered by an Agricoders service.
-            </p>
-          </Reveal>
+      {/* ═════ WHO WE SERVE ═════ */}
+      <section id="impact" className="scroll-mt-24 py-24 sm:py-28">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <SectionTitle
+            center
+            title="Built for everyone who grows, funds and protects food"
+            sub="Zero hunger, decent work and climate resilience start with better decisions on every farm."
+          />
           <Reveal delay={100}>
-            <ProcessFlow />
+            <ul className="m-0 flex list-none flex-wrap justify-center gap-3 p-0">
+              {AUDIENCES.map((a) => (
+                <li key={a} className={`${CARD} inline-flex items-center gap-2 px-5 py-3 text-[15px] font-bold`}>
+                  <Leaf size={18} weight="fill" className="text-[#2E7D32] dark:text-green-400" />
+                  {a}
+                </li>
+              ))}
+            </ul>
           </Reveal>
-        </div>
-      </section>
-
-      {/* ═════ PRECISION ═════ */}
-      <section id="precision" className="scroll-mt-24 py-24 sm:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-2">
-            <Reveal>
-              <Eyebrow>Precision agriculture</Eyebrow>
-              <h2 className="mb-5 text-balance text-[clamp(2rem,4.5vw,3.2rem)] font-black leading-tight tracking-tight">
-                Productive farming needs <span className="mkt-gradient-text">the right precision tools</span>
-              </h2>
-              <p className="mb-5 text-lg leading-relaxed text-gray-600 dark:text-gray-300">
-                The difference between a thriving farm and an underperforming one is often not effort — it is
-                information. We develop geospatial planning tools that help farmers prioritise where to focus,
-                so every investment of time, labour and input achieves maximum productivity.
-              </p>
-              <p className="mb-7 text-[15.5px] leading-relaxed text-gray-500 dark:text-gray-400">
-                Our tools combine field-level spatial data, soil conditions, crop suitability and productivity
-                patterns into clear, actionable priorities — not guesswork.
-              </p>
-              <ul className="m-0 flex list-none flex-col gap-3 p-0">
-                {PRECISION_POINTS.map((p) => (
-                  <li key={p} className="flex items-start gap-3 text-base font-bold">
-                    <span className="mkt-sticker mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full">
-                      <CheckCircle size={16} weight="bold" />
-                    </span>
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-            <Reveal delay={120}>
-              <div className="mkt-card rounded-[32px] p-5 hover:!translate-y-0 sm:p-8">
-                <PrecisionLayers />
-              </div>
-            </Reveal>
-          </div>
-
-          <div className="mt-14 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {PRECISION_CARDS.map(({ Icon, title, desc }, i) => (
-              <Reveal key={title} delay={i * 80}>
-                <div className="mkt-card group h-full rounded-[24px] p-6">
-                  <span className="mkt-sticker mb-5 flex h-12 w-12 items-center justify-center rounded-2xl">
-                    <Icon size={26} weight="duotone" />
-                  </span>
-                  <h3 className="mb-2 text-lg font-black leading-tight">{title}</h3>
-                  <p className="m-0 text-[15px] leading-relaxed text-gray-500 dark:text-gray-400">{desc}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═════ SYSTEMS ═════ */}
-      <section id="systems" className="scroll-mt-24 relative overflow-hidden py-24 sm:py-28" style={{ background: "linear-gradient(180deg, #07130b 0%, #0b1d11 100%)" }}>
-        <div className="pointer-events-none absolute left-1/2 top-0 h-[420px] w-[820px] -translate-x-1/2 rounded-full bg-green-500/10 blur-3xl" />
-        <div className="relative mx-auto max-w-7xl px-4 text-white sm:px-6 lg:px-8">
-          <Reveal className="mx-auto mb-14 max-w-2xl text-center">
-            <span className="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-green-300">
-              <Sparkle size={14} weight="fill" /> Our systems
-            </span>
-            <h2 className="mb-4 text-balance text-[clamp(2rem,4.5vw,3.2rem)] font-black leading-tight tracking-tight">
-              Tools built for agribusiness, <span className="text-green-400">running today</span>
-            </h2>
-            <p className="text-lg text-white/65">
-              Platforms we have built for agribusinesses, farmers and entrepreneurs — connected into one ecosystem.
-            </p>
-          </Reveal>
-
-          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1fr_1.1fr]">
-            <div className="flex flex-col gap-5">
-              {AGRICODERS_APPS.map((app, i) => {
-                const external = app.href.startsWith("http");
-                return (
-                  <Reveal key={app.id} delay={i * 90}>
-                    <article className="group relative overflow-hidden rounded-[26px] border border-white/10 bg-white/[0.04] p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/20 hover:bg-white/[0.07] sm:p-7">
-                      <div className="absolute inset-x-0 top-0 h-1" style={{ background: `linear-gradient(90deg, ${app.accentColor}, #66BB6A)` }} />
-                      <div className="mb-4 flex items-center gap-4">
-                        <span
-                          className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-[18px] text-white shadow-lg transition-transform duration-500 group-hover:-rotate-6 group-hover:scale-105"
-                          style={{ background: `linear-gradient(135deg, ${app.accentColor}bb, ${app.accentColor})` }}
-                        >
-                          {APP_ICONS[app.id] ?? <Sparkle size={30} weight="duotone" />}
-                        </span>
-                        <div className="min-w-0">
-                          <div className="flex flex-wrap items-center gap-2">
-                            <h3 className="m-0 text-xl font-black">{app.name}</h3>
-                            {app.status === "live" ? (
-                              <span className="inline-flex items-center gap-1.5 rounded-full bg-green-400/15 px-2.5 py-0.5 text-[11px] font-black uppercase tracking-wide text-green-300">
-                                <span className="mkt-pulse-dot inline-block h-1.5 w-1.5 rounded-full bg-green-400" /> Live
-                              </span>
-                            ) : (
-                              <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] font-black uppercase tracking-wide text-white/60">Coming soon</span>
-                            )}
-                          </div>
-                          <p className="m-0 text-sm font-bold text-white/55">{app.tagline}</p>
-                        </div>
-                      </div>
-                      <p className="mb-5 text-[15px] leading-relaxed text-white/70">{app.description}</p>
-                      <Link
-                        href={app.href}
-                        target={external ? "_blank" : undefined}
-                        rel={external ? "noopener noreferrer" : undefined}
-                        className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-extrabold text-gray-900 no-underline transition-transform hover:-translate-y-0.5"
-                      >
-                        Open {app.name}
-                        {external ? <ArrowUpRight size={15} weight="bold" /> : <ArrowRight size={15} weight="bold" />}
-                      </Link>
-                    </article>
-                  </Reveal>
-                );
-              })}
-              <Reveal delay={AGRICODERS_APPS.length * 90}>
-                <div className="flex items-center gap-4 rounded-[26px] border-2 border-dashed border-white/10 p-6">
-                  <Sparkle size={28} weight="duotone" className="flex-shrink-0 text-green-300/70" />
-                  <div>
-                    <p className="m-0 font-extrabold text-white/80">More systems coming</p>
-                    <p className="m-0 text-sm text-white/50">New tools are in development.</p>
-                  </div>
-                </div>
-              </Reveal>
-            </div>
-
-            <Reveal delay={150}>
-              <div className="rounded-[32px] border border-white/10 bg-white/[0.03] p-4 text-white sm:p-6 [&_.fill-white]:fill-[#132019] [&_.fill-gray-900]:fill-white [&_.fill-gray-500]:fill-white/60">
-                <Ecosystem />
-              </div>
-            </Reveal>
-          </div>
         </div>
       </section>
 
       {/* ═════ CTA ═════ */}
-      <section id="contact" className="scroll-mt-24 px-4 py-24 sm:px-6 sm:py-28 lg:px-8">
+      <section id="contact" className="scroll-mt-24 px-4 pb-24 sm:px-6 sm:pb-28 lg:px-8">
         <Reveal>
-          <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[36px] px-6 py-16 text-center text-white shadow-[0_40px_80px_-30px_rgba(27,94,32,0.8)] sm:px-12 sm:py-20" style={{ background: "linear-gradient(135deg, #1B5E20 0%, #2E7D32 45%, #00897B 100%)" }}>
-            <div className="mkt-grid-dots pointer-events-none absolute inset-0 opacity-40 [background-image:radial-gradient(rgba(255,255,255,0.25)_1px,transparent_1px)]" />
-            <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/10" />
-            <div className="pointer-events-none absolute -bottom-32 -right-16 h-96 w-96 rounded-full bg-white/[0.07]" />
+          <div className="relative mx-auto max-w-6xl overflow-hidden rounded-3xl bg-[#1B5E20] px-6 py-16 text-center text-white sm:px-12 sm:py-20">
+            <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-white/[0.06]" />
+            <div className="pointer-events-none absolute -bottom-32 -right-16 h-96 w-96 rounded-full bg-black/10" />
             <div className="relative mx-auto max-w-2xl">
-              <span className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-[22px] bg-white/15 ring-1 ring-white/25">
-                <Plant size={34} weight="duotone" />
+              <span className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-[#F9A825] text-[#111611]">
+                <Handshake size={32} weight="fill" />
               </span>
-              <h2 className="mb-5 text-balance text-[clamp(2rem,5vw,3.4rem)] font-black leading-tight tracking-tight">
-                Ready to build your agribusiness with precision?
+              <h2 className="mb-5 text-balance text-[clamp(2rem,5vw,3.3rem)] font-bold leading-tight tracking-tight">
+                Help us build the future of digital agriculture
               </h2>
-              <p className="mb-9 text-lg leading-relaxed text-white/85">
-                Explore our systems or get in touch to discuss how Agricoders can support your agribusiness journey.
+              <p className="mb-9 text-lg leading-relaxed text-green-50/90">
+                Farmers, cooperatives, lenders, investors and development partners: let&apos;s grow the
+                continent&apos;s food system together.
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row">
-                <Link
-                  href="/apps"
-                  className="inline-flex items-center justify-center gap-2.5 rounded-full bg-white px-8 py-4 text-base font-extrabold text-green-800 no-underline shadow-lg transition-transform hover:-translate-y-0.5"
-                >
-                  <Stack size={20} weight="duotone" />
-                  Our systems
-                </Link>
                 <a
                   href="mailto:agricoders@gmail.com"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 px-8 py-4 text-base font-extrabold text-white no-underline transition-all hover:-translate-y-0.5 hover:bg-white/10"
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-[#F9A825] px-8 py-4 text-base font-bold text-[#111611] no-underline shadow-lg transition-transform hover:-translate-y-0.5"
                 >
-                  <EnvelopeSimple size={20} weight="duotone" />
-                  Contact us
+                  <EnvelopeSimple size={20} weight="fill" />
+                  Partner with us
                 </a>
+                <Link
+                  href="/apps"
+                  className="inline-flex items-center justify-center gap-2.5 rounded-full border-2 border-white/40 px-8 py-4 text-base font-bold text-white no-underline transition-all hover:-translate-y-0.5 hover:bg-white/10"
+                >
+                  <Stack size={20} weight="duotone" />
+                  Explore our systems
+                </Link>
               </div>
             </div>
           </div>
