@@ -11,9 +11,7 @@ import {
   Megaphone,
   ChartBar,
   Leaf,
-  PawPrint,
   EnvelopeSimple,
-  Plant,
   AppleLogo,
   AndroidLogo,
   Notebook,
@@ -25,13 +23,13 @@ import {
   TrendUp,
   CurrencyCircleDollar,
   Target,
-  Flag,
   Handshake,
 } from "@phosphor-icons/react/dist/ssr";
 import AgriNav from "@/components/layout/AgriNav";
 import Reveal from "@/components/ui/Reveal";
 import CountUp from "@/components/ui/CountUp";
 import MarketingFooter from "@/components/marketing/MarketingFooter";
+import AppIcon from "@/components/marketing/AppIcon";
 import { AGRICODERS_APPS } from "@/lib/apps";
 
 export const metadata: Metadata = {
@@ -64,15 +62,9 @@ const VALUES = [
   "Farmer data belongs to the farmer",
 ];
 
-const PRODUCT_ICONS: Record<string, React.ElementType> = {
-  cropmanager: Plant,
-  livestockpro: PawPrint,
-  agriplan: CurrencyCircleDollar,
-};
-
 const PRODUCTS = AGRICODERS_APPS.map((app) => ({
   id: app.id,
-  Icon: PRODUCT_ICONS[app.id] ?? Plant,
+  icon: app.icon,
   name: app.name,
   desc: app.tagline,
   href: app.href,
@@ -120,34 +112,6 @@ const SPOTLIGHTS = [
   },
 ];
 
-const ROADMAP = [
-  {
-    phase: "Delivered",
-    items: [
-      "Agriplan live: 19-sheet model, six charts, 100+ currencies",
-      "LivestockPro on web and offline-first mobile, in ten languages",
-      "CropManager live at crop.agricoders.com: 18 modules, 9 calculators, web and mobile apps",
-    ],
-  },
-  {
-    phase: "Near term",
-    items: ["Offline-first CropManager mobile app", "Google Play and App Store releases"],
-  },
-  {
-    phase: "Medium term",
-    items: [
-      "Local languages: Swahili, French, Hausa, Kinyarwanda",
-      "Multi-currency and regional settings",
-      "Mobile-money integration",
-      "One Agricoders account across products",
-    ],
-  },
-  {
-    phase: "Longer term",
-    items: ["Weather, satellite and soil data", "SMS / USSD companion for basic phones", "Marketplace and lender connections"],
-  },
-];
-
 const AUDIENCES = [
   "Smallholder farmers",
   "Commercial & dairy farms",
@@ -190,7 +154,7 @@ export default function AgricodersPage() {
       <AgriNav />
 
       {/* ═════ HERO — deck cover: forest green, amber accents ═════ */}
-      <div className="relative -mt-[84px] overflow-hidden bg-[#1B5E20] pt-[84px] text-white">
+      <div className="relative overflow-hidden bg-[#1B5E20] text-white">
         <div className="pointer-events-none absolute -right-40 -top-40 h-[560px] w-[560px] rounded-full bg-white/[0.04]" />
         <div className="pointer-events-none absolute -bottom-52 left-1/3 h-[520px] w-[520px] rounded-full bg-black/10" />
 
@@ -253,13 +217,9 @@ export default function AgricodersPage() {
                   />
                 </div>
                 <ul className="m-0 mt-6 flex list-none flex-wrap justify-center gap-3 p-0">
-                  {[
-                    { Icon: Plant, label: "CropManager" },
-                    { Icon: PawPrint, label: "LivestockPro" },
-                    { Icon: CurrencyCircleDollar, label: "Agriplan" },
-                  ].map(({ Icon, label }) => (
-                    <li key={label} className="inline-flex items-center gap-2 rounded-full bg-[#F9A825] px-4 py-2 text-sm font-bold text-[#111611]">
-                      <Icon size={18} weight="fill" /> {label}
+                  {AGRICODERS_APPS.map((app) => (
+                    <li key={app.id} className="inline-flex items-center gap-2 rounded-full bg-white py-1.5 pl-1.5 pr-4 text-sm font-bold text-[#111611]">
+                      <AppIcon src={app.icon} size={24} /> {app.name}
                     </li>
                   ))}
                 </ul>
@@ -350,13 +310,13 @@ export default function AgricodersPage() {
           <SectionTitle title="One platform, three products" sub="Every product on web, iOS and Android" />
 
           <div className="mb-6 grid grid-cols-1 gap-5 md:grid-cols-3">
-            {PRODUCTS.map(({ id, Icon, name, desc, href, status }, i) => {
+            {PRODUCTS.map(({ id, icon, name, desc, href, status }, i) => {
               const external = href.startsWith("http");
               return (
                 <Reveal key={id} delay={i * 90}>
                   <article className={`${CARD} group flex h-full flex-col p-7`}>
                     <div className="mb-6 flex items-center justify-between">
-                      <Badge Icon={Icon} size={64} />
+                      <AppIcon src={icon} size={64} />
                       <span
                         className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${
                           status === "Live" ? "bg-[#1B5E20] text-white" : "bg-[#F9A825] text-[#111611]"
@@ -455,36 +415,6 @@ export default function AgricodersPage() {
                   <div className="mb-5"><Badge Icon={Icon} /></div>
                   <h3 className="mb-2 text-xl font-bold">{title}</h3>
                   <p className="m-0 text-[15px] leading-relaxed text-gray-600 dark:text-gray-300">{desc}</p>
-                </article>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═════ ROADMAP ═════ */}
-      <section id="roadmap" className="scroll-mt-24 border-y border-[#D5E3D6] bg-[#F3F8F3] py-24 dark:border-white/10 dark:bg-white/[0.03] sm:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionTitle
-            title="What we have shipped, and what comes next"
-            sub="We release when it is useful, then improve continuously with farmers and partners."
-          />
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
-            {ROADMAP.map((r, i) => (
-              <Reveal key={r.phase} delay={i * 90}>
-                <article className="h-full overflow-hidden rounded-2xl border border-[#D5E3D6] bg-white dark:border-white/10 dark:bg-[#111814]">
-                  <div className={`flex items-center gap-3 px-6 py-4 ${i === 0 ? "bg-[#1B5E20] text-white" : "bg-white text-[#1B5E20] dark:bg-transparent dark:text-green-300"}`}>
-                    {i === 0 ? <CheckCircle size={22} weight="fill" className="text-[#F9A825]" /> : <Flag size={22} weight="fill" className="text-[#F9A825]" />}
-                    <h3 className="m-0 text-lg font-bold">{r.phase}</h3>
-                  </div>
-                  <ul className="m-0 flex list-none flex-col gap-3 p-6 pt-4">
-                    {r.items.map((it) => (
-                      <li key={it} className="flex items-start gap-2.5 text-[15px] leading-snug text-gray-700 dark:text-gray-300">
-                        <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full bg-[#2E7D32]" />
-                        {it}
-                      </li>
-                    ))}
-                  </ul>
                 </article>
               </Reveal>
             ))}

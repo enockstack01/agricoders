@@ -1,9 +1,10 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowRight, ArrowUpRight, CheckCircle, Plant, PawPrint, CurrencyCircleDollar } from "@phosphor-icons/react/dist/ssr";
+import { ArrowRight, ArrowUpRight, CheckCircle } from "@phosphor-icons/react/dist/ssr";
 import AgriNav from "@/components/layout/AgriNav";
 import PageHero from "@/components/marketing/PageHero";
 import MarketingFooter from "@/components/marketing/MarketingFooter";
+import AppIcon from "@/components/marketing/AppIcon";
 import ScreenshotGallery from "@/components/marketing/ScreenshotGallery";
 import Reveal from "@/components/ui/Reveal";
 import { AGRICODERS_APPS } from "@/lib/apps";
@@ -12,12 +13,6 @@ export const metadata: Metadata = {
   title: "Our Systems | Agricoders",
   description:
     "CropManager, LivestockPro and Agriplan: the systems Agricoders has built for farmers and agribusinesses.",
-};
-
-const ICONS: Record<string, React.ElementType> = {
-  cropmanager: Plant,
-  livestockpro: PawPrint,
-  agriplan: CurrencyCircleDollar,
 };
 
 export default function SystemsPage() {
@@ -31,7 +26,6 @@ export default function SystemsPage() {
 
       {AGRICODERS_APPS.map((app, i) => {
         const dark = i % 2 === 1;
-        const Icon = ICONS[app.id] ?? Plant;
         const external = app.href.startsWith("http");
         const live = app.status === "live";
         return (
@@ -43,12 +37,7 @@ export default function SystemsPage() {
             <div className="mx-auto grid max-w-7xl grid-cols-1 items-start gap-12 px-4 sm:px-6 lg:grid-cols-[0.85fr_1.15fr] lg:px-8">
               <Reveal className={i % 2 === 1 ? "lg:order-2" : ""}>
                 <div className="mb-5 flex items-center gap-4">
-                  <span
-                    className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full"
-                    style={{ background: dark ? "#fff" : "#1B5E20", color: dark ? "#1B5E20" : "#fff" }}
-                  >
-                    <Icon size={32} weight="fill" />
-                  </span>
+                  <AppIcon src={app.icon} size={72} />
                   <span
                     className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-bold uppercase tracking-wide ${
                       live ? "bg-[#F9A825] text-[#111611]" : "bg-white/15"

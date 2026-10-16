@@ -8,10 +8,10 @@ interface PageHeroProps {
 }
 
 /** Shared hero for secondary marketing pages (Systems, Privacy, Terms), in the Agricoders deck style:
- *  forest green band, amber tracked eyebrow, white bold title, pulled up under the floating nav. */
+ *  forest green band, amber tracked eyebrow, white bold title, sits directly below the header bar. */
 export default function PageHero({ eyebrow, title, children }: PageHeroProps) {
   return (
-    <section className="relative -mt-[84px] overflow-hidden bg-[#1B5E20] pb-16 pt-[84px] text-white sm:pb-20">
+    <section className="relative overflow-hidden bg-[#1B5E20] pb-16 text-white sm:pb-20">
       <div className="pointer-events-none absolute -right-40 -top-40 h-[480px] w-[480px] rounded-full bg-white/[0.04]" />
       <div className="pointer-events-none absolute -bottom-48 left-1/4 h-[420px] w-[420px] rounded-full bg-black/10" />
       <div className="relative mx-auto max-w-7xl px-4 pt-14 sm:px-6 sm:pt-20 lg:px-8">

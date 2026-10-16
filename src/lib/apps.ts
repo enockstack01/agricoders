@@ -14,6 +14,8 @@ export interface AppEntry {
   status: "live" | "beta" | "coming-soon";
   category: string;
   accentColor: string;
+  /** Official app icon (the same artwork as the product's mobile app icon). */
+  icon: string;
   features: string[];
   pricing?: string;
   screenshots?: Screenshot[];
@@ -32,6 +34,7 @@ const cm = (file: string, alt: string, width: number, height: number) => shot("c
 export const AGRICODERS_APPS: AppEntry[] = [
   {
     id: "cropmanager",
+    icon: "/brand/icons/cropmanager.png",
     name: "CropManager",
     tagline: "Crop Production Management System",
     description:
@@ -55,6 +58,7 @@ export const AGRICODERS_APPS: AppEntry[] = [
   },
   {
     id: "livestockpro",
+    icon: "/brand/icons/livestockpro.png",
     name: "LivestockPro",
     tagline: "Livestock Management System",
     description:
@@ -95,6 +99,7 @@ export const AGRICODERS_APPS: AppEntry[] = [
   },
   {
     id: "agriplan",
+    icon: "/brand/icons/agriplan.png",
     name: "Agriplan",
     tagline: "AI Business Plan and Financial Model Generator",
     description:

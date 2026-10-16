@@ -183,11 +183,11 @@ export default function Home() {
       <AgriNav />
 
       {/* Hero: deck cover */}
-      <div className="relative -mt-[84px] overflow-hidden bg-[#1B5E20] pt-[84px] text-white">
+      <div className="relative overflow-hidden bg-[#1B5E20] text-white">
         <div className="pointer-events-none absolute -right-40 -top-40 h-[560px] w-[560px] rounded-full bg-white/[0.04]" />
         <div className="pointer-events-none absolute -bottom-52 left-1/3 h-[520px] w-[520px] rounded-full bg-black/10" />
         <section className="relative mx-auto max-w-7xl px-4 pb-24 pt-14 sm:px-6 sm:pt-20 lg:px-8 lg:pb-28 lg:pt-24">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="max-w-3xl">
             <div>
               <Reveal>
                 <p className="mb-5 text-sm font-bold uppercase tracking-[0.28em] text-[#F9A825]">Agriplan</p>
@@ -231,25 +231,6 @@ export default function Home() {
               </Reveal>
             </div>
 
-            {/* The two deliverables, as on the Agriplan deck */}
-            <Reveal delay={150}>
-              <div className="mx-auto flex w-full max-w-[420px] flex-col gap-4">
-                <div className="flex items-center gap-4 rounded-xl bg-white p-5 text-[#111611] shadow-2xl">
-                  <Badge Icon={FileText} size={56} />
-                  <div>
-                    <p className="m-0 text-lg font-bold text-[#1B5E20]">Business Plan.docx</p>
-                    <p className="m-0 text-sm text-gray-600">Executive Summary, analysis, projections</p>
-                  </div>
-                </div>
-                <div className="ml-8 flex items-center gap-4 rounded-xl bg-white p-5 text-[#111611] shadow-2xl">
-                  <Badge Icon={ChartBar} size={56} />
-                  <div>
-                    <p className="m-0 text-lg font-bold text-[#1B5E20]">Financial Model.xlsx</p>
-                    <p className="m-0 text-sm text-gray-600">19 sheets, live formulas, NPV and IRR</p>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
           </div>
         </section>
       </div>
