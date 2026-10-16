@@ -12,6 +12,7 @@ import {
   List,
   X,
   PawPrint,
+  Plant,
   Sparkle,
   GlobeHemisphereEast,
   DeviceMobile,
@@ -27,6 +28,7 @@ import BrandMark from "@/components/marketing/BrandMark";
 const APP_ICONS: Record<string, React.ReactNode> = {
   agriplan: <Stack size={20} weight="duotone" />,
   livestockpro: <PawPrint size={20} weight="duotone" />,
+  cropmanager: <Plant size={20} weight="duotone" />,
 };
 
 const SERVICE_LINKS = [

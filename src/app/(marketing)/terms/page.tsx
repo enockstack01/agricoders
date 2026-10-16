@@ -6,7 +6,7 @@ import MarketingFooter from "@/components/marketing/MarketingFooter";
 import Reveal from "@/components/ui/Reveal";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — Agricoders",
+  title: "Terms of Service | Agricoders",
   description: "The terms that govern your use of Agriplan and Agricoders products.",
 };
 
@@ -23,7 +23,7 @@ const SECTIONS = [
   },
   {
     title: "3. Acceptable use",
-    body: `You agree not to misuse our products — including attempting to disrupt our systems, reverse-engineer our software, use the service for unlawful purposes, or generate content that infringes on others' rights.`,
+    body: `You agree not to misuse our products, including attempting to disrupt our systems, reverse-engineer our software, use the service for unlawful purposes, or generate content that infringes on others' rights.`,
   },
   {
     title: "4. Generated content",
@@ -49,35 +49,35 @@ const SECTIONS = [
 
 export default function TermsPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white dark:bg-gray-900">
+    <div className="brand-deck flex min-h-screen flex-col bg-white text-[#111611] dark:bg-[#0c140d] dark:text-white">
       <AgriNav />
 
       <PageHero eyebrow="Legal" title="Terms of Service">
-        <p className="text-sm text-gray-500 dark:text-gray-400">Last updated: {UPDATED}</p>
+        <p className="text-sm">Last updated: {UPDATED}</p>
       </PageHero>
 
-      <section className="pb-24">
+      <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             {SECTIONS.map((s, i) => (
               <Reveal key={s.title} delay={Math.min(i * 40, 200)} className="mb-8">
-                <h2 className="mb-2.5 text-[19px] font-bold text-gray-900 dark:text-white">{s.title}</h2>
-                <p className="text-[15px] leading-relaxed text-gray-600 dark:text-gray-400">{s.body}</p>
+                <h2 className="mb-2.5 text-xl font-bold text-[#1B5E20] dark:text-green-300">{s.title}</h2>
+                <p className="text-base leading-relaxed text-[#111611] dark:text-gray-300">{s.body}</p>
               </Reveal>
             ))}
 
             <Reveal delay={220}>
-              <div className="mt-10 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 p-5">
-                <h3 className="mb-3 text-[15px] font-bold text-gray-900 dark:text-white">Questions about these terms?</h3>
+              <div className="mt-10 rounded-2xl border border-[#D5E3D6] bg-[#F3F8F3] p-6 dark:border-white/10 dark:bg-white/[0.04]">
+                <h3 className="mb-3 text-lg font-bold text-[#1B5E20] dark:text-green-300">Questions about these terms?</h3>
                 <div className="mb-2 flex items-center gap-2">
-                  <Mail size={14} className="flex-shrink-0 text-green-600" />
-                  <a href="mailto:logistackltd@gmail.com" className="text-sm text-gray-600 dark:text-gray-400 no-underline">
+                  <Mail size={14} className="flex-shrink-0 text-[#2E7D32]" />
+                  <a href="mailto:logistackltd@gmail.com" className="text-sm text-[#111611] dark:text-gray-300 no-underline">
                     logistackltd@gmail.com
                   </a>
                 </div>
                 <div className="flex items-start gap-2">
-                  <MapPin size={14} className="mt-0.5 flex-shrink-0 text-green-600" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Deco Center — NYARUTARAMA, Kigali, Rwanda</span>
+                  <MapPin size={14} className="mt-0.5 flex-shrink-0 text-[#2E7D32]" />
+                  <span className="text-sm text-[#111611] dark:text-gray-300">Deco Center, Nyarutarama, Kigali, Rwanda</span>
                 </div>
               </div>
             </Reveal>

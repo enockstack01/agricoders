@@ -37,7 +37,7 @@ export default function MarketingFooter() {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative overflow-hidden bg-[#050c07] text-white">
+    <footer className="relative overflow-hidden bg-[#111611] text-white">
       <div className="pointer-events-none absolute -top-40 left-1/2 h-80 w-[900px] -translate-x-1/2 rounded-full bg-green-500/10 blur-3xl" />
 
       <div className="relative mx-auto max-w-7xl px-4 pb-10 pt-16 sm:px-6 sm:pt-20 lg:px-8">
@@ -54,7 +54,7 @@ export default function MarketingFooter() {
             </p>
             <p className="mb-6 flex items-start gap-2 text-sm font-semibold text-white/60">
               <MapPin size={18} weight="duotone" className="mt-0.5 flex-shrink-0 text-green-400" />
-              KG 9 Ave, Deco Center, Kigali, Rwanda
+              Deco Center, Nyarutarama, Kigali, Rwanda
             </p>
             <div className="flex items-center gap-2">
               {SOCIALS.map(({ label, Icon, href }) => (
@@ -127,7 +127,12 @@ export default function MarketingFooter() {
         </div>
 
         <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-white/10 pt-6 text-sm text-white/45 sm:flex-row">
-          <span>&copy; {year} Agricoders. All rights reserved.</span>
+          <span>
+            &copy; {year} Logistack Ltd. All rights reserved.{" "}
+            <a href="https://logistack.space" target="_blank" rel="noopener noreferrer" className="text-white/60 no-underline hover:text-white">
+              logistack.space
+            </a>
+          </span>
           <a href="mailto:agricoders@gmail.com" className="inline-flex items-center gap-1.5 text-white/60 no-underline hover:text-white">
             <EnvelopeSimple size={16} weight="duotone" />
             agricoders@gmail.com

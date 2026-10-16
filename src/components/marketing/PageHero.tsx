@@ -1,4 +1,3 @@
-import { Sparkle } from "@phosphor-icons/react/dist/ssr";
 import Reveal from "@/components/ui/Reveal";
 
 interface PageHeroProps {
@@ -8,23 +7,19 @@ interface PageHeroProps {
   children?: React.ReactNode;
 }
 
-/** Shared centered hero for secondary marketing pages (Apps, Privacy, Terms) —
- *  eyebrow pill, fluid heavy heading, optional subtitle, on the landing-page mesh background. */
+/** Shared hero for secondary marketing pages (Systems, Privacy, Terms), in the Agricoders deck style:
+ *  forest green band, amber tracked eyebrow, white bold title, pulled up under the floating nav. */
 export default function PageHero({ eyebrow, title, children }: PageHeroProps) {
   return (
-    <section className="mkt-mesh relative overflow-hidden py-20 text-center sm:py-24">
-      <div className="mkt-grid-dots pointer-events-none absolute inset-0" />
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mx-auto max-w-2xl">
+    <section className="relative -mt-[84px] overflow-hidden bg-[#1B5E20] pb-16 pt-[84px] text-white sm:pb-20">
+      <div className="pointer-events-none absolute -right-40 -top-40 h-[480px] w-[480px] rounded-full bg-white/[0.04]" />
+      <div className="pointer-events-none absolute -bottom-48 left-1/4 h-[420px] w-[420px] rounded-full bg-black/10" />
+      <div className="relative mx-auto max-w-7xl px-4 pt-14 sm:px-6 sm:pt-20 lg:px-8">
+        <div className="max-w-3xl">
           <Reveal>
-            <span className="mb-5 inline-flex items-center gap-2 rounded-full bg-green-600/10 px-4 py-1.5 text-xs font-black uppercase tracking-[0.14em] text-green-700 dark:bg-green-400/10 dark:text-green-300">
-              <Sparkle size={14} weight="fill" />
-              {eyebrow}
-            </span>
-            <h1 className="mb-3 text-balance text-[clamp(2rem,5vw,3.4rem)] font-black leading-tight tracking-tight text-gray-900 dark:text-white">
-              {title}
-            </h1>
-            {children}
+            <p className="mb-4 text-sm font-bold uppercase tracking-[0.28em] text-[#F9A825]">{eyebrow}</p>
+            <h1 className="mb-4 text-balance text-[clamp(2.2rem,5vw,3.8rem)] font-bold leading-tight tracking-tight">{title}</h1>
+            <div className="text-lg text-green-50/90 [&_p]:m-0">{children}</div>
           </Reveal>
         </div>
       </div>

@@ -32,9 +32,10 @@ import AgriNav from "@/components/layout/AgriNav";
 import Reveal from "@/components/ui/Reveal";
 import CountUp from "@/components/ui/CountUp";
 import MarketingFooter from "@/components/marketing/MarketingFooter";
+import { AGRICODERS_APPS } from "@/lib/apps";
 
 export const metadata: Metadata = {
-  title: "Agricoders — Building the Future of Digital Agriculture",
+  title: "Agricoders | Building the Future of Digital Agriculture",
   description:
     "Agricoders is building the operating system for African agriculture: CropManager, LivestockPro and Agriplan, made in Kigali by Logistack Ltd for African farmers.",
 };
@@ -63,11 +64,20 @@ const VALUES = [
   "Farmer data belongs to the farmer",
 ];
 
-const PRODUCTS = [
-  { id: "cropmanager", Icon: Plant, name: "CropManager", desc: "Run every crop cycle on data", href: "/apps", status: "Rolling out" },
-  { id: "livestockpro", Icon: PawPrint, name: "LivestockPro", desc: "Know the herd, protect its health", href: "https://livestockpro.agricoders.com/", status: "Live" },
-  { id: "agriplan", Icon: CurrencyCircleDollar, name: "Agriplan", desc: "Bankable business plans in 15 minutes", href: "/plan", status: "Live" },
-];
+const PRODUCT_ICONS: Record<string, React.ElementType> = {
+  cropmanager: Plant,
+  livestockpro: PawPrint,
+  agriplan: CurrencyCircleDollar,
+};
+
+const PRODUCTS = AGRICODERS_APPS.map((app) => ({
+  id: app.id,
+  Icon: PRODUCT_ICONS[app.id] ?? Plant,
+  name: app.name,
+  desc: app.tagline,
+  href: app.href,
+  status: app.status === "live" ? "Live" : "Coming soon",
+}));
 
 const LOOP = [
   { Icon: ClipboardText, label: "Record", amber: false },
@@ -92,7 +102,7 @@ const SPOTLIGHTS = [
       { n: "9", l: "agronomic calculators" },
     ],
     bullets: ["Higher yields", "Lower input costs", "Crop disease diagnosis", "Bankable season records"],
-    img: "/brand/cropmanager-dashboard.webp",
+    img: "/brand/cropmanager/dashboard.webp",
     h: 722,
     flip: false,
   },
@@ -103,8 +113,8 @@ const SPOTLIGHTS = [
       { n: "8", l: "management areas" },
       { n: "10", l: "languages, works offline" },
     ],
-    bullets: ["Earlier warning of disease", "Offline-first mobile app", "One Health surveillance", "Records lenders trust"],
-    img: "/brand/livestockpro-dashboard.webp",
+    bullets: ["Health and vaccination tracking", "Offline-first mobile app", "Breeding and birth planning", "Records lenders trust"],
+    img: "/brand/livestockpro/dashboard-overview.webp",
     h: 725,
     flip: true,
   },
@@ -115,13 +125,13 @@ const ROADMAP = [
     phase: "Delivered",
     items: [
       "Agriplan live: 19-sheet model, six charts, 100+ currencies",
-      "LivestockPro on web and offline-first mobile, with One Health surveillance",
-      "CropManager v2.0: 18 modules, 9 calculators, web and mobile apps",
+      "LivestockPro on web and offline-first mobile, in ten languages",
+      "CropManager live at crop.agricoders.com: 18 modules, 9 calculators, web and mobile apps",
     ],
   },
   {
     phase: "Near term",
-    items: ["Public cloud deployment of CropManager", "Offline-first CropManager mobile app", "Google Play and App Store releases"],
+    items: ["Offline-first CropManager mobile app", "Google Play and App Store releases"],
   },
   {
     phase: "Medium term",
@@ -234,7 +244,7 @@ export default function AgricodersPage() {
               <div className="mx-auto w-full max-w-[620px]">
                 <div className="overflow-hidden rounded-xl border-[6px] border-[#111611] bg-[#111611] shadow-2xl">
                   <Image
-                    src="/brand/cropmanager-dashboard.webp"
+                    src="/brand/cropmanager/dashboard.webp"
                     alt="CropManager dashboard"
                     width={1400}
                     height={722}
@@ -291,7 +301,7 @@ export default function AgricodersPage() {
               </Reveal>
             ))}
           </div>
-          <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">Sources: FAO, IFAD, World Bank, African Development Bank; rounded estimates.</p>
+          <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">Sources: FAO, IFAD, World Bank and African Development Bank, rounded estimates.</p>
         </div>
       </section>
 

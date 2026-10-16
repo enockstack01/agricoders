@@ -6,7 +6,7 @@ import MarketingFooter from "@/components/marketing/MarketingFooter";
 import Reveal from "@/components/ui/Reveal";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — Agricoders",
+  title: "Privacy Policy | Agricoders",
   description: "How Agricoders and Agriplan collect, use, and protect your data.",
 };
 
@@ -19,7 +19,7 @@ const SECTIONS = [
   },
   {
     title: "2. Information we collect",
-    body: `We collect information you provide directly — such as your name, email address, and company details when you create an account or submit a business plan — and information collected automatically, such as usage data, device information, and cookies needed to keep you signed in and the app working correctly. Authentication (sign-in/sign-up) is handled by our identity provider, Clerk, which processes your credentials on our behalf.`,
+    body: `We collect information you provide directly, such as your name, email address, and company details when you create an account or submit a business plan, and information collected automatically, such as usage data, device information, and cookies needed to keep you signed in and the app working correctly. Authentication (sign-in/sign-up) is handled by our identity provider, Clerk, which processes your credentials on our behalf.`,
   },
   {
     title: "3. How we use your information",
@@ -49,35 +49,35 @@ const SECTIONS = [
 
 export default function PrivacyPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-white dark:bg-gray-900">
+    <div className="brand-deck flex min-h-screen flex-col bg-white text-[#111611] dark:bg-[#0c140d] dark:text-white">
       <AgriNav />
 
       <PageHero eyebrow="Legal" title="Privacy Policy">
-        <p className="text-sm text-gray-500 dark:text-gray-400">Last updated: {UPDATED}</p>
+        <p className="text-sm">Last updated: {UPDATED}</p>
       </PageHero>
 
-      <section className="pb-24">
+      <section className="py-16 sm:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             {SECTIONS.map((s, i) => (
               <Reveal key={s.title} delay={Math.min(i * 40, 200)} className="mb-8">
-                <h2 className="mb-2.5 text-[19px] font-bold text-gray-900 dark:text-white">{s.title}</h2>
-                <p className="text-[15px] leading-relaxed text-gray-600 dark:text-gray-400">{s.body}</p>
+                <h2 className="mb-2.5 text-xl font-bold text-[#1B5E20] dark:text-green-300">{s.title}</h2>
+                <p className="text-base leading-relaxed text-[#111611] dark:text-gray-300">{s.body}</p>
               </Reveal>
             ))}
 
             <Reveal delay={220}>
-              <div className="mt-10 rounded-xl border border-gray-200 dark:border-gray-800 bg-gray-50 dark:bg-gray-950 p-5">
-                <h3 className="mb-3 text-[15px] font-bold text-gray-900 dark:text-white">Contact us</h3>
+              <div className="mt-10 rounded-2xl border border-[#D5E3D6] bg-[#F3F8F3] p-6 dark:border-white/10 dark:bg-white/[0.04]">
+                <h3 className="mb-3 text-lg font-bold text-[#1B5E20] dark:text-green-300">Contact us</h3>
                 <div className="mb-2 flex items-center gap-2">
-                  <Mail size={14} className="flex-shrink-0 text-green-600" />
-                  <a href="mailto:logistackltd@gmail.com" className="text-sm text-gray-600 dark:text-gray-400 no-underline">
+                  <Mail size={14} className="flex-shrink-0 text-[#2E7D32]" />
+                  <a href="mailto:logistackltd@gmail.com" className="text-sm text-[#111611] dark:text-gray-300 no-underline">
                     logistackltd@gmail.com
                   </a>
                 </div>
                 <div className="flex items-start gap-2">
-                  <MapPin size={14} className="mt-0.5 flex-shrink-0 text-green-600" />
-                  <span className="text-sm text-gray-600 dark:text-gray-400">Deco Center — NYARUTARAMA, Kigali, Rwanda</span>
+                  <MapPin size={14} className="mt-0.5 flex-shrink-0 text-[#2E7D32]" />
+                  <span className="text-sm text-[#111611] dark:text-gray-300">Deco Center, Nyarutarama, Kigali, Rwanda</span>
                 </div>
               </div>
             </Reveal>
