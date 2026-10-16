@@ -206,7 +206,7 @@ export default function SuperAdminPage() {
                             <Avatar src={u.imageUrl} name={u.name || u.email} />
                             <div>
                               <div className="cell-primary truncate" style={{ maxWidth: 180 }}>
-                                {u.name || "—"} {isSelf && <span className="cell-sub">(you)</span>}
+                                {u.name || "N/A"} {isSelf && <span className="cell-sub">(you)</span>}
                               </div>
                               <div className="cell-sub truncate" style={{ maxWidth: 200 }}>{u.email}</div>
                             </div>
@@ -218,7 +218,7 @@ export default function SuperAdminPage() {
                             {u.submissionCount}
                           </span>
                         </td>
-                        <td className="cell-muted">{u.lastActive ? new Date(u.lastActive).toLocaleDateString() : "—"}</td>
+                        <td className="cell-muted">{u.lastActive ? new Date(u.lastActive).toLocaleDateString() : "N/A"}</td>
                         <td className="cell-muted">{new Date(u.createdAt).toLocaleDateString()}</td>
                         <td style={{ width: 180 }}>
                           {isSelf ? (
@@ -246,7 +246,7 @@ export default function SuperAdminPage() {
                     <div className="user-cell" style={{ marginBottom: isSelf ? 0 : 12 }}>
                       <Avatar src={u.imageUrl} name={u.name || u.email} />
                       <div>
-                        <div className="cell-primary truncate">{u.name || "—"}{isSelf ? " (you)" : ""}</div>
+                        <div className="cell-primary truncate">{u.name || "N/A"}{isSelf ? " (you)" : ""}</div>
                         <div className="cell-sub truncate">{u.email}</div>
                         <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 4 }}>
                           <Badge variant={roleBadgeVariant(u.role)}>{roleLabel(u.role)}</Badge>

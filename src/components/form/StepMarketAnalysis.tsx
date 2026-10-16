@@ -15,10 +15,10 @@ function AIButton({ label, loading, onClick }: { label: string; loading: boolean
       type="button"
       onClick={onClick}
       disabled={loading}
-      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-[#F3F8F3] dark:bg-white/5 text-[#1B5E20] dark:text-green-300 border border-[#D5E3D6] dark:border-white/15 hover:bg-[#F3F8F3] dark:hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
       {loading
-        ? <span className="inline-block w-3 h-3 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
+        ? <span className="inline-block w-3 h-3 border-2 border-[#1B5E20] border-t-transparent rounded-full animate-spin" />
         : <span>✨</span>}
       {loading ? "Generating…" : label}
     </button>

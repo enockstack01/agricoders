@@ -110,7 +110,7 @@ export default function StepOpex({ formData, update }: Props) {
         <div className="callout callout-success px-4 py-3 text-sm dark:text-green-300">
           <strong>Total Monthly OPEX:</strong><br />{fmt(totalMonthly)} RWF
         </div>
-        <div className="callout callout-info px-4 py-3 text-sm dark:text-blue-300">
+        <div className="callout callout-info px-4 py-3 text-sm dark:text-[#BFC2E6]">
           <strong>Total Annual OPEX (Y1):</strong><br />{fmt(totalAnnual)} RWF
         </div>
       </div>

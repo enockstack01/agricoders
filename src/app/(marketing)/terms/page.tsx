@@ -23,15 +23,15 @@ const SECTIONS = [
   },
   {
     title: "3. Acceptable use",
-    body: `You agree not to misuse our products, including attempting to disrupt our systems, reverse-engineer our software, use the service for unlawful purposes, or generate content that infringes on others' rights.`,
+    body: `You agree not to misuse our products, including attempting to disrupt our systems, reverse engineer our software, use the service for unlawful purposes, or generate content that infringes on others' rights.`,
   },
   {
     title: "4. Generated content",
-    body: `Business plans, financial models, and other documents you generate through Agriplan are yours to use for your own business purposes. We do not claim ownership over the specific business information you provide or the documents generated from it. Because content is AI-assisted, you are responsible for reviewing generated documents for accuracy before relying on them, e.g. for investor or regulatory submissions.`,
+    body: `Business plans, financial models, and other documents you generate through Agriplan are yours to use for your own business purposes. We do not claim ownership over the specific business information you provide or the documents generated from it. Because content is AI assisted, you are responsible for reviewing generated documents for accuracy before relying on them, e.g. for investor or regulatory submissions.`,
   },
   {
     title: "5. Payments",
-    body: `Certain features (such as system-generated or expert-custom business plans) require payment as described at the point of purchase. Fees are non-refundable except where required by law or explicitly stated otherwise.`,
+    body: `Certain features (such as system generated or expert-custom business plans) require payment as described at the point of purchase. Fees are non refundable except where required by law or explicitly stated otherwise.`,
   },
   {
     title: "6. Service availability",
@@ -39,7 +39,7 @@ const SECTIONS = [
   },
   {
     title: "7. Limitation of liability",
-    body: `Our products, including AI-generated content, are provided "as is" without warranties of any kind. To the fullest extent permitted by law, Agricoders and Logistack Ltd are not liable for indirect, incidental, or consequential damages arising from your use of our products.`,
+    body: `Our products, including AI generated content, are provided "as is" without warranties of any kind. To the fullest extent permitted by law, Agricoders and Logistack Ltd are not liable for indirect, incidental, or consequential damages arising from your use of our products.`,
   },
   {
     title: "8. Changes to these terms",

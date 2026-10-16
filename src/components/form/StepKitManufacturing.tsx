@@ -99,7 +99,7 @@ export default function StepKitManufacturing({ formData, update }: Props) {
         <div className="callout callout-success px-4 py-3 text-sm dark:text-green-300">
           <strong>Total Cost (batch):</strong><br />{fmt(totalCost)} RWF
         </div>
-        <div className="callout callout-info px-4 py-3 text-sm dark:text-blue-300">
+        <div className="callout callout-info px-4 py-3 text-sm dark:text-[#BFC2E6]">
           <strong>Cost Per Unit (avg):</strong><br />{fmt(unitCost)} RWF
         </div>
       </div>

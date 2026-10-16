@@ -54,7 +54,7 @@ export default function StepCompanyInfo({ formData, update }: Props) {
           onChange={(v) => set("authorTitle", v)}
           placeholder="e.g. Founder & CEO"
           required
-          hint="Your job title or role within the company (e.g. CEO, Director, Co-Founder)."
+          hint="Your job title or role within the company (e.g. CEO, Director, Cofounder)."
         />
       </GridRow>
       <GridRow cols={2}>

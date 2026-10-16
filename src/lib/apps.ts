@@ -53,7 +53,7 @@ export const AGRICODERS_APPS: AppEntry[] = [
       cm("dashboard", "CropManager farm profile dashboard", 1400, 722),
       cm("dashboard-analytics", "CropManager dashboard with land utilisation and crop distribution", 1400, 721),
       cm("mobile-app", "CropManager mobile app splash and sign-in screens", 1400, 976),
-      cm("web-sign-in", "CropManager web sign-in", 1024, 768),
+      cm("web-sign-in", "CropManager web sign in", 1024, 768),
     ],
   },
   {
@@ -103,19 +103,19 @@ export const AGRICODERS_APPS: AppEntry[] = [
     name: "Agriplan",
     tagline: "AI Business Plan and Financial Model Generator",
     description:
-      "Generate investor-ready business plans and 19-sheet financial models in under 15 minutes. Fully written, formatted and ready to submit.",
+      "Generate investor ready business plans and 19 sheet financial models in under 15 minutes. Fully written, formatted and ready to submit.",
     href: "/plan",
     status: "live",
     category: "Business Planning",
     accentColor: "#2E7D32",
     features: [
-      "Investor-ready Business Plan (.docx)",
-      "19-sheet Excel Financial Model",
-      "AI-generated professional narrative",
+      "Investor ready Business Plan (.docx)",
+      "19 sheet Excel Financial Model",
+      "AI generated professional narrative",
       "Six embedded charts",
       "NPV, IRR and payback period",
       "Any business, country or currency",
     ],
-    pricing: "USD 20 system-generated, USD 69 customised by an expert",
+    pricing: "USD 20 system generated, USD 69 customised by an expert",
   },
 ];

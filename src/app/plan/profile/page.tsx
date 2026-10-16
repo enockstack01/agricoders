@@ -23,7 +23,7 @@ import {
 } from "@/components/plan/icons";
 
 const CURRENCIES = ["USD","EUR","GBP","RWF","KES","NGN","ZAR","GHS","UGX","TZS","ETB","INR","CAD","AUD","BRL","MXN","JPY","CNY","SGD","AED"];
-const COMPANY_TYPES = ["Private Limited Company","Public Limited Company","LLC","Sole Proprietorship","Partnership","LLP","Non-profit Organization","Cooperative","Other"];
+const COMPANY_TYPES = ["Private Limited Company","Public Limited Company","LLC","Sole Proprietorship","Partnership","LLP","Nonprofit Organization","Cooperative","Other"];
 
 function Section({ title, icon, tone = "green", children }: { title: string; icon: React.ReactNode; tone?: string; children: React.ReactNode }) {
   return (
@@ -165,7 +165,7 @@ export default function ProfilePage() {
     <AppShell role={role} title="Profile & Settings" breadcrumb={crumbs}>
       <PageHeader
         title="Profile & Default Settings"
-        subtitle="These defaults pre-fill every new business plan you create. You can always override them in the form."
+        subtitle="These defaults prefill every new business plan you create. You can always override them in the form."
         actions={<span className="hidden sm:inline-flex">{saveButton}</span>}
       />
 
@@ -188,8 +188,8 @@ export default function ProfilePage() {
           <div className="user-cell" style={{ marginBottom: 18 }}>
             <Avatar src={user?.imageUrl} name={user?.fullName ?? undefined} size="lg" />
             <div>
-              <div className="cell-primary" style={{ fontSize: 15 }}>{user?.fullName || "—"}</div>
-              <div className="cell-muted" style={{ overflowWrap: "anywhere" }}>{user?.primaryEmailAddress?.emailAddress || "—"}</div>
+              <div className="cell-primary" style={{ fontSize: 15 }}>{user?.fullName || "N/A"}</div>
+              <div className="cell-muted" style={{ overflowWrap: "anywhere" }}>{user?.primaryEmailAddress?.emailAddress || "N/A"}</div>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6, flexWrap: "wrap" }}>
                 {role !== "user" && (
                   <span className={`badge ${role === "super_admin" ? "badge-purple" : "badge-info"}`}>
@@ -198,7 +198,7 @@ export default function ProfilePage() {
                   </span>
                 )}
                 <span className="cell-sub">
-                  Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB", { month: "long", year: "numeric" }) : "—"}
+                  Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-GB", { month: "long", year: "numeric" }) : "N/A"}
                 </span>
               </div>
             </div>
@@ -206,7 +206,7 @@ export default function ProfilePage() {
 
           <Field label="Your Account ID" hint="Share this ID with an admin when requesting credits. Keep it private otherwise.">
             <div style={{ display: "flex", gap: 8 }}>
-              <input readOnly value={user?.id || "—"} className="form-control mono" onFocus={(e) => e.target.select()} />
+              <input readOnly value={user?.id || "N/A"} className="form-control mono" onFocus={(e) => e.target.select()} />
               <button
                 onClick={() => {
                   if (user?.id) {
@@ -233,7 +233,7 @@ export default function ProfilePage() {
           <div className="stat-grid" style={{ marginBottom: 16, "--stat-min": "110px" } as React.CSSProperties}>
             <div className="stat-tile tone-green">
               <div className="stat-tile-label">Available</div>
-              <div className="stat-tile-value">{credits ?? "—"}</div>
+              <div className="stat-tile-value">{credits ?? "N/A"}</div>
               <div className="stat-tile-sub">credits</div>
             </div>
             <div className="stat-tile tone-orange">
@@ -288,7 +288,7 @@ export default function ProfilePage() {
         {/* ── Company Defaults ────────────────────────────────────────────── */}
         <Section title="Company Defaults" icon={<Building2 size={15} />} tone="blue">
           <div className="form-row">
-            <Field label="Default Author Title" hint="Pre-filled in every new plan">
+            <Field label="Default Author Title" hint="Prefilled in every new plan">
               <Input value={defaults.authorTitle} onChange={(v) => set("authorTitle", v)} placeholder="Founder & CEO" />
             </Field>
             <Field label="Default Location / Country" hint="City and country">
@@ -333,7 +333,7 @@ export default function ProfilePage() {
           <Section title="Default Financial Rates" icon={<DollarSign size={15} />}>
             <div className="form-row-4">
               <RateInput label="Corporate Income Tax (CIT)" hint="Tax on company profits" value={defaults.citRate} onChange={(v) => set("citRate", v)} />
-              <RateInput label="NPV Discount Rate" hint="For NPV and cost-benefit" value={defaults.discountRate} onChange={(v) => set("discountRate", v)} />
+              <RateInput label="NPV Discount Rate" hint="For NPV and cost benefit" value={defaults.discountRate} onChange={(v) => set("discountRate", v)} />
               <RateInput label="Loan Interest Rate (% p.a.)" hint="Commercial loans" value={defaults.loanRate} onChange={(v) => set("loanRate", v)} />
               <Field label="Loan Term (Years)" hint="Repayment period">
                 <Input type="number" value={defaults.loanTermYears} onChange={(v) => set("loanTermYears", parseInt(v) || 5)} placeholder="5" />

@@ -9,7 +9,7 @@ import { LogoMark } from "@/components/plan/ui";
 // brand the Clerk form; our own sign-in / sign-up switch link replaces Clerk's card footer
 const appearance = {
   layout: { socialButtonsVariant: "blockButton" as const, socialButtonsPlacement: "top" as const },
-  variables: { colorPrimary: "#2E7D32", borderRadius: "10px", fontFamily: "var(--font-cm), Inter, system-ui, sans-serif" },
+  variables: { colorPrimary: "#1B5E20", borderRadius: "12px", fontFamily: "Calibri, Carlito, Segoe UI, Arial, sans-serif" },
   elements: {
     footerAction: { display: "none" },
     socialButtonsBlockButton: { minHeight: "46px", fontWeight: 600 },
@@ -18,8 +18,8 @@ const appearance = {
 };
 
 const POINTS = [
-  "Investor-ready business plan (.docx)",
-  "19-sheet financial model (.xlsx)",
+  "Investor ready business plan (.docx)",
+  "19 sheet financial model (.xlsx)",
   "AI narrative + embedded charts",
 ];
 
@@ -30,11 +30,11 @@ export default function AuthScreen({ mode = "sign-in" }: { mode?: "sign-in" | "s
       <div className="auth-split">
         <div className="auth-split-brand">
           <div className="auth-split-brand-icon">
-            <LogoMark size={56} />
+            <LogoMark size={104} />
           </div>
           <h1>Agriplan</h1>
           <p>
-            Turn your business data into professional business plans and financial models — generated
+            Turn your business data into professional business plans and financial models, generated
             automatically, ready for investors and lenders.
           </p>
           <ul className="auth-split-points">
@@ -55,7 +55,7 @@ export default function AuthScreen({ mode = "sign-in" }: { mode?: "sign-in" | "s
             </Link>
             <div className="auth-split-mobile-brand" aria-hidden="true">
               <span className="auth-split-mobile-logo">
-                <LogoMark size={22} />
+                <LogoMark size={42} />
               </span>
               Agriplan
             </div>

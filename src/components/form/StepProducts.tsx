@@ -89,7 +89,7 @@ export default function StepProducts({ formData, update }: Props) {
     <div className="space-y-5">
       <p className="text-sm text-gray-500">
         Add the physical <strong>products</strong> your business manufactures and/or the <strong>services</strong> you deliver.
-        You can add any combination — both, either, or leave both empty for a pure trading/retail model.
+        You can add any combination: both, either, or leave both empty for a pure trading or retail model.
       </p>
 
       {/* Tab bar */}
@@ -110,7 +110,7 @@ export default function StepProducts({ formData, update }: Props) {
       {tab === "products" && (
         <div className="space-y-5">
           <div className="callout callout-success px-4 py-3 text-sm text-green-800 dark:text-green-300">
-            <strong>Manufactured Products</strong> — Physical goods your business produces. Each product has a bill of materials and a batch size used to calculate the unit manufacturing cost.
+            <strong>Manufactured Products</strong>: Physical goods your business produces. Each product has a bill of materials and a batch size used to calculate the unit manufacturing cost.
             Leave empty if you only deliver services.
           </div>
 
@@ -224,8 +224,8 @@ export default function StepProducts({ formData, update }: Props) {
                       <p className="font-bold text-green-800 dark:text-green-300">{fmt(totalCost)} {cur}</p>
                     </div>
                     <div className="callout callout-info px-4 py-3 text-sm">
-                      <p className="text-xs text-blue-600 dark:text-blue-400 font-medium">Unit Cost (avg)</p>
-                      <p className="font-bold text-blue-800 dark:text-blue-300">{fmt(Math.round(unitCost))} {cur}</p>
+                      <p className="text-xs text-[#0A108A] dark:text-[#BFC2E6] font-medium">Unit Cost (avg)</p>
+                      <p className="font-bold text-[#0A108A] dark:text-[#BFC2E6]">{fmt(Math.round(unitCost))} {cur}</p>
                     </div>
                   </div>
 
@@ -253,9 +253,9 @@ export default function StepProducts({ formData, update }: Props) {
       {/* ── SERVICES TAB ──────────────────────────────────────────────────────── */}
       {tab === "services" && (
         <div className="space-y-4">
-          <div className="callout callout-info px-4 py-3 text-sm text-blue-800 dark:text-blue-300">
-            <strong>Service Offerings</strong> — Intangible services your business delivers (consulting, SaaS, training, support, etc.).
-            Services have no manufacturing cost — their pricing and revenue is configured in the Revenue step.
+          <div className="callout callout-info px-4 py-3 text-sm text-[#0A108A] dark:text-[#BFC2E6]">
+            <strong>Service Offerings</strong>: Intangible services your business delivers (consulting, SaaS, training, support, etc.).
+            Services have no manufacturing cost, so their pricing and revenue is configured in the Revenue step.
           </div>
 
           {services.length === 0 && (
@@ -311,7 +311,7 @@ export default function StepProducts({ formData, update }: Props) {
                     onChange={(v) => updateService(i, "pricingModel", v)}
                     options={pricingModelOptions}
                   />
-                  <div className="callout callout-info px-3 py-2.5 text-xs text-blue-700 dark:text-blue-300 flex items-start gap-2">
+                  <div className="callout callout-info px-3 py-2.5 text-xs text-[#0A108A] dark:text-[#BFC2E6] flex items-start gap-2">
                     <Briefcase size={13} className="mt-0.5 flex-shrink-0" />
                     <span>Service pricing and customer volumes are configured in the <strong>Revenue Streams</strong> step.</span>
                   </div>

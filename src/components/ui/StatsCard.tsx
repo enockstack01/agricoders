@@ -13,7 +13,7 @@ interface Props {
 const TONE = { green: "green", blue: "blue", purple: "purple", amber: "orange", rose: "red" } as const;
 
 export default function StatsCard({ label, value, sub, trend, icon, accent = "green" }: Props) {
-  const text = value === null || value === undefined || value === "" ? "—" : String(value);
+  const text = value === null || value === undefined || value === "" ? "N/A" : String(value);
   return (
     <div className="kpi-card">
       <div className={`kpi-icon ${TONE[accent]}`}>{icon}</div>

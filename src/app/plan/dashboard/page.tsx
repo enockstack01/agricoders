@@ -93,7 +93,7 @@ function GeneratingOverlay({ docType, companyName }: { docType: string; companyN
             {GEN_MESSAGES[msgIdx]}
           </p>
           <p className="form-hint" style={{ marginTop: 10 }}>
-            This usually takes 30–90 seconds. Please do not close this page.
+            This usually takes 30 to 90 seconds. Please do not close this page.
           </p>
         </div>
       </div>
@@ -189,7 +189,7 @@ function CreditsModal({ required, balance, onClose }: { required: number; balanc
       <div className="option-row">
         <div>
           <div className="title">Financial Model (.xlsx)</div>
-          <div className="sub">19-sheet spreadsheet</div>
+          <div className="sub">19 sheet spreadsheet</div>
         </div>
         <Stepper value={fmCount} onChange={setFmCount} />
       </div>
@@ -424,7 +424,7 @@ export default function Dashboard() {
         />
         <StatsCard
           label="Latest Plan"
-          value={latestPlan?.companyInfo?.companyName ?? "—"}
+          value={latestPlan?.companyInfo?.companyName ?? "N/A"}
           sub={latestPlan ? new Date(latestPlan.createdAt).toLocaleDateString() : "No plans yet"}
           icon={<TrendingUp size={18} />}
           accent="purple"
@@ -534,8 +534,8 @@ export default function Dashboard() {
                             <div className="cell-sub truncate 2xl:hidden" style={{ maxWidth: 180 }}>{s.companyInfo.location}</div>
                           )}
                         </td>
-                        <td className="cell-muted">{s.companyInfo?.companyFocus || "—"}</td>
-                        <td className="cell-muted hidden 2xl:table-cell">{s.companyInfo?.location || "—"}</td>
+                        <td className="cell-muted">{s.companyInfo?.companyFocus || "N/A"}</td>
+                        <td className="cell-muted hidden 2xl:table-cell">{s.companyInfo?.location || "N/A"}</td>
                         <td className="cell-muted" style={{ whiteSpace: "nowrap" }}>
                           {new Date(s.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                         </td>
@@ -632,7 +632,7 @@ export default function Dashboard() {
             <div className="quick-actions-grid">
               <Link href="/plan/form" className="quick-action-btn">
                 <span className="icon-tile"><PlusCircle size={15} /></span>
-                <span><span className="title" style={{ display: "block" }}>New Business Plan</span><span className="sub">Start the 10-step wizard</span></span>
+                <span><span className="title" style={{ display: "block" }}>New Business Plan</span><span className="sub">Start the 10 step wizard</span></span>
               </Link>
               <button type="button" onClick={() => setCreditModal({ required: 0, balance: credits ?? 0 })} className="quick-action-btn" style={{ textAlign: "left" }}>
                 <span className="icon-tile"><Coins size={15} /></span>
@@ -653,9 +653,9 @@ export default function Dashboard() {
           <div className="card-header"><h3><span className="icon-tile"><Layers size={15} /></span>What&apos;s Included</h3></div>
           <div className="card-body">
             {[
-              { icon: <Layers size={15} />, tone: "green", title: "AI-Enhanced Documents", desc: "Our intelligent system creates the entire business plan proposal." },
+              { icon: <Layers size={15} />, tone: "green", title: "AI Enhanced Documents", desc: "Our intelligent system creates the entire business plan proposal." },
               { icon: <BarChart2 size={15} />, tone: "blue", title: "Python Chart Engine", desc: "6 matplotlib charts embedded in your Word document automatically." },
-              { icon: <Download size={15} />, tone: "purple", title: "Multi-Format Export", desc: "Business Plan (.docx) + 19-sheet Financial Model (.xlsx)." },
+              { icon: <Download size={15} />, tone: "purple", title: "Multi Format Export", desc: "Business Plan (.docx) + 19 sheet Financial Model (.xlsx)." },
             ].map((f) => (
               <div key={f.title} className="summary-row" style={{ justifyContent: "flex-start", flexWrap: "nowrap", alignItems: "flex-start" }}>
                 <span className={`icon-tile ${f.tone}`}>{f.icon}</span>
@@ -769,7 +769,7 @@ function DocDropdown({
             </button>
           ) : (
             <div className="dropdown-empty" style={{ padding: "10px 16px", textAlign: "left", fontSize: 12 }}>
-              No stored version yet — generate one first.
+              No stored version yet. Generate one first.
             </div>
           )}
         </div>

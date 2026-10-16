@@ -30,16 +30,16 @@ const FEATURES = [
   {
     Icon: ChartBar,
     title: "Six professional charts",
-    desc: "Revenue forecasts, cash flow, income summaries and break-even charts, generated and embedded into your Word document.",
+    desc: "Revenue forecasts, cash flow, income summaries and break even charts, generated and embedded into your Word document.",
   },
   {
     Icon: TrendUp,
     title: "Complete financial model",
-    desc: "A 19-sheet Excel workbook covering CAPEX, OPEX, revenue, cash flow, NPV, IRR, payback period, balance sheet and loan amortisation.",
+    desc: "A 19 sheet Excel workbook covering CAPEX, OPEX, revenue, cash flow, NPV, IRR, payback period, balance sheet and loan amortisation.",
   },
   {
     Icon: FileText,
-    title: "Investor-ready business plan",
+    title: "Investor ready business plan",
     desc: "A structured Word document covering every section investors and lenders expect, formatted for immediate submission.",
   },
   {
@@ -62,19 +62,19 @@ const STATS = [
 ];
 
 const BUSINESS_PLAN_ITEMS = [
-  "AI-written Executive Summary",
+  "AI written Executive Summary",
   "Company introduction and vision",
   "Industry and market analysis",
   "Competitor review",
   "Financial highlights and projections",
   "Six embedded professional charts",
-  "APA-cited reference list",
+  "APA cited reference list",
 ];
 
 const FINANCIAL_MODEL_ITEMS = [
   "CAPEX and product bill of materials",
   "Staff, payroll and deduction schedules",
-  "Operating expenses (multi-year)",
+  "Operating expenses (multi year)",
   "Revenue forecast and sales volume",
   "Cash flow statement",
   "Income statement and P&L",
@@ -85,7 +85,7 @@ const STEPS = [
   {
     num: "1",
     title: "Complete the guided form",
-    desc: "A structured 10-step form walks you through company details, team, products, market analysis and financial projections. No finance expertise required.",
+    desc: "A structured 10 step form walks you through company details, team, products, market analysis and financial projections. No finance expertise required.",
     time: "About 10 minutes",
   },
   {
@@ -105,12 +105,12 @@ const STEPS = [
 const QUALITY_ITEMS = [
   {
     Icon: Medal,
-    title: "Consultant-standard output",
+    title: "Consultant standard output",
     desc: "Documents follow professional business document structures, so investors and lenders take them seriously.",
   },
   {
     Icon: Users,
-    title: "Extra-mile client support",
+    title: "Extra mile client support",
     desc: "Our team helps you get the inputs right, from financial figures to market data, through every part of the process.",
   },
   {
@@ -120,24 +120,24 @@ const QUALITY_ITEMS = [
   },
   {
     Icon: Brain,
-    title: "Market-specific intelligence",
+    title: "Market specific intelligence",
     desc: "Content is generated for your industry, country and business context, not a generic template with your name inserted.",
   },
 ];
 
 const STANDARD_PRICE_ITEMS = [
   "Full business plan (.docx) and financial model (.xlsx)",
-  "19-sheet Excel spreadsheet",
+  "19 sheet Excel spreadsheet",
   "Six embedded professional charts",
   "NPV, IRR and payback analysis",
-  "Investor-ready in minutes",
+  "Investor ready in minutes",
 ];
 
 const CUSTOM_PRICE_ITEMS = [
   "All standard documents included (USD 20 value)",
   "Custom sections for your specific needs",
   "Expert review and refinement",
-  "Market-specific personalisation",
+  "Market specific personalisation",
   "Direct consultation with a specialist",
   "Tailored strategic recommendations",
 ];
@@ -194,14 +194,13 @@ export default function Home() {
               </Reveal>
               <Reveal delay={60}>
                 <h1 className="mb-5 text-balance text-[clamp(2.4rem,5.6vw,4.2rem)] font-bold leading-[1.05] tracking-tight">
-                  Investor-ready business plans in under 15 minutes
+                  Investor ready business plans in under 15 minutes
                 </h1>
               </Reveal>
               <Reveal delay={120}>
-                <p className="mb-3 max-w-xl text-xl leading-relaxed text-green-50/90">
+                <p className="mb-8 max-w-xl text-xl leading-relaxed text-green-50/90">
                   Agriplan produces a complete Business Plan and a full Financial Model, so you can focus on building your business, not writing documents.
                 </p>
-                <p className="mb-8 max-w-xl text-lg font-bold text-[#F9A825]">Agriplan, by Logistack Ltd</p>
               </Reveal>
               <Reveal delay={180}>
                 <div className="mb-8 flex flex-col gap-3 sm:flex-row">
@@ -290,7 +289,7 @@ export default function Home() {
       {/* How it works */}
       <section id="how-it-works" className="scroll-mt-24 bg-[#1B5E20] py-24 text-white">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionTitle light title="Three steps, one session" sub="From your first input to investor-ready documents, guided and complete." />
+          <SectionTitle light title="Three steps, one session" sub="From your first input to investor ready documents, guided and complete." />
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             {STEPS.map((step, i) => (
               <Reveal key={step.num} delay={i * 90}>
@@ -363,7 +362,7 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <SectionTitle
             title="Clear, straightforward pricing"
-            sub="Every package includes the complete standard documents. Choose system-generated, or add expert customisation for extra sections."
+            sub="Every package includes the complete standard documents. Choose system generated, or add expert customisation for extra sections."
           />
           <div className="mx-auto grid max-w-4xl grid-cols-1 gap-5 md:grid-cols-2">
             <Reveal>

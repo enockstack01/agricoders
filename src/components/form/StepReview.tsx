@@ -54,11 +54,11 @@ export default function StepReview({ formData, onSubmit, submitting }: Props) {
   ];
 
   const summaryItems = [
-    { label: "Company", value: ci.companyName || "—" },
-    { label: "Product / Project", value: ci.productName || "—" },
-    { label: "Author", value: ci.authorName || "—" },
-    { label: "Location", value: ci.location || "—" },
-    { label: "Industry", value: ci.companyFocus || "—" },
+    { label: "Company", value: ci.companyName || "N/A" },
+    { label: "Product / Project", value: ci.productName || "N/A" },
+    { label: "Author", value: ci.authorName || "N/A" },
+    { label: "Location", value: ci.location || "N/A" },
+    { label: "Industry", value: ci.companyFocus || "N/A" },
     { label: "Currency", value: cur },
     { label: "Staff Members", value: `${staff.reduce((s, m) => s + m.count, 0)} people` },
     { label: "Total Monthly Payroll", value: `${fmt(staff.reduce((s, m) => s + m.salaryPerEmployee * m.count, 0))} ${cur}` },
@@ -76,7 +76,7 @@ export default function StepReview({ formData, onSubmit, submitting }: Props) {
     { label: "NPV Total", value: `${fmt(results.npv.npvTotal)} ${cur}` },
     { label: `B/C Ratio (Y${n})`, value: (results.cba.bcRatio[lastIdx] ?? 0).toFixed(2) },
     ...(hasProducts
-      ? [{ label: "Break-Even (Units)", value: `${results.breakEven.bepUnits.toFixed(0)} units` }]
+      ? [{ label: "Break Even (Units)", value: `${results.breakEven.bepUnits.toFixed(0)} units` }]
       : []),
   ];
 
@@ -110,8 +110,8 @@ export default function StepReview({ formData, onSubmit, submitting }: Props) {
       <div className="callout callout-warning p-4">
         <strong>What happens next:</strong> Your data will be saved. On the dashboard you can download:
         <ul className="mt-1 list-disc pl-4 space-y-0.5 text-xs">
-          <li><strong>Business Plan (.docx)</strong> — Complete formatted Word document with all sections and financial tables</li>
-          <li><strong>Financial Model (.xlsx)</strong> — Full Excel workbook with all calculations across 19 sheets</li>
+          <li><strong>Business Plan (.docx)</strong>: Complete formatted Word document with all sections and financial tables</li>
+          <li><strong>Financial Model (.xlsx)</strong>: Full Excel workbook with all calculations across 19 sheets</li>
         </ul>
       </div>
 

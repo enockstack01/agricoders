@@ -92,7 +92,7 @@ export default function StepCapex({ formData, update }: Props) {
 
   return (
     <div className="space-y-4">
-      <p className="text-sm text-gray-500">Capital expenses are one-time investments in equipment and infrastructure. Also used as the initial investment for financial calculations.</p>
+      <p className="text-sm text-gray-500">Capital expenses are one time investments in equipment and infrastructure. Also used as the initial investment for financial calculations.</p>
 
       <div className="callout callout-success px-4 py-3 text-sm dark:text-green-300">
         <strong>Total CAPEX (Initial Investment):</strong> {fmt(total)} RWF

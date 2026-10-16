@@ -15,10 +15,10 @@ function AIButton({ label, loading, onClick }: { label: string; loading: boolean
       type="button"
       onClick={onClick}
       disabled={loading}
-      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-purple-50 dark:bg-purple-900/20 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800 hover:bg-purple-100 dark:hover:bg-purple-900/30 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-[#F3F8F3] dark:bg-white/5 text-[#1B5E20] dark:text-green-300 border border-[#D5E3D6] dark:border-white/15 hover:bg-[#F3F8F3] dark:hover:bg-white/10 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
     >
       {loading ? (
-        <span className="inline-block w-3 h-3 border-2 border-purple-400 border-t-transparent rounded-full animate-spin" />
+        <span className="inline-block w-3 h-3 border-2 border-[#1B5E20] border-t-transparent rounded-full animate-spin" />
       ) : (
         <span>✨</span>
       )}
@@ -82,8 +82,8 @@ export default function StepBusinessDescription({ formData, update }: Props) {
   return (
     <div className="space-y-4">
       {/* AI info banner */}
-      <div className="callout callout-purple px-4 py-3 text-sm text-purple-800 dark:text-purple-300">
-        <strong>✨ AI Assist</strong> — Click any &quot;Generate with AI&quot; button to auto-fill that section based on your company info from Step 1. You can edit any generated content.
+      <div className="callout callout-purple px-4 py-3 text-sm text-[#1B5E20] dark:text-green-300">
+        <strong>AI Assist</strong>: Click any &quot;Generate with AI&quot; button to auto-fill that section based on your company info from Step 1. You can edit any generated content.
       </div>
 
       <SectionTitle>Vision &amp; Mission</SectionTitle>
@@ -121,9 +121,9 @@ export default function StepBusinessDescription({ formData, update }: Props) {
       <SectionTitle>Goals</SectionTitle>
       {(
         [
-          { key: "shortTermGoals", label: "Short-term Goals (0–12 months)", aiSection: "shortTermGoals" },
-          { key: "mediumTermGoals", label: "Medium-term Goals (1–3 years)", aiSection: "mediumTermGoals" },
-          { key: "longTermGoals", label: "Long-term Goals (3–5 years)", aiSection: "longTermGoals" },
+          { key: "shortTermGoals", label: "Short term Goals (0 to 12 months)", aiSection: "shortTermGoals" },
+          { key: "mediumTermGoals", label: "Medium term Goals (1 to 3 years)", aiSection: "mediumTermGoals" },
+          { key: "longTermGoals", label: "Long term Goals (3 to 5 years)", aiSection: "longTermGoals" },
         ] as const
       ).map(({ key, label, aiSection }) => (
         <div key={key}>

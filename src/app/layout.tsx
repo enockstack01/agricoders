@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Agriplan – Business Plan Generator",
+  title: "Agriplan | Business Plan Generator",
   description: "Generate professional business plans and financial models automatically with AI and Python charts.",
 };
 

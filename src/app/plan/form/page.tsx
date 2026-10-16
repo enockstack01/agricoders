@@ -111,7 +111,7 @@ function CreditGate({ credits, required, onBack }: { credits: number; required: 
             <label className="form-label">Request credits from your admin ({CREDITS_PER_DOC} credits each)</label>
             {[
               { label: "Business Plan (.docx)", sub: "Narrative + charts", count: bpCount, setCount: setBpCount },
-              { label: "Financial Model (.xlsx)", sub: "19-sheet spreadsheet", count: fmCount, setCount: setFmCount },
+              { label: "Financial Model (.xlsx)", sub: "19 sheet spreadsheet", count: fmCount, setCount: setFmCount },
             ].map(({ label, sub, count, setCount }) => (
               <div key={label} className="option-row">
                 <div>
@@ -343,7 +343,7 @@ function FormPageContent() {
     <AppShell role={role} title={title} breadcrumb={breadcrumb}>
       <PageHeader
         title={title}
-        subtitle="Work through each section — your answers drive the business plan narrative and the financial model."
+        subtitle="Work through each section. Your answers drive the business plan narrative and the financial model."
         actions={
           <button onClick={() => router.push("/plan/dashboard")} className="btn btn-secondary">
             <ChevronLeft size={15} />

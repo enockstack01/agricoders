@@ -79,7 +79,7 @@ export default function StepTeam({ formData, update }: Props) {
 
       <AddButton onClick={addMember} label="Add staff member" />
 
-      <SectionTitle>Payroll Tax Rates (Pre-configured)</SectionTitle>
+      <SectionTitle>Payroll Tax Rates (Preconfigured)</SectionTitle>
       <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 text-sm space-y-1 text-gray-600 dark:text-gray-300">
         <p>• <strong>RSSB Pension:</strong> {(formData.financial.rssbRate * 100).toFixed(1)}% of gross salary</p>
         <p>• <strong>Employee Health Insurance:</strong> {(formData.financial.healthInsuranceRate * 100).toFixed(1)}% of gross salary</p>

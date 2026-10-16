@@ -23,9 +23,9 @@ import BrandMark from "@/components/marketing/BrandMark";
 import AppIcon from "@/components/marketing/AppIcon";
 
 const SERVICE_LINKS = [
-  { title: "Business Planning", desc: "Investor-ready plans and models", Icon: ChartBar },
-  { title: "Geospatial Intelligence", desc: "Field-level maps and spatial planning", Icon: GlobeHemisphereEast },
-  { title: "Web & Mobile Apps", desc: "Production-grade agri platforms", Icon: DeviceMobile },
+  { title: "Business Planning", desc: "Investor ready plans and models", Icon: ChartBar },
+  { title: "Geospatial Intelligence", desc: "Field level maps and spatial planning", Icon: GlobeHemisphereEast },
+  { title: "Web & Mobile Apps", desc: "Production grade agri platforms", Icon: DeviceMobile },
   { title: "Digital Marketing", desc: "SEO, content and campaigns", Icon: Megaphone },
 ];
 
@@ -138,10 +138,7 @@ export default function AgriNav() {
           {/* Logo lockup: symbol, wordmark, endorsement */}
           <Link href="/" aria-label="Agricoders home" className="flex flex-shrink-0 items-center gap-3 no-underline" onClick={() => setOpen(false)}>
             <BrandMark size={44} />
-            <span className="flex flex-col leading-tight">
-              <span className="text-lg font-bold uppercase tracking-[0.18em] text-[#1B5E20] dark:text-white">Agricoders</span>
-              <span className="hidden text-[10px] uppercase tracking-[0.2em] text-[#555555] dark:text-gray-400 sm:block">by Logistack Ltd</span>
-            </span>
+            <span className="text-lg font-bold uppercase tracking-[0.18em] text-[#1B5E20] dark:text-white">Agricoders</span>
           </Link>
 
           {/* Desktop links */}

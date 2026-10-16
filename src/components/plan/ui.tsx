@@ -2,10 +2,12 @@
 // CropManager-style building blocks for the Agriplan app.
 // Markup mirrors Crop-Manager/client/src/components/ui.jsx; styles live in app/plan/cropmanager.css.
 import { useEffect } from "react";
-import { Layers, X, CheckCircle2, AlertTriangle, Inbox } from "@/components/plan/icons";
+import { X, CheckCircle2, AlertTriangle, Inbox } from "@/components/plan/icons";
+import AppIcon from "@/components/marketing/AppIcon";
 
+/** The Agriplan app icon (layers), the same artwork as the mobile app. */
 export function LogoMark({ size = 20 }: { size?: number }) {
-  return <Layers size={size} strokeWidth={2.2} />;
+  return <AppIcon src="/brand/icons/agriplan.png" size={size} />;
 }
 
 export function PageHeader({

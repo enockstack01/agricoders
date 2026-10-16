@@ -116,7 +116,7 @@ export const defaultFormData: Omit<FormSubmission, "userId"> = {
 
 /**
  * Merges user profile defaults into the base form defaults.
- * Call this when creating a new plan to pre-fill the form with saved preferences.
+ * Call this when creating a new plan to prefill the form with saved preferences.
  */
 export function buildDefaultFormData(
   profile?: UserProfileDefaults | null

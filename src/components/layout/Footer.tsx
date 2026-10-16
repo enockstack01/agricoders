@@ -66,12 +66,12 @@ const SOCIALS = [
 ];
 
 const FEATURES = [
-  "AI-Enhanced Documents",
+  "AI Enhanced Documents",
   "Python Chart Engine",
-  "19-Sheet Financial Model",
+  "19 Sheet Financial Model",
   "Any Business Type",
   "Any Currency",
-  "Role-Based Dashboards",
+  "Role Based Dashboards",
 ];
 
 export default function Footer() {

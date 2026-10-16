@@ -32,7 +32,7 @@ export default function StepRevenue({ formData, update }: Props) {
   const allOfferings = [...productNames, ...serviceNames];
 
   const offeringOptions = [
-    { value: "", label: "— select offering —" },
+    { value: "", label: "Select offering" },
     ...productNames.map((p) => ({ value: p.name, label: `${p.name} (Product)` })),
     ...serviceNames.map((s) => ({ value: s.name, label: `${s.name} (Service)` })),
     { value: "__other__", label: "Other (type below)" },
@@ -83,7 +83,7 @@ export default function StepRevenue({ formData, update }: Props) {
       <p className="text-sm text-gray-500">
         Define revenue streams for your products and services.
         For <strong>recurring revenue</strong> (subscriptions, retainers, SaaS), set the monthly price per customer.
-        For <strong>one-time product sales</strong>, enable &quot;Product Sale&quot; and set the selling price per unit.
+        For <strong>one time product sales</strong>, enable &quot;Product Sale&quot; and set the selling price per unit.
       </p>
 
       {allOfferings.length > 0 && (
@@ -95,7 +95,7 @@ export default function StepRevenue({ formData, update }: Props) {
             </span>
           ))}
           {serviceNames.map((s) => (
-            <span key={s.name} className="inline-flex items-center gap-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full px-2.5 py-0.5 border border-blue-200 dark:border-blue-800">
+            <span key={s.name} className="inline-flex items-center gap-1 text-xs bg-[#EAEBF8] dark:bg-white/10 text-[#0A108A] dark:text-[#BFC2E6] rounded-full px-2.5 py-0.5 border border-[#BFC2E6] dark:border-white/15">
               <Briefcase size={10} />{s.name}
             </span>
           ))}
@@ -114,7 +114,7 @@ export default function StepRevenue({ formData, update }: Props) {
               <div>
                 <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">Revenue Stream #{i + 1}</span>
                 {linkedIsService && (
-                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full px-2 py-0.5">
+                  <span className="ml-2 inline-flex items-center gap-1 text-xs bg-[#EAEBF8] dark:bg-white/10 text-[#0A108A] dark:text-[#BFC2E6] rounded-full px-2 py-0.5">
                     <Briefcase size={10} />Service
                   </span>
                 )}
@@ -123,7 +123,7 @@ export default function StepRevenue({ formData, update }: Props) {
                 {/* Only show "Product Sale" toggle for manufactured products (not services) */}
                 {!linkedIsService && (
                   <FormCheckbox
-                    label="Product Sale (one-time)"
+                    label="Product Sale (one time)"
                     checked={isProductSale(p)}
                     onChange={(v) => updatePkg(i, "isProductSale", v)}
                   />

@@ -28,7 +28,7 @@ export default function MarketingFooter() {
         <div className="mb-14 flex flex-col items-start justify-between gap-5 rounded-2xl bg-[#1B5E20] p-7 sm:flex-row sm:items-center sm:p-9">
           <div>
             <p className="m-0 mb-1 text-2xl font-bold">Start your business plan today</p>
-            <p className="m-0 text-base text-green-50/90">Investor-ready documents in under 15 minutes with Agriplan.</p>
+            <p className="m-0 text-base text-green-50/90">Investor ready documents in under 15 minutes with Agriplan.</p>
           </div>
           <Link
             href="/plan"
@@ -44,13 +44,10 @@ export default function MarketingFooter() {
           <div className="lg:col-span-4">
             <Link href="/" aria-label="Agricoders home" className="mb-5 inline-flex items-center gap-3 no-underline">
               <BrandMark size={48} />
-              <span className="flex flex-col leading-tight">
-                <span className="text-xl font-bold uppercase tracking-[0.18em] text-white">Agricoders</span>
-                <span className="text-[11px] uppercase tracking-[0.2em] text-white/60">by Logistack Ltd</span>
-              </span>
+              <span className="text-xl font-bold uppercase tracking-[0.18em] text-white">Agricoders</span>
             </Link>
             <p className="mb-6 max-w-sm text-[15px] leading-relaxed text-white/75">
-              The operating system for African agriculture. Built by Logistack Ltd for African farmers.
+              The operating system for African agriculture, built for African farmers.
             </p>
             <ul className="m-0 flex list-none flex-col gap-3 p-0 text-[15px] text-white/75">
               <li className="flex items-start gap-3">

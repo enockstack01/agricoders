@@ -21,7 +21,7 @@ export default function SystemsPage() {
       <AgriNav />
 
       <PageHero eyebrow="Agricoders" title="Our systems">
-        <p>Three live products on web, iOS and Android, built by Logistack Ltd for African farmers.</p>
+        <p>Three live products on web, iOS and Android, built for African farmers.</p>
       </PageHero>
 
       {AGRICODERS_APPS.map((app, i) => {
@@ -85,7 +85,7 @@ export default function SystemsPage() {
                   <div className="rounded-2xl border border-[#D5E3D6] bg-[#F3F8F3] p-8 dark:border-white/10 dark:bg-white/[0.04]">
                     <p className="m-0 text-lg font-bold text-[#1B5E20] dark:text-green-300">Planning documents in minutes</p>
                     <p className="m-0 mt-2 text-gray-600 dark:text-gray-300">
-                      Answer ten guided steps and receive a Business Plan (.docx) and a 19-sheet Financial Model (.xlsx).
+                      Answer ten guided steps and receive a Business Plan (.docx) and a 19 sheet Financial Model (.xlsx).
                     </p>
                   </div>
                 </Reveal>

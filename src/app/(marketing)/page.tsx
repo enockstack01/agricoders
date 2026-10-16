@@ -35,7 +35,7 @@ import { AGRICODERS_APPS } from "@/lib/apps";
 export const metadata: Metadata = {
   title: "Agricoders | Building the Future of Digital Agriculture",
   description:
-    "Agricoders is building the operating system for African agriculture: CropManager, LivestockPro and Agriplan, made in Kigali by Logistack Ltd for African farmers.",
+    "Agricoders is building the operating system for African agriculture: CropManager, LivestockPro and Agriplan, made in Kigali for African farmers.",
 };
 
 /* Brand tokens, taken from the Agricoders pitch decks */
@@ -43,7 +43,7 @@ const FOREST = "#1B5E20";
 const AMBER = "#F9A825";
 
 const PROBLEM_STATS = [
-  { big: "~½", desc: "of sub-Saharan Africa's workforce farms" },
+  { big: "~½", desc: "of sub Saharan Africa's workforce farms" },
   { big: "~80%", desc: "of the region's food comes from small farms" },
   { big: "< ½", desc: "of the global average cereal yield" },
 ];
@@ -79,9 +79,9 @@ const LOOP = [
 ];
 
 const SERVICES = [
-  { Icon: ChartBar, title: "Business Planning", desc: "Investor-ready plans and financial models, with expert-customised packages." },
-  { Icon: GlobeHemisphereEast, title: "Geospatial Intelligence", desc: "Location advisory, open-source spatial tools and Agtech consultancy." },
-  { Icon: DeviceMobile, title: "Web & Mobile Apps", desc: "Production-grade, offline-first apps for cooperatives, processors and NGOs." },
+  { Icon: ChartBar, title: "Business Planning", desc: "Investor ready plans and financial models, with expert customised packages." },
+  { Icon: GlobeHemisphereEast, title: "Geospatial Intelligence", desc: "Location advisory, open source spatial tools and Agtech consultancy." },
+  { Icon: DeviceMobile, title: "Web & Mobile Apps", desc: "Production grade, offline first apps for cooperatives, processors and NGOs." },
   { Icon: Megaphone, title: "Digital Marketing", desc: "SEO, content and campaigns that connect agribusinesses with buyers." },
 ];
 
@@ -105,7 +105,7 @@ const SPOTLIGHTS = [
       { n: "8", l: "management areas" },
       { n: "10", l: "languages, works offline" },
     ],
-    bullets: ["Health and vaccination tracking", "Offline-first mobile app", "Breeding and birth planning", "Records lenders trust"],
+    bullets: ["Health and vaccination tracking", "Offline first mobile app", "Breeding and birth planning", "Records lenders trust"],
     img: "/brand/livestockpro/dashboard-overview.webp",
     h: 725,
     flip: true,
@@ -118,7 +118,7 @@ const AUDIENCES = [
   "Cooperatives & producer groups",
   "Veterinary & extension officers",
   "Lenders, insurers & buyers",
-  "Government & public-health bodies",
+  "Government & public health bodies",
 ];
 
 /** Section title block in the deck style: bold forest-green title with a muted subtitle underneath. */
@@ -173,7 +173,7 @@ export default function AgricodersPage() {
                 <p className="mb-6 max-w-xl text-xl leading-relaxed text-green-50/90 sm:text-2xl">
                   The operating system for African agriculture.
                 </p>
-                <p className="mb-8 max-w-xl text-lg font-bold text-[#F9A825]">Built by Logistack Ltd for African farmers</p>
+                <p className="mb-8 max-w-xl text-lg font-bold text-[#F9A825]">Built for African farmers</p>
               </Reveal>
               <Reveal delay={180}>
                 <div className="mb-10 flex flex-col gap-3 sm:flex-row">

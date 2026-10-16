@@ -85,7 +85,7 @@ export default function AppShell({ role, children, title, breadcrumb }: Props) {
         <aside className={`sidebar ${collapsed ? "sidebar-collapsed" : ""} ${mobileOpen ? "sidebar-mobile-open" : ""}`}>
           <div className="sidebar-header">
             <div className="sidebar-logo-icon">
-              <LogoMark size={20} />
+              <LogoMark size={36} />
             </div>
             <div className="sidebar-logo-text">
               Agri<span>plan</span>

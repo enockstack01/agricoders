@@ -201,7 +201,7 @@ export default function AdminPage() {
 
   return (
     <AppShell role={role} title="Admin Panel" breadcrumb={crumbs}>
-      <PageHeader title="Admin Panel" subtitle="Platform-wide KPIs, users, business plans, credits and disease-risk signals" />
+      <PageHeader title="Admin Panel" subtitle="Platform wide KPIs, users, business plans, credits and disease risk signals" />
 
       <div className="cm-tabs">
         {TABS.map((t) => (
@@ -229,7 +229,7 @@ export default function AdminPage() {
             <div className="chart-grid">
               <div className="chart-card">
                 <div className="chart-card-header">
-                  <h3>Plans Created — Last 7 Days</h3>
+                  <h3>Plans Created, Last 7 Days</h3>
                   <button onClick={loadStats} className="btn-icon" title="Refresh"><RefreshCw size={14} /></button>
                 </div>
                 <div className="chart-card-body">
@@ -246,7 +246,7 @@ export default function AdminPage() {
                     { label: "Inactive users (no plans)", val: stats.totalUsers - stats.activeUsers },
                     { label: "Admin/Super Admin accounts", val: stats.admins },
                     { label: "Plans created this week", val: stats.plansThisWeek },
-                    { label: "Avg plans per active user", val: stats.activeUsers > 0 ? (stats.totalSubmissions / stats.activeUsers).toFixed(1) : "—" },
+                    { label: "Avg plans per active user", val: stats.activeUsers > 0 ? (stats.totalSubmissions / stats.activeUsers).toFixed(1) : "N/A" },
                   ].map((r) => (
                     <div key={r.label} className="summary-row">
                       <span className="label">{r.label}</span>
@@ -297,7 +297,7 @@ export default function AdminPage() {
                           <div className="user-cell">
                             <Avatar src={u.imageUrl} name={u.name || u.email} />
                             <div>
-                              <div className="cell-primary truncate">{u.name || "—"}</div>
+                              <div className="cell-primary truncate">{u.name || "N/A"}</div>
                               <div className="cell-sub truncate">{u.email}</div>
                             </div>
                           </div>
@@ -310,7 +310,7 @@ export default function AdminPage() {
                           </span>
                         </td>
                         <td><span className={`badge ${creditBadge(u.credits)}`}><Coins size={10} />{u.credits}</span></td>
-                        <td className="cell-muted">{u.lastActive ? new Date(u.lastActive).toLocaleDateString() : "—"}</td>
+                        <td className="cell-muted">{u.lastActive ? new Date(u.lastActive).toLocaleDateString() : "N/A"}</td>
                         <td className="cell-muted">{new Date(u.createdAt).toLocaleDateString()}</td>
                       </tr>
                     ))}
@@ -324,7 +324,7 @@ export default function AdminPage() {
                     <div className="user-cell">
                       <Avatar src={u.imageUrl} name={u.name || u.email} />
                       <div>
-                        <div className="cell-primary truncate">{u.name || "—"}</div>
+                        <div className="cell-primary truncate">{u.name || "N/A"}</div>
                         <div className="cell-sub truncate">{u.email}</div>
                         <div className="mono cell-sub truncate" style={{ userSelect: "all" }}>{u.id}</div>
                         <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6, flexWrap: "wrap" }}>
@@ -382,9 +382,9 @@ export default function AdminPage() {
                   <tbody>
                     {submissions.map((s) => (
                       <tr key={s._id}>
-                        <td><div className="cell-primary truncate" style={{ maxWidth: 200 }}>{s.companyInfo?.companyName || "—"}</div></td>
+                        <td><div className="cell-primary truncate" style={{ maxWidth: 200 }}>{s.companyInfo?.companyName || "N/A"}</div></td>
                         <td className="cell-muted"><div className="truncate" style={{ maxWidth: 160 }}>{s.userName}</div></td>
-                        <td className="cell-muted">{s.companyInfo?.companyFocus || "—"}</td>
+                        <td className="cell-muted">{s.companyInfo?.companyFocus || "N/A"}</td>
                         <td>{s.companyInfo?.currency && <Badge variant="gray">{s.companyInfo.currency}</Badge>}</td>
                         <td className="cell-muted" style={{ whiteSpace: "nowrap" }}>
                           {new Date(s.createdAt).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
@@ -398,7 +398,7 @@ export default function AdminPage() {
               <div className="lg:hidden">
                 {submissions.map((s) => (
                   <div key={s._id} className="list-row">
-                    <div className="cell-primary">{s.companyInfo?.companyName || "—"}</div>
+                    <div className="cell-primary">{s.companyInfo?.companyName || "N/A"}</div>
                     <div className="cell-sub">{s.userName} · {s.companyInfo?.companyFocus || "No industry"}</div>
                     <div className="cell-sub">{new Date(s.createdAt).toLocaleDateString()}</div>
                   </div>
@@ -541,7 +541,7 @@ function AdminRequestsPanel({
                   <div className="user-cell" style={{ flex: 1 }}>
                     <Avatar src={req.user.imageUrl} name={req.user.name || req.user.email} />
                     <div>
-                      <div className="cell-primary truncate">{req.user.name || "—"}</div>
+                      <div className="cell-primary truncate">{req.user.name || "N/A"}</div>
                       <div className="cell-sub truncate">{req.user.email}</div>
                     </div>
                   </div>
@@ -915,7 +915,7 @@ function AdminCreditsPanel() {
                 <div className="form-row form-group">
                   <div>
                     <label className="form-label">Credits to Dismiss<span className="required">*</span></label>
-                    <input type="number" min={1} max={maxDeduct} value={deductAmt} onChange={(e) => setDeductAmt(e.target.value)} placeholder={`1 – ${maxDeduct}`} required className="form-control" />
+                    <input type="number" min={1} max={maxDeduct} value={deductAmt} onChange={(e) => setDeductAmt(e.target.value)} placeholder={`1 to ${maxDeduct}`} required className="form-control" />
                     <p className="form-hint">Max {maxDeduct}</p>
                   </div>
                   <div>
@@ -1104,7 +1104,7 @@ function OneHealthPanel() {
           <div className="alert-content">
             <strong className="alert-kicker">LivestockPro connection not configured yet</strong>
             Set <code className="cm-code">LIVESTOCK_API_URL</code> and <code className="cm-code">LIVESTOCK_API_KEY</code> once
-            LivestockPro exposes the records feed — this dashboard will start syncing automatically.
+            LivestockPro exposes the records feed, so this dashboard will start syncing automatically.
           </div>
         </div>
       )}
@@ -1120,12 +1120,12 @@ function OneHealthPanel() {
       )}
 
       <div className="kpi-grid">
-        <StatsCard label="Open alerts" value={summary?.openAlerts ?? "—"} icon={<ShieldAlert size={18} />} accent="rose" />
-        <StatsCard label="Zoonotic risk (open)" value={summary?.zoonoticOpenAlerts ?? "—"} icon={<Skull size={18} />} accent="amber" />
-        <StatsCard label="Records synced" value={summary?.totalRecordsSynced ?? "—"} icon={<Database size={18} />} accent="blue" />
+        <StatsCard label="Open alerts" value={summary?.openAlerts ?? "N/A"} icon={<ShieldAlert size={18} />} accent="rose" />
+        <StatsCard label="Zoonotic risk (open)" value={summary?.zoonoticOpenAlerts ?? "N/A"} icon={<Skull size={18} />} accent="amber" />
+        <StatsCard label="Records synced" value={summary?.totalRecordsSynced ?? "N/A"} icon={<Database size={18} />} accent="blue" />
         <StatsCard
           label="Last sync"
-          value={summary ? ohFmtDate(summary.sync.lastSyncedAt) : "—"}
+          value={summary ? ohFmtDate(summary.sync.lastSyncedAt) : "N/A"}
           sub={summary?.sync.status === "ok" ? "Healthy" : summary?.sync.status}
           icon={<RefreshCw size={18} />}
           accent="green"

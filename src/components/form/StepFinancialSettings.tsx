@@ -76,7 +76,7 @@ export default function StepFinancialSettings({ formData, update }: Props) {
           value={Math.round(fin.discountRate * 100)}
           onChange={(v) => setFin("discountRate", (parseInt(v) || 12) / 100)}
           placeholder="12"
-          hint="Typically 10–15% depending on the country risk and sector benchmark rate."
+          hint="Typically 10 to 15% depending on the country risk and sector benchmark rate."
         />
         <FormInput
           label="Corporate Income Tax (CIT) Rate (%)"
