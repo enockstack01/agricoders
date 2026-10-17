@@ -877,4 +877,61 @@
     .cm-app .main-content { margin-left: 0 !important; }
     .cm-app .main-content-inner { padding: 0 !important; }
   }
+
+  /* ============================================================
+     AGRICODERS DECK STYLE OVERRIDES
+     Forest page banner with amber eyebrow and CTA, tinted stat cards,
+     forest table headers, circular icon badges, pill buttons.
+     ============================================================ */
+  .cm-app .page-header {
+    position: relative; overflow: hidden; background: #1B5E20; color: #fff;
+    border-radius: 16px; padding: 28px 32px; margin-bottom: 24px;
+  }
+  .cm-app .page-header::before {
+    content: ''; position: absolute; width: 380px; height: 380px; border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05); top: -170px; right: -110px; pointer-events: none;
+  }
+  .cm-app .page-header > * { position: relative; }
+  .cm-app .page-header > div:first-child::before {
+    content: 'Agriplan'; display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.28em; text-transform: uppercase; color: #F9A825;
+  }
+  .cm-app .page-header .page-title { color: #fff; font-size: 30px; }
+  .cm-app .page-header .page-subtitle { color: rgba(255, 255, 255, 0.85); font-size: 16px; }
+  .cm-app .page-header .btn-primary,
+  .cm-app .page-header a.btn-primary { background: #F9A825; border-color: #F9A825; color: #111611; }
+  .cm-app .page-header .btn-primary:hover:not(:disabled),
+  .cm-app .page-header a.btn-primary:hover:not(:disabled) { background: #F9A825; border-color: #F9A825; color: #111611; filter: brightness(1.06); }
+  .cm-app .page-header .btn-secondary { background: transparent; border-color: rgba(255, 255, 255, 0.45); color: #fff; }
+  .cm-app .page-header .btn-secondary:hover:not(:disabled) { background: rgba(255, 255, 255, 0.12); color: #fff; }
+  .cm-app .page-header .btn-secondary svg { color: #fff !important; }
+
+  .cm-app .btn { border-radius: 999px; padding: 10px 20px; font-size: 14px; font-weight: 700; }
+  .cm-app .btn-sm { padding: 7px 14px; font-size: 13px; }
+
+  .cm-app .card { border-radius: 16px; box-shadow: none; }
+  .cm-app .card-header h3 { font-size: 17px; font-weight: 700; color: var(--primary); }
+  .dark .cm-app .card-header h3 { color: #A5D6A7; }
+  .cm-app .topbar-breadcrumb .current { color: var(--primary); }
+  .dark .cm-app .topbar-breadcrumb .current { color: #A5D6A7; }
+
+  .cm-app .icon-tile, .cm-app .kpi-icon,
+  .cm-app .icon-tile.green, .cm-app .icon-tile.blue, .cm-app .icon-tile.purple,
+  .cm-app .kpi-icon.green, .cm-app .kpi-icon.blue, .cm-app .kpi-icon.purple,
+  .dark .cm-app .icon-tile.green, .dark .cm-app .icon-tile.blue, .dark .cm-app .icon-tile.purple,
+  .dark .cm-app .kpi-icon.green, .dark .cm-app .kpi-icon.blue, .dark .cm-app .kpi-icon.purple {
+    background: #1B5E20; color: #fff; border-radius: 999px;
+  }
+  .cm-app .icon-tile.orange, .cm-app .kpi-icon.orange,
+  .dark .cm-app .icon-tile.orange, .dark .cm-app .kpi-icon.orange { background: #F9A825; color: #111611; }
+  .cm-app .quick-action-btn:hover .icon-tile { background: #F9A825; color: #111611; }
+
+  .cm-app .kpi-card { background: #F3F8F3; border-radius: 16px; box-shadow: none; }
+  .cm-app .kpi-card:hover { box-shadow: none; border-color: #1B5E20; }
+  .dark .cm-app .kpi-card { background: #111814; }
+  .cm-app .kpi-value { color: var(--primary); }
+  .dark .cm-app .kpi-value { color: #A5D6A7; }
+
+  .cm-app .data-table thead { background: #1B5E20; }
+  .cm-app .data-table th { color: #fff; border-bottom: none; }
 }

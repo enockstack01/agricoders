@@ -23,6 +23,7 @@ import {
   TrendUp,
   CurrencyCircleDollar,
   Target,
+  Eye,
   Handshake,
 } from "@phosphor-icons/react/dist/ssr";
 import AgriNav from "@/components/layout/AgriNav";
@@ -229,6 +230,59 @@ export default function AgricodersPage() {
         </section>
       </div>
 
+      {/* ═════ VISION AND MISSION — first section under the hero ═════ */}
+      <section id="vision" className="scroll-mt-24 py-24 sm:py-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <SectionTitle title="Vision and Mission" sub="Where we are heading, and how we get there." />
+
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+            <Reveal>
+              <div className={`${CARD} h-full p-7 sm:p-9`}>
+                <div className="mb-5 flex items-center gap-3">
+                  <Badge Icon={Eye} size={48} />
+                  <h3 className="m-0 text-2xl font-bold text-[#1B5E20] dark:text-green-300">Vision</h3>
+                </div>
+                <p className="m-0 mb-4 text-balance text-[clamp(1.5rem,2.8vw,2.2rem)] font-bold leading-tight">
+                  Every African farmer running their farm as a business.
+                </p>
+                <p className="m-0 text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+                  Knowing what they produce, what it costs and what it earns, and using that knowledge to grow
+                  more, waste less, access finance and feed the continent.
+                </p>
+              </div>
+            </Reveal>
+
+            <Reveal delay={100}>
+              <div className={`${CARD} h-full p-7 sm:p-9`}>
+                <div className="mb-5 flex items-center gap-3">
+                  <Badge Icon={Target} size={48} />
+                  <h3 className="m-0 text-2xl font-bold text-[#1B5E20] dark:text-green-300">Mission</h3>
+                </div>
+                <p className="m-0 mb-4 text-balance text-[clamp(1.5rem,2.8vw,2.2rem)] font-bold leading-tight">
+                  Empower farmers and agribusinesses with intelligence and technology.
+                </p>
+                <p className="m-0 text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+                  We bring geospatial intelligence, intelligent applications and professional planning together,
+                  so every investment of land, labour, capital and inputs achieves the greatest possible
+                  productivity and profitability.
+                </p>
+              </div>
+            </Reveal>
+          </div>
+
+          <ul className="m-0 mt-10 grid list-none grid-cols-1 gap-x-8 gap-y-4 p-0 sm:grid-cols-2 lg:grid-cols-4">
+            {VALUES.map((v, i) => (
+              <Reveal key={v} delay={i * 70}>
+                <li className="flex items-start gap-3 text-[17px] font-bold">
+                  <CheckCircle size={24} weight="fill" className="mt-0.5 flex-shrink-0 text-[#2E7D32]" />
+                  {v}
+                </li>
+              </Reveal>
+            ))}
+          </ul>
+        </div>
+      </section>
+
       {/* ═════ PROBLEM — "Africa's largest employer runs on guesswork" ═════ */}
       <section id="gap" className="scroll-mt-24 py-24 sm:py-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -262,45 +316,6 @@ export default function AgricodersPage() {
             ))}
           </div>
           <p className="mt-6 text-xs text-gray-500 dark:text-gray-400">Sources: FAO, IFAD, World Bank and African Development Bank, rounded estimates.</p>
-        </div>
-      </section>
-
-      {/* ═════ VISION & AGENDA — forest section ═════ */}
-      <section id="vision" className="scroll-mt-24 bg-[#1B5E20] py-24 text-white sm:py-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-            <div>
-              <SectionTitle
-                light
-                title="Every African farmer running their farm as a business"
-                sub="Knowing what they produce, what it costs and what it earns, and using that knowledge to grow more, waste less, access finance and feed the continent."
-              />
-              <ul className="m-0 flex list-none flex-col gap-4 p-0">
-                {VALUES.map((v, i) => (
-                  <Reveal key={v} delay={i * 70}>
-                    <li className="flex items-center gap-3 text-lg font-bold">
-                      <CheckCircle size={26} weight="fill" className="flex-shrink-0 text-[#F9A825]" />
-                      {v}
-                    </li>
-                  </Reveal>
-                ))}
-              </ul>
-            </div>
-
-            <Reveal delay={100}>
-              <div className="rounded-2xl border border-white/15 bg-[#2E7D32]/40 p-7 sm:p-9">
-                <div className="mb-4 flex items-center gap-3">
-                  <Badge Icon={Target} amber size={48} />
-                  <p className="m-0 text-sm font-bold uppercase tracking-[0.2em] text-[#F9A825]">Our mission</p>
-                </div>
-                <p className="m-0 text-xl leading-relaxed">
-                  Empower farmers and agribusinesses with geospatial intelligence, intelligent applications and
-                  professional planning, so every investment of land, labour, capital and inputs achieves the
-                  greatest possible productivity and profitability.
-                </p>
-              </div>
-            </Reveal>
-          </div>
         </div>
       </section>
 
