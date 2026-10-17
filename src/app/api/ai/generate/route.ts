@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { AI_ASSIST_POLICY, checkRateLimit, rateLimitHeaders, rateLimitResponse, roleFromClaims } from "@/lib/rateLimit";
 
 export const maxDuration = 30;
 
@@ -66,26 +67,29 @@ const SECTION_PROMPTS: Record<string, (ctx: string, extra?: string) => string> =
     `No markdown, no extra text.`,
 };
 
+/** Keeps each user supplied value short so a single request cannot carry an oversized prompt. */
+const clip = (v: unknown, max = 300) => String(v).slice(0, max);
+
 function buildContext(body: Record<string, unknown>): string {
   const lines: string[] = [];
-  if (body.companyName) lines.push(`Company: ${body.companyName}`);
-  if (body.companyFocus) lines.push(`Industry: ${body.companyFocus}`);
-  if (body.location) lines.push(`Location: ${body.location}`);
-  if (body.companyType) lines.push(`Type: ${body.companyType}`);
-  if (body.productName) lines.push(`Product/Project: ${body.productName}`);
+  if (body.companyName) lines.push(`Company: ${clip(body.companyName)}`);
+  if (body.companyFocus) lines.push(`Industry: ${clip(body.companyFocus)}`);
+  if (body.location) lines.push(`Location: ${clip(body.location)}`);
+  if (body.companyType) lines.push(`Type: ${clip(body.companyType)}`);
+  if (body.productName) lines.push(`Product/Project: ${clip(body.productName)}`);
   if (body.products && Array.isArray(body.products)) {
-    const ps = (body.products as { name?: string }[]).filter((p) => p.name).map((p) => p.name).join(", ");
+    const ps = (body.products as { name?: string }[]).filter((p) => p.name).slice(0, 10).map((p) => clip(p.name, 80)).join(", ");
     if (ps) lines.push(`Products/Services: ${ps}`);
   }
-  if (body.currency) lines.push(`Currency: ${body.currency}`);
-  if (body.existingVision) lines.push(`Existing Vision: ${body.existingVision}`);
-  if (body.existingMission) lines.push(`Existing Mission: ${body.existingMission}`);
+  if (body.currency) lines.push(`Currency: ${clip(body.currency)}`);
+  if (body.existingVision) lines.push(`Existing Vision: ${clip(body.existingVision)}`);
+  if (body.existingMission) lines.push(`Existing Mission: ${clip(body.existingMission)}`);
   return lines.join("\n");
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId, sessionClaims } = await auth();
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const body = await req.json();
@@ -94,6 +98,11 @@ export async function POST(req: NextRequest) {
     if (!section || !SECTION_PROMPTS[section]) {
       return NextResponse.json({ error: "Unknown section" }, { status: 400 });
     }
+
+    // Rate limit per user before any AI call is made
+    const limit = await checkRateLimit(userId, AI_ASSIST_POLICY, roleFromClaims(sessionClaims));
+    if (!limit.ok) return rateLimitResponse(limit);
+    const limitHeaders = rateLimitHeaders(limit);
 
     const ctx = buildContext(body);
     const prompt = SECTION_PROMPTS[section](ctx);
@@ -123,13 +132,13 @@ export async function POST(req: NextRequest) {
         // Strip any accidental markdown code fences
         const clean = raw.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
         const parsed = JSON.parse(clean);
-        return NextResponse.json({ content: parsed });
+        return NextResponse.json({ content: parsed }, { headers: limitHeaders });
       } catch {
-        return NextResponse.json({ error: "AI returned invalid JSON", raw }, { status: 422 });
+        return NextResponse.json({ error: "AI returned invalid JSON", raw }, { status: 422, headers: limitHeaders });
       }
     }
 
-    return NextResponse.json({ content: raw });
+    return NextResponse.json({ content: raw }, { headers: limitHeaders });
   } catch (err) {
     console.error("[/api/ai/generate]", err);
     return NextResponse.json({ error: "AI generation failed" }, { status: 500 });

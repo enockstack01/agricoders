@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
+import { rateLimitMessage } from "@/lib/aiClient";
 import { FormSubmission } from "@/types";
 import { SectionTitle, AddButton, RemoveButton } from "./FormField";
 
@@ -72,8 +73,13 @@ export default function StepBusinessDescription({ formData, update }: Props) {
       const { data } = await axios.post("/api/ai/generate", { section, ...aiContext });
       apply(data.content);
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : "AI generation failed";
-      alert(`AI generation failed: ${msg}. Check your ANTHROPIC_API_KEY is set.`);
+      const limited = await rateLimitMessage(err);
+      if (limited) {
+        alert(limited);
+      } else {
+        const msg = err instanceof Error ? err.message : "AI generation failed";
+        alert(`AI generation failed: ${msg}. Check your ANTHROPIC_API_KEY is set.`);
+      }
     } finally {
       setLoading((l) => ({ ...l, [section]: false }));
     }

@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import axios from "axios";
+import { rateLimitMessage } from "@/lib/aiClient";
 import { FormSubmission } from "@/types";
 import { FormInput, SectionTitle, AddButton, RemoveButton, GridRow } from "./FormField";
 
@@ -53,8 +54,8 @@ export default function StepMarketAnalysis({ formData, update }: Props) {
     try {
       const { data } = await axios.post("/api/ai/generate", { section, ...aiContext });
       apply(data.content);
-    } catch {
-      alert("AI generation failed. Ensure your ANTHROPIC_API_KEY is configured.");
+    } catch (err) {
+      alert((await rateLimitMessage(err)) ?? "AI generation failed. Ensure your ANTHROPIC_API_KEY is configured.");
     } finally {
       setLoading((l) => ({ ...l, [section]: false }));
     }

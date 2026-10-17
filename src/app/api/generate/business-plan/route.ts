@@ -9,12 +9,13 @@ import { generateCharts } from "@/lib/chartGenerator";
 import { generateAINarrative } from "@/lib/aiNarrative";
 import { deductCredits, refundCredits, CREDITS_NEW_GENERATION, CREDITS_REGENERATION } from "@/lib/credits";
 import { createNotification } from "@/lib/notifications";
+import { BUSINESS_PLAN_AI_POLICY, checkRateLimit, rateLimitResponse, roleFromClaims } from "@/lib/rateLimit";
 
 export const maxDuration = 120;
 
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId, sessionClaims } = await auth();
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
     const id = req.nextUrl.searchParams.get("id");
@@ -33,6 +34,13 @@ export async function GET(req: NextRequest) {
           "Content-Disposition": `attachment; filename="${name}_Business_Plan.docx"`,
         },
       });
+    }
+
+    // ── Rate limit: AI narrative generation is the most expensive AI call.
+    // Checked before credits are deducted so a refused request never costs credits.
+    if (req.nextUrl.searchParams.get("ai") !== "false") {
+      const limit = await checkRateLimit(userId, BUSINESS_PLAN_AI_POLICY, roleFromClaims(sessionClaims));
+      if (!limit.ok) return rateLimitResponse(limit);
     }
 
     // ── Credit check: determine cost ─────────────────────────────────────────

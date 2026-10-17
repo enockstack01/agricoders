@@ -3,6 +3,7 @@ import { useEffect, useState, useCallback, useRef } from "react";
 import { useUser } from "@clerk/nextjs";
 import Link from "next/link";
 import axios from "axios";
+import { rateLimitMessage } from "@/lib/aiClient";
 import AppShell, { NavRole } from "@/components/layout/AppShell";
 import StatsCard from "@/components/ui/StatsCard";
 import { PageHeader, Loading, EmptyState, Modal, Stepper } from "@/components/plan/ui";
@@ -316,7 +317,7 @@ export default function Dashboard() {
         const data = err.response.data;
         setCreditModal({ required: data.required ?? 10, balance: data.balance ?? 0 });
       } else {
-        alert("Generation failed. Please try again.");
+        alert((await rateLimitMessage(err)) ?? "Generation failed. Please try again.");
       }
     } finally {
       setDownloading(null);
