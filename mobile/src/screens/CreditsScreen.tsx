@@ -36,7 +36,7 @@ export function CreditsScreen() {
     <Screen refreshControl={<RefreshControl refreshing={credits.isRefetching} onRefresh={() => { credits.refetch(); requests.refetch(); }} tintColor={colors.primary} />}>
       <PageHeader
         title="Credits"
-        subtitle={`Each document generation costs ${CREDITS_PER_DOC} credits. Re-downloading a stored copy is free.`}
+        subtitle={`Each document generation costs ${CREDITS_PER_DOC} credits. Downloading a stored copy again is free.`}
         action={<Button title={pending ? 'Request pending' : 'Request Credits'} icon="paper-plane" onPress={() => setOpen(true)} disabled={pending} />}
       />
 

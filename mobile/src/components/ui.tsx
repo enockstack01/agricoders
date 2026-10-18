@@ -18,6 +18,7 @@ import { useTheme } from '../theme/ThemeProvider';
 import { ff, font, KPI_TONES, radius, shadow, spacing } from '../theme/theme';
 import { haptics } from '../lib/haptics';
 import { PressableScale } from './PressableScale';
+import { BannerContext } from './banner';
 
 /*
  * UI kit mirroring the web app's CSS (client/src/styles): same type scale, card,
@@ -135,7 +136,7 @@ export function AppText({
   };
   const v = map[variant];
   const w = weight ?? v.weight;
-  // explicit style fontWeight still selects the matching Inter face
+  // explicit style fontWeight still selects the matching Carlito face
   const flat = StyleSheet.flatten(style) as any;
   const family = ff(flat?.fontWeight ?? w);
   return (
@@ -152,24 +153,34 @@ export function AppText({
 }
 
 /* ------------------------------------------------------------ PageHeader */
-/** web .page-title + .page-subtitle (+ an optional action under it, like "Add Farm"). */
+/**
+ * Page banner in the Agricoders deck style: forest green, amber tracked eyebrow, white title and
+ * subtitle, with the actions underneath (amber primary button, outlined secondary button).
+ */
 export function PageHeader({ title, subtitle, action, right }: { title: string; subtitle?: string; action?: React.ReactNode; right?: React.ReactNode }) {
   return (
-    <View style={{ marginBottom: 20, gap: 14 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md }}>
-        <View style={{ flex: 1 }}>
-          <AppText variant="title" style={{ lineHeight: 31 }}>{title}</AppText>
-          {subtitle ? <AppText variant="subtitle" style={{ marginTop: 4 }}>{subtitle}</AppText> : null}
+    <BannerContext.Provider value={true}>
+      <View style={{ backgroundColor: '#1B5E20', borderRadius: radius.lg, padding: 22, marginBottom: 20, gap: 16, overflow: 'hidden' }}>
+        <View
+          pointerEvents="none"
+          style={{ position: 'absolute', width: 240, height: 240, borderRadius: 120, backgroundColor: 'rgba(255,255,255,0.05)', top: -110, right: -70 }}
+        />
+        <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: spacing.md }}>
+          <View style={{ flex: 1 }}>
+            <AppText weight="700" style={{ fontSize: 12, letterSpacing: 3, textTransform: 'uppercase', color: '#F9A825', marginBottom: 6 }}>Agriplan</AppText>
+            <AppText variant="title" color="#FFFFFF" style={{ lineHeight: 32 }}>{title}</AppText>
+            {subtitle ? <AppText variant="subtitle" color="rgba(255,255,255,0.85)" style={{ marginTop: 4 }}>{subtitle}</AppText> : null}
+          </View>
+          {right}
         </View>
-        {right}
+        {action ? <View style={{ alignSelf: 'flex-start' }}>{action}</View> : null}
       </View>
-      {action ? <View style={{ alignSelf: 'flex-start' }}>{action}</View> : null}
-    </View>
+    </BannerContext.Provider>
   );
 }
 
 /* ------------------------------------------------------------------ Card */
-/** web .card: white, 1px border, radius 10, soft shadow */
+/** Brand card: white, 1px brand border, 16 radius, flat */
 export function Card({ style, children, ...rest }: ViewProps) {
   const { colors } = useTheme();
   return (
@@ -225,7 +236,7 @@ export function ChartCard({
         }}
       >
         {icon ? <Icon name={icon} size={15} color={iconColor ?? colors.primary} /> : null}
-        <AppText weight="600" style={{ fontSize: 15, flex: 1 }} numberOfLines={2}>{title}</AppText>
+        <AppText weight="700" style={{ fontSize: 17, flex: 1, color: colors.primary }} numberOfLines={2}>{title}</AppText>
         {right}
       </View>
       <View style={[{ padding: 20 }, bodyStyle]}>{children}</View>
@@ -262,12 +273,12 @@ export function KpiCard({
         paddingVertical: 18, paddingHorizontal: 20, ...shadow(1),
       }}
     >
-      <View style={{ width: 44, height: 44, borderRadius: 10, backgroundColor: isDark ? bgDark : bgLight, alignItems: 'center', justifyContent: 'center' }}>
+      <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: isDark ? bgDark : bgLight, alignItems: 'center', justifyContent: 'center' }}>
         <Icon name={icon} size={17} color={fg} />
       </View>
       <View style={{ flex: 1, minWidth: 0 }}>
         <AppText weight="500" style={{ fontSize: 12, color: colors.textLight, marginBottom: 4 }} numberOfLines={1}>{label}</AppText>
-        <AppText weight="700" style={{ fontSize: 24, lineHeight: 29 }} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.5}>
+        <AppText weight="700" style={{ fontSize: 26, lineHeight: 31, color: colors.primary }} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.5}>
           {String(value)}
         </AppText>
       </View>
@@ -303,16 +314,16 @@ export function Badge({
 }) {
   const { colors, isDark } = useTheme();
   const tones: Record<string, [string, string]> = {
-    success: [isDark ? '#1A3D1E' : '#E8F5E9', isDark ? '#81C784' : '#2E7D32'],
+    success: [isDark ? '#1A3D1E' : '#F3F8F3', isDark ? '#81C784' : '#2E7D32'],
     warning: [isDark ? '#3D3420' : '#FFF8E1', isDark ? '#FFD54F' : '#F57F17'],
     danger: [isDark ? '#3D1A1A' : '#FFEBEE', isDark ? '#EF9A9A' : '#D32F2F'],
-    info: [isDark ? '#1A3A5C' : '#E3F2FD', isDark ? '#90CAF9' : '#1565C0'],
+    info: [isDark ? '#1C2058' : '#EAEBF8', isDark ? '#BFC2E6' : '#0A108A'],
     primary: [colors.primaryLight, isDark ? '#81C784' : colors.primary],
     neutral: [colors.bg, colors.textLight],
   };
   const [bg, fg] = tones[tone] ?? tones.neutral;
   return (
-    <View style={{ alignSelf: 'flex-start', backgroundColor: bg, paddingHorizontal: 10, paddingVertical: 4, borderRadius: radius.sm }}>
+    <View style={{ alignSelf: 'flex-start', backgroundColor: bg, paddingHorizontal: 12, paddingVertical: 4, borderRadius: radius.pill }}>
       <Text style={{ color: fg, fontSize: 11, fontFamily: ff('600') }}>{label}</Text>
     </View>
   );
@@ -327,7 +338,7 @@ export function KeyValue({ label, children }: { label: string; children: React.R
         {label}
       </AppText>
       {typeof children === 'string' || typeof children === 'number' ? (
-        <AppText style={{ fontSize: 13 }}>{String(children || '—')}</AppText>
+        <AppText style={{ fontSize: 13 }}>{String(children || 'N/A')}</AppText>
       ) : (
         children
       )}

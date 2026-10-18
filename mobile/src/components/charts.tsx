@@ -155,7 +155,7 @@ export function Bars({
           return (
             <G key={t}>
               <Line x1={pad.l} x2={width - pad.r} y1={y} y2={y} stroke={colors.border} strokeWidth={1} />
-              <SvgText x={pad.l - 6} y={y + 3} fontSize={9} fill={colors.textLight} fontFamily="Inter_400Regular" textAnchor="end">
+              <SvgText x={pad.l - 6} y={y + 3} fontSize={9} fill={colors.textLight} fontFamily="Carlito_400Regular" textAnchor="end">
                 {compact(max * t)}
               </SvgText>
             </G>
@@ -173,7 +173,7 @@ export function Bars({
                 return <Rect key={di} x={x + 1} y={pad.t + chartH - h} width={barW - 2} height={Math.max(0, h)} rx={4} fill={fill} />;
               })}
               {i % labelEvery === 0 ? (
-                <SvgText x={gx} y={height - pad.b + 16} fontSize={9.5} fill={colors.textLight} fontFamily="Inter_400Regular" textAnchor="middle">
+                <SvgText x={gx} y={height - pad.b + 16} fontSize={9.5} fill={colors.textLight} fontFamily="Carlito_400Regular" textAnchor="middle">
                   {truncate(lab, 9)}
                 </SvgText>
               ) : null}
@@ -234,7 +234,7 @@ export function LineChart({
           return (
             <G key={t}>
               <Line x1={pad.l} x2={width - pad.r} y1={yy} y2={yy} stroke={colors.border} strokeWidth={1} />
-              <SvgText x={pad.l - 6} y={yy + 3} fontSize={9} fill={colors.textLight} fontFamily="Inter_400Regular" textAnchor="end">
+              <SvgText x={pad.l - 6} y={yy + 3} fontSize={9} fill={colors.textLight} fontFamily="Carlito_400Regular" textAnchor="end">
                 {compact(max * t)}
               </SvgText>
             </G>
@@ -248,7 +248,7 @@ export function LineChart({
         ))}
         {labels.map((lab, i) =>
           i % labelEvery === 0 ? (
-            <SvgText key={i} x={x(i)} y={height - pad.b + 16} fontSize={9.5} fill={colors.textLight} fontFamily="Inter_400Regular" textAnchor="middle">
+            <SvgText key={i} x={x(i)} y={height - pad.b + 16} fontSize={9.5} fill={colors.textLight} fontFamily="Carlito_400Regular" textAnchor="middle">
               {truncate(lab, 8)}
             </SvgText>
           ) : null,

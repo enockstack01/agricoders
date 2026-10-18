@@ -66,7 +66,7 @@ export function SignUpScreen({ navigation }: any) {
         haptics.success();
         await setActive({ session: attempt.createdSessionId });
       } else {
-        setError('Verification incomplete — check the code and try again.');
+        setError('Verification incomplete. Check the code and try again.');
       }
     } catch (e: any) {
       haptics.error();
@@ -101,7 +101,7 @@ export function SignUpScreen({ navigation }: any) {
             value={code}
             onChangeValue={setCode}
             keyboardType="number-pad"
-            autoComplete="one-time-code"
+            autoComplete="one time-code"
             textContentType="oneTimeCode"
             returnKeyType="done"
             onSubmitEditing={verify}

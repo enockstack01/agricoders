@@ -45,9 +45,11 @@ function useAI(data: PlanInput) {
         existingVision: data.businessDescription.vision, existingMission: data.businessDescription.mission,
       });
       apply(content);
-      toast('Generated — review and edit as needed', 'success');
+      toast('Generated. Review and edit as needed', 'success');
     } catch (e: any) {
-      toast(`AI generation failed: ${e?.message || 'unknown error'}`, 'error');
+      // 429: the per user AI limit (the server message says which limit and when to retry)
+      if (e?.status === 429) toast(e.message, 'warning');
+      else toast(`AI generation failed: ${e?.message || 'unknown error'}`, 'error');
     } finally {
       setLoading((l) => ({ ...l, [section]: false }));
     }
@@ -112,7 +114,7 @@ export function BusinessStep({ data, update }: StepProps) {
   );
   return (
     <View style={{ gap: spacing.lg }}>
-      <Callout tone="info">✨ AI Assist — tap any "Generate with AI" button to draft that section from your Step 1 company info. You can edit everything.</Callout>
+      <Callout tone="info">AI Assist: tap any "Generate with AI" button to draft that section from your Step 1 company info. You can edit everything.</Callout>
       <FormSection title="Vision & Mission">
         <View style={{ gap: 6 }}>
           <View style={{ alignSelf: 'flex-end' }}><AIButton loading={ai.loading.vision} onPress={() => ai.run('vision', (d) => set('vision', String(d)))} /></View>
@@ -124,7 +126,7 @@ export function BusinessStep({ data, update }: StepProps) {
         </View>
       </FormSection>
       <FormSection title="Goals">
-        {([['shortTermGoals', 'Short-term (0–1 year)'], ['mediumTermGoals', 'Medium-term (1–3 years)'], ['longTermGoals', 'Long-term (3+ years)']] as const).map(([k, label]) => (
+        {([['shortTermGoals', 'Short term (0 to 1 year)'], ['mediumTermGoals', 'Medium term (1 to 3 years)'], ['longTermGoals', 'Long term (3+ years)']] as const).map(([k, label]) => (
           <View key={k} style={{ gap: 6 }}>
             <AppText variant="label">{label}</AppText>
             <StringList items={bd[k]} onChange={(v) => set(k, v)} addLabel="Add goal" placeholder="Goal" />
@@ -223,7 +225,7 @@ export function TeamStep({ data, update }: StepProps) {
         </ItemCard>
       ))}
       <AddRowButton label="Add staff member" onPress={() => update('staff', [...staff, { role: '', count: 1, responsibilities: '', salaryPerEmployee: 0 }])} />
-      <FormSection title="Payroll Tax Rates (Pre-configured)">
+      <FormSection title="Payroll Tax Rates (Preconfigured)">
         <AppText variant="subtitle" style={{ fontSize: 12 }}>
           Pension {(fin.rssbRate * 100).toFixed(1)}% · Health insurance {(fin.healthInsuranceRate * 100).toFixed(1)}% · Other {(fin.maternityRate * 100).toFixed(1)}% of gross salary. Change them in Financial Settings (step 9).
         </AppText>
@@ -241,7 +243,7 @@ export function CapexStep({ data, update }: StepProps) {
   const total = items.reduce((s, c) => s + c.quantity * c.costPerUnit, 0);
   return (
     <View style={{ gap: spacing.lg }}>
-      <AppText variant="subtitle" style={{ fontSize: 13 }}>One-time investments in equipment and infrastructure — also the initial investment for NPV, IRR and payback.</AppText>
+      <AppText variant="subtitle" style={{ fontSize: 13 }}>One time investments in equipment and infrastructure, also the initial investment for NPV, IRR and payback.</AppText>
       <Callout tone="success">{`Total CAPEX (initial investment): ${fmt(total)} ${cur}`}</Callout>
       {items.map((c, i) => (
         <ItemCard key={i} title={c.item || `Item ${i + 1}`} onRemove={() => setItems(items.filter((_, j) => j !== i))}>
@@ -425,7 +427,7 @@ export function RevenueStep({ data, update }: StepProps) {
             {!linkedIsService ? (
               <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                 <View style={{ flex: 1 }}>
-                  <AppText variant="label">Product sale (one-time)</AppText>
+                  <AppText variant="label">Product sale (one time)</AppText>
                   <AppText variant="caption">Priced per unit sold instead of per month</AppText>
                 </View>
                 <Switch value={isSale(p)} onValueChange={(v) => setP({ isProductSale: v, isKitSale: v })} trackColor={{ true: colors.primary, false: colors.border }} thumbColor="#fff" />
@@ -492,7 +494,7 @@ export function FinanceStep({ data, update }: StepProps) {
           <PercentField label="Other Payroll Deduction" value={fin.maternityRate} onChange={(v) => setFin('maternityRate', v)} />
         </Grid>
       </FormSection>
-      <Callout tone="warning">These were pre-filled from your profile defaults. Changes here apply to this plan only.</Callout>
+      <Callout tone="warning">These were prefilled from your profile defaults. Changes here apply to this plan only.</Callout>
     </View>
   );
 }
@@ -511,12 +513,12 @@ export function ReviewStep({ data }: { data: PlanInput }) {
   } catch {
     results = null;
   }
-  if (!results) return <Callout tone="warning">Some figures are incomplete, so the summary can't be computed yet. Check steps 4–9.</Callout>;
+  if (!results) return <Callout tone="warning">Some figures are incomplete, so the summary can't be computed yet. Check steps 4 to 9.</Callout>;
   const last = results.totalRevenue.length - 1;
 
   const items: [string, string][] = [
-    ['Company', ci.companyName || '—'],
-    ['Product / Project', ci.productName || '—'],
+    ['Company', ci.companyName || 'N/A'],
+    ['Product / Project', ci.productName || 'N/A'],
     ['Currency', cur],
     ['Staff', `${data.staff.reduce((s, m) => s + m.count, 0)} people`],
     ['Initial Investment (CAPEX)', `${fmt(results.capexTotal)} ${cur}`],

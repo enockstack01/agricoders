@@ -103,7 +103,7 @@ export function useRequestCredits() {
 }
 
 /* ---------------------------------------------------------------- profile */
-/** Plan defaults (currency, tax, loan…) that pre-fill every new plan. */
+/** Plan defaults (currency, tax, loan…) that prefill every new plan. */
 export function useProfile() {
   const query = useQuery<{ defaults: UserProfileDefaults }>({
     queryKey: ['profile'],

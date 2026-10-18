@@ -65,10 +65,10 @@ export function DashboardScreen() {
     <PressableScale
       onPress={onPress}
       accessibilityRole="button"
-      style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderWidth: 1, borderColor: colors.border, borderRadius: 8, backgroundColor: colors.card }}
+      style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderWidth: 1, borderColor: colors.border, borderRadius: 16, backgroundColor: colors.card }}
     >
-      <View style={{ width: 32, height: 32, borderRadius: 8, backgroundColor: colors.primaryLight, alignItems: 'center', justifyContent: 'center' }}>
-        <Icon name={icon} size={13} color={colors.primary} />
+      <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#1B5E20', alignItems: 'center', justifyContent: 'center' }}>
+        <Icon name={icon} size={14} color="#FFFFFF" />
       </View>
       <View style={{ flex: 1 }}>
         <AppText weight="600" style={{ fontSize: 13 }}>{title}</AppText>
@@ -101,7 +101,7 @@ export function DashboardScreen() {
           value={balance ?? '…'}
           onPress={() => nav.navigate('credits')}
         />
-        <KpiCard icon="arrow-trend-up" tone="purple" label={latest ? `Latest Plan · ${formatDate(latest.createdAt)}` : 'Latest Plan'} value={latest?.companyInfo?.companyName || '—'} />
+        <KpiCard icon="arrow-trend-up" tone="purple" label={latest ? `Latest Plan · ${formatDate(latest.createdAt)}` : 'Latest Plan'} value={latest?.companyInfo?.companyName || 'N/A'} />
       </Grid>
 
       <ChartCard
@@ -137,19 +137,19 @@ export function DashboardScreen() {
 
       <Grid columns={columns >= 2 ? 2 : 1} gap={spacing.lg}>
         <ChartCard title="Quick Actions" icon="bolt" bodyStyle={{ gap: 10 }}>
-          <QuickAction icon="circle-plus" title="New Business Plan" sub="Start the 10-step wizard" onPress={() => nav.navigate('plan-form', { editId: undefined, nonce: Date.now() })} />
+          <QuickAction icon="circle-plus" title="New Business Plan" sub="Start the 10 step wizard" onPress={() => nav.navigate('plan-form', { editId: undefined, nonce: Date.now() })} />
           <QuickAction icon="coins" title="Request Credits" sub={`Balance: ${balance ?? '…'}`} onPress={() => setRequestOpen(true)} />
           <QuickAction icon="gear" title="Plan Defaults" sub="Currency, tax & loan rates" onPress={() => nav.navigate('settings')} />
         </ChartCard>
         <ChartCard title="What's Included" icon="layer-group" bodyStyle={{ gap: 14 }}>
           {[
-            { icon: 'layer-group', title: 'AI-Enhanced Documents', desc: 'Our intelligent system writes the entire business plan proposal.' },
+            { icon: 'layer-group', title: 'AI Enhanced Documents', desc: 'Our intelligent system writes the entire business plan proposal.' },
             { icon: 'chart-column', title: 'Python Chart Engine', desc: '6 professional charts embedded in your Word document.' },
-            { icon: 'download', title: 'Multi-Format Export', desc: 'Business Plan (.docx) + 19-sheet Financial Model (.xlsx).' },
+            { icon: 'download', title: 'Multi Format Export', desc: 'Business Plan (.docx) + 19 sheet Financial Model (.xlsx).' },
           ].map((f) => (
             <View key={f.title} style={{ flexDirection: 'row', gap: 12 }}>
-              <View style={{ width: 32, height: 32, borderRadius: 8, backgroundColor: colors.primaryLight, alignItems: 'center', justifyContent: 'center' }}>
-                <Icon name={f.icon} size={13} color={colors.primary} />
+              <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#1B5E20', alignItems: 'center', justifyContent: 'center' }}>
+                <Icon name={f.icon} size={14} color="#FFFFFF" />
               </View>
               <View style={{ flex: 1 }}>
                 <AppText weight="600" style={{ fontSize: 13 }}>{f.title}</AppText>

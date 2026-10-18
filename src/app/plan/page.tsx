@@ -220,7 +220,7 @@ export default function Home() {
               </Reveal>
               <Reveal delay={240}>
                 <ul className="m-0 flex list-none flex-wrap gap-x-6 gap-y-2 p-0 text-base font-bold">
-                  {["Any industry", "Any country", "Any currency", "Delivered in minutes"].map((t) => (
+                  {["Any country", "Any currency", "Delivered in minutes"].map((t) => (
                     <li key={t} className="flex items-center gap-2">
                       <CheckCircle size={20} weight="fill" className="text-[#F9A825]" />
                       {t}

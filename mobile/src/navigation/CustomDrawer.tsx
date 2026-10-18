@@ -1,12 +1,11 @@
 import React from 'react';
 import { Linking, Pressable, ScrollView, Text, View } from 'react-native';
 import { DrawerContentComponentProps } from '@react-navigation/drawer';
-import { LinearGradient } from 'expo-linear-gradient';
+import { Image } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAuth } from '@clerk/clerk-expo';
 import { ff } from '../theme/theme';
 import { Icon } from '../components/Icon';
-import { AgriplanLogo } from '../components/AgriplanLogo';
 import { useRole } from '../lib/useResource';
 import { WEB_ORIGIN } from '../env';
 import { useConfirm } from '../components/Confirm';
@@ -34,14 +33,14 @@ function NavItem({ icon, label, active, onPress, danger }: { icon: string; label
       style={({ pressed }) => ({
         flexDirection: 'row', alignItems: 'center', gap: 12,
         paddingVertical: 11, paddingLeft: 17, paddingRight: 20,
-        borderLeftWidth: 3, borderLeftColor: active ? '#66BB6A' : 'transparent',
+        borderLeftWidth: 3, borderLeftColor: active ? '#F9A825' : 'transparent',
         backgroundColor: active ? ACTIVE_BG : pressed ? PRESSED_BG : 'transparent',
       })}
     >
       <View style={{ width: 20, alignItems: 'center' }}>
         <Icon name={icon} size={14} color={color} />
       </View>
-      <Text style={{ color, fontSize: 13, fontFamily: ff('500') }} numberOfLines={1}>{label}</Text>
+      <Text style={{ color, fontSize: 14, fontFamily: ff('500') }} numberOfLines={1}>{label}</Text>
     </Pressable>
   );
 }
@@ -67,7 +66,7 @@ export function CustomDrawer(props: DrawerContentComponentProps) {
   };
 
   return (
-    <LinearGradient colors={['#1B5E20', '#0D3B12']} start={{ x: 0, y: 0 }} end={{ x: 0, y: 1 }} style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: '#1B5E20' }}>
       {/* .sidebar-header */}
       <View
         style={{
@@ -76,12 +75,8 @@ export function CustomDrawer(props: DrawerContentComponentProps) {
           borderBottomWidth: 1, borderBottomColor: DIVIDER,
         }}
       >
-        <View style={{ width: 36, height: 36, borderRadius: 10, backgroundColor: 'rgba(255,255,255,0.15)', alignItems: 'center', justifyContent: 'center' }}>
-          <AgriplanLogo size={24} scale={0.9} />
-        </View>
-        <Text style={{ fontSize: 17, fontFamily: ff('700'), color: '#FFFFFF' }}>
-          Agri<Text style={{ color: '#81C784' }}>plan</Text>
-        </Text>
+        <Image source={require('../../assets/icon.png')} style={{ width: 36, height: 36, borderRadius: 8 }} />
+        <Text style={{ fontSize: 16, fontFamily: ff('700'), color: '#FFFFFF', letterSpacing: 3, textTransform: 'uppercase' }}>Agriplan</Text>
       </View>
 
       {/* .sidebar-nav */}
@@ -112,6 +107,6 @@ export function CustomDrawer(props: DrawerContentComponentProps) {
         ) : null}
         <NavItem icon="logout" label="Sign out" onPress={onSignOut} danger />
       </View>
-    </LinearGradient>
+    </View>
   );
 }

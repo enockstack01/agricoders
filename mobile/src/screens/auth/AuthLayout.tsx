@@ -1,11 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { Animated, KeyboardAvoidingView, Pressable, ScrollView, Text, View } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
 import { ff, radius, shadow, spacing } from '../../theme/theme';
 import { AppText, useLayout } from '../../components/ui';
-import { AgriplanLogo } from '../../components/AgriplanLogo';
+import { BrandMark } from '../../components/BrandMark';
 import { haptics } from '../../lib/haptics';
 
 /**
@@ -62,18 +61,11 @@ export function AuthLayout({
           >
             {/* .auth-split-mobile-brand */}
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, marginBottom: 24 }}>
-              <LinearGradient
-                colors={['#43A047', '#1B5E20']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={{ width: 42, height: 42, borderRadius: 12, alignItems: 'center', justifyContent: 'center', ...shadow(2) }}
-              >
-                <AgriplanLogo size={30} scale={0.9} />
-              </LinearGradient>
-              <Text style={{ fontSize: 20, fontFamily: ff('800'), color: colors.text }}>Agriplan</Text>
+              <BrandMark size={44} />
+              <Text style={{ fontSize: 19, fontFamily: ff('700'), color: colors.primary, letterSpacing: 3, textTransform: 'uppercase' }}>Agricoders</Text>
             </View>
 
-            <AppText weight="700" style={{ fontSize: isTablet ? 28 : 26, lineHeight: 34 }}>{heading}</AppText>
+            <AppText weight="700" style={{ fontSize: isTablet ? 30 : 28, lineHeight: 36, color: colors.primary }}>{heading}</AppText>
             <AppText variant="subtitle" style={{ marginTop: 6, marginBottom: 30 }}>{intro}</AppText>
 
             {/* Clerk-style card */}

@@ -40,7 +40,7 @@ function toPlanInput(raw: any): PlanInput {
   return rest as PlanInput;
 }
 
-/** The 10-step business-plan wizard (website /plan/form), for new plans and edits. */
+/** The 10 step business-plan wizard (website /plan/form), for new plans and edits. */
 export function PlanWizardScreen({ editId }: { editId?: string }) {
   const nav = useNavigation<any>();
   const { colors } = useTheme();
@@ -58,7 +58,7 @@ export function PlanWizardScreen({ editId }: { editId?: string }) {
   const [jumpOpen, setJumpOpen] = useState(false);
   const [requestOpen, setRequestOpen] = useState(false);
 
-  // initialise once: the plan being edited, or a fresh plan pre-filled from profile defaults
+  // initialise once: the plan being edited, or a fresh plan prefilled from profile defaults
   useEffect(() => {
     if (data) return;
     if (editId) {
@@ -88,7 +88,7 @@ export function PlanWizardScreen({ editId }: { editId?: string }) {
       if (editId) await replace.mutateAsync({ id: editId, body: data });
       else await create.mutateAsync(data);
       haptics.success();
-      toast(editId ? 'Plan updated' : 'Plan saved — generate your documents from My Business Plans', 'success');
+      toast(editId ? 'Plan updated' : 'Plan saved. Generate your documents from My Business Plans', 'success');
       nav.navigate('plans');
     } catch (e: any) {
       toast(e?.message || 'Submission failed. Please try again.', 'error');

@@ -5,14 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ClerkProvider, SignedIn, SignedOut, useAuth } from '@clerk/clerk-expo';
-import {
-  useFonts,
-  Inter_400Regular,
-  Inter_500Medium,
-  Inter_600SemiBold,
-  Inter_700Bold,
-  Inter_800ExtraBold,
-} from '@expo-google-fonts/inter';
+import { useFonts, Carlito_400Regular, Carlito_700Bold } from '@expo-google-fonts/carlito';
 
 import { CLERK_PUBLISHABLE_KEY } from './env';
 import { tokenCache } from './lib/tokenCache';
@@ -99,8 +92,8 @@ function AppShell() {
 }
 
 export default function App() {
-  // Inter, CropManager's typeface; the splash covers the moment it takes to load
-  const [fontsLoaded, fontError] = useFonts({ Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, Inter_800ExtraBold });
+  // Carlito (the open twin of Calibri, the brand typeface); the splash covers the moment it takes to load
+  const [fontsLoaded, fontError] = useFonts({ Carlito_400Regular, Carlito_700Bold });
   const ready = fontsLoaded || !!fontError;
 
   return (

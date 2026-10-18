@@ -23,7 +23,7 @@ const COLORS: Record<ToastType, string> = {
   success: '#2E7D32',
   error: '#D32F2F',
   warning: '#F9A825',
-  info: '#1976D2',
+  info: '#0A108A',
 };
 const FEEDBACK: Record<ToastType, () => void> = {
   success: haptics.success,

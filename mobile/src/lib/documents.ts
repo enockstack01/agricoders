@@ -71,7 +71,7 @@ export async function getDocument(opts: {
   }
   if (!res.ok) {
     const body = await res.json().catch(() => ({}));
-    throw new ApiError(body.error || body.message || (stored ? 'Download failed. The document may no longer be available.' : 'Generation failed. Please try again.'), res.status);
+    throw new ApiError(body.message || body.error || (stored ? 'Download failed. The document may no longer be available.' : 'Generation failed. Please try again.'), res.status);
   }
 
   const bytes = new Uint8Array(await res.arrayBuffer());
@@ -80,7 +80,7 @@ export async function getDocument(opts: {
   file.write(bytes);
 
   if (await Sharing.isAvailableAsync()) {
-    await Sharing.shareAsync(file.uri, { mimeType: MIME[type], UTI: UTI[type], dialogTitle: `${docLabel(type)} — ${companyName}` });
+    await Sharing.shareAsync(file.uri, { mimeType: MIME[type], UTI: UTI[type], dialogTitle: `${docLabel(type)}: ${companyName}` });
   }
 
   const remaining = res.headers.get('x-credits-remaining');

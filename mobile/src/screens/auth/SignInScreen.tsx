@@ -13,7 +13,7 @@ import { clerkMessage, usePasswordRules } from './clerkHelpers';
 
 /*
  * Mirrors the web app's Clerk <SignIn/> flow on the same Clerk instance:
- *   email → password (or a one-time email code) → new-device / 2FA code if Clerk
+ *   email → password (or a one time email code) → new-device / 2FA code if Clerk
  *   asks for one → signed in. "Forgot password?" resets via an emailed code.
  */
 type Step = 'email' | 'password' | 'email-code' | 'second-factor' | 'reset' | 'new-password';
@@ -88,7 +88,7 @@ export function SignInScreen({ navigation }: any) {
         go('new-password');
         return;
       default:
-        throw new Error('Sign-in could not be completed. Please try again.');
+        throw new Error('Sign in could not be completed. Please try again.');
     }
   };
 
@@ -103,7 +103,7 @@ export function SignInScreen({ navigation }: any) {
       const methods = (res.supportedFirstFactors ?? []).map((f: any) => f.strategy);
       if (methods.includes('password')) go('password');
       else if (methods.includes('email_code')) await sendEmailCode();
-      else throw new Error('This account uses a sign-in method the app does not support. Try “Continue with Google”.');
+      else throw new Error('This account uses a sign in method the app does not support. Try “Continue with Google”.');
     });
 
   const submitPassword = () =>
@@ -183,7 +183,7 @@ export function SignInScreen({ navigation }: any) {
       value={code}
       onChangeValue={setCode}
       keyboardType="number-pad"
-      autoComplete="one-time-code"
+      autoComplete="one time-code"
       textContentType="oneTimeCode"
       returnKeyType="done"
       onSubmitEditing={onSubmit}

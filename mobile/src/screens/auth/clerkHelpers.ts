@@ -5,10 +5,10 @@ export function clerkMessage(e: any, fallback = 'Something went wrong. Please tr
   const err = e?.errors?.[0];
   const code = err?.code || e?.code;
   if (code === 'requires_captcha' || code === 'captcha_invalid' || code === 'captcha_client_attempts_exceeded') {
-    return 'This sign-up was blocked by bot protection. An administrator must allow native apps in the Clerk dashboard (Native applications / Bot sign-up protection).';
+    return 'This sign up was blocked by bot protection. An administrator must allow native apps in the Clerk dashboard (Native applications / Bot sign-up protection).';
   }
   if (code === 'network_error') {
-    return `Could not reach the sign-in service (${e?.message || 'network error'}). Check your internet connection and try again.`;
+    return `Could not reach the sign in service (${e?.message || 'network error'}). Check your internet connection and try again.`;
   }
   if (code === 'form_identifier_not_found') return 'No account uses this email. Check it, or create an account.';
   if (code === 'form_password_incorrect') return 'Incorrect password. Try again, or use an email code instead.';

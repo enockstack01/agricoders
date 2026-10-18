@@ -14,7 +14,7 @@ import { haptics } from '../lib/haptics';
  */
 
 export const CURRENCIES = ['USD', 'EUR', 'GBP', 'RWF', 'KES', 'NGN', 'ZAR', 'GHS', 'UGX', 'TZS', 'ETB', 'INR', 'CAD', 'AUD', 'BRL', 'MXN', 'JPY', 'CNY', 'SGD', 'AED'];
-export const COMPANY_TYPES = ['Private Limited Company', 'Public Limited Company', 'LLC', 'Sole Proprietorship', 'Partnership', 'LLP', 'Non-profit Organization', 'Cooperative', 'Other'];
+export const COMPANY_TYPES = ['Private Limited Company', 'Public Limited Company', 'LLC', 'Sole Proprietorship', 'Partnership', 'LLP', 'Nonprofit Organization', 'Cooperative', 'Other'];
 
 /** Number input that edits as text (so "1." or "" are allowed mid-typing) but reports a number. */
 export function NumField({
@@ -133,7 +133,7 @@ export function FormSection({ title, right, children }: { title: string; right?:
 /** "✨ Generate with AI" pill (website AIButton). */
 export function AIButton({ onPress, loading, label = 'Generate with AI' }: { onPress: () => void; loading?: boolean; label?: string }) {
   const { colors, isDark } = useTheme();
-  const purple = isDark ? '#CE93D8' : '#7B1FA2';
+  const purple = isDark ? '#BFC2E6' : '#555555';
   return (
     <Pressable
       onPress={() => { haptics.select(); onPress(); }}
@@ -141,7 +141,7 @@ export function AIButton({ onPress, loading, label = 'Generate with AI' }: { onP
       accessibilityRole="button"
       style={({ pressed }) => ({
         flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, minHeight: 32, borderRadius: radius.md,
-        backgroundColor: isDark ? '#2D1A3D' : '#F3E5F5', opacity: loading ? 0.6 : pressed ? 0.85 : 1,
+        backgroundColor: isDark ? '#262626' : '#F4F5FB', opacity: loading ? 0.6 : pressed ? 0.85 : 1,
         borderWidth: 1, borderColor: isDark ? '#4A2A5C' : '#E1BEE7',
       })}
     >
@@ -155,8 +155,8 @@ export function AIButton({ onPress, loading, label = 'Generate with AI' }: { onP
 export function Callout({ tone = 'success', children }: { tone?: 'success' | 'info' | 'warning'; children: React.ReactNode }) {
   const { isDark } = useTheme();
   const c = {
-    success: [isDark ? '#1A3D1E' : '#E8F5E9', '#2E7D32'],
-    info: [isDark ? '#1A3A5C' : '#E3F2FD', '#1976D2'],
+    success: [isDark ? '#1A3D1E' : '#F3F8F3', '#2E7D32'],
+    info: [isDark ? '#1C2058' : '#EAEBF8', '#0A108A'],
     warning: [isDark ? '#3D3420' : '#FFF8E1', '#F9A825'],
   }[tone];
   return (

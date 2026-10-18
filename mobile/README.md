@@ -4,8 +4,11 @@ Native Android + iOS app for **Agriplan**, the Agricoders business-plan generato
 It talks to the **same API** as the website (`https://www.agricoders.com/api`) and the **same
 Clerk instance**, so accounts, plans and credits are shared — no backend changes required.
 
-The design follows the CropManager app: Inter typeface, the same green design tokens, cards,
-badges, drawer navigation and Font Awesome solid icons.
+The design follows the Agricoders brand, the same as the website and the pitch decks: forest green
+`#1B5E20`, amber `#F9A825`, tint `#F3F8F3`, lines `#D5E3D6`, ink `#111611`, Carlito (the open twin of
+Calibri) as the typeface, pill buttons, flat 16 radius cards, a forest page banner on every screen and
+the Agricoders logo on the sign in screens. Tokens live in `src/theme/theme.ts`. Visible text follows
+the brand writing rules: no hyphens or dashes between words, `N/A` for empty values.
 
 ```
 mobile/
@@ -37,6 +40,9 @@ mobile/
 - **Profile & Settings** — account + copyable account ID, plan defaults (currency, tax, loan,
   payroll rates), light/dark/system theme, sign out.
 - **Notifications** — bell with unread count; tap to mark read/unread, "Mark all read".
+- **AI usage limits** — the server limits each user to 6 AI assist requests per minute, 40 per hour and
+  100 per day, and 6 AI plan generations per hour and 20 per day. When a limit is reached the app shows
+  the server's message (which limit, and when to try again).
 
 Not yet on mobile (use the website): Admin Panel / User Management (admins get a shortcut in the
 drawer), and uploading a company logo (a logo added on the website is kept when editing).

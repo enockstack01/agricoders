@@ -75,7 +75,7 @@ export function GeneratingOverlay({ visible, type, companyName }: { visible: boo
           <AppText variant="subtitle" style={{ fontSize: 13, textAlign: 'center', marginTop: 2 }} numberOfLines={1}>{companyName}</AppText>
           <AppText weight="600" style={{ fontSize: 12, color: colors.primary, marginTop: 18, minHeight: 18 }}>{GEN_MESSAGES[i]}</AppText>
           <AppText variant="caption" style={{ textAlign: 'center', marginTop: 8 }}>
-            This usually takes 30–90 seconds. Please keep the app open.
+            This usually takes 30 to 90 seconds. Please keep the app open.
           </AppText>
         </View>
       </View>
@@ -173,7 +173,7 @@ export function CreditRequestSheet({
       )}
       <AppText variant="label" style={{ marginBottom: 8 }}>Documents ({CREDITS_PER_DOC} credits each)</AppText>
       <Row title="Business Plan (.docx)" sub="Narrative + charts" value={bp} onChange={setBp} />
-      <Row title="Financial Model (.xlsx)" sub="19-sheet spreadsheet" value={fm} onChange={setFm} />
+      <Row title="Financial Model (.xlsx)" sub="19 sheet spreadsheet" value={fm} onChange={setFm} />
       <View style={{ marginTop: 6 }}>
         <TextAreaField label="Note for the admin" hint="Optional" value={note} onChangeValue={setNote} placeholder="Anything the admin should know…" />
       </View>
@@ -275,14 +275,14 @@ export function DocumentSheet({
                 <Action
                   icon="rotate"
                   title="Generate & download"
-                  sub="Creates a fresh, up-to-date document"
+                  sub="Creates a fresh, up to date document"
                   right={`${CREDITS_PER_DOC} cr`}
                   onPress={() => { onClose(); onRun(plan, t, false); }}
                 />
                 <Action
                   icon="download"
                   title={storedAt ? `Download stored copy` : 'No stored copy yet'}
-                  sub={storedAt ? `Generated ${formatDate(storedAt)}` : 'Generate it once, then re-download free'}
+                  sub={storedAt ? `Generated ${formatDate(storedAt)}` : 'Generate it once, then download again for free'}
                   right={storedAt ? 'Free' : undefined}
                   disabled={!storedAt}
                   onPress={() => { onClose(); onRun(plan, t, true); }}

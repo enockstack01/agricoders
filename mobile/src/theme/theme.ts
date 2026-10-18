@@ -1,6 +1,7 @@
 /**
- * Design tokens ported 1:1 from the web app's CSS custom properties
- * (client/src/styles/style.css :root and .dark-mode) so both apps look the same.
+ * Agricoders brand tokens, shared with the Agriplan website: forest #1B5E20, amber #F9A825,
+ * tint #F3F8F3, lines #D5E3D6, ink #111611, slate #555555. Navy #0A108A is the parent brand
+ * colour and is used where a second colour is needed (info badges, links).
  */
 export type Palette = {
   primary: string;
@@ -26,42 +27,47 @@ export type Palette = {
 };
 
 export const light: Palette = {
-  primary: '#2E7D32',
-  primaryLight: '#E8F5E9',
-  primaryDark: '#1B5E20',
-  bg: '#F5F7FA',
+  primary: '#1B5E20',
+  primaryLight: '#F3F8F3',
+  primaryDark: '#164719',
+  bg: '#F3F8F3',
   card: '#FFFFFF',
   surface: '#FFFFFF',
   input: '#FFFFFF',
-  text: '#263238',
-  textLight: '#546E7A',
-  placeholder: '#9E9E9E',
-  border: '#E0E0E0',
+  text: '#111611',
+  textLight: '#555555',
+  placeholder: '#8A948B',
+  border: '#D5E3D6',
   orange: '#F9A825',
   red: '#D32F2F',
-  blue: '#1976D2',
-  purple: '#7B1FA2',
+  blue: '#0A108A',
+  purple: '#555555',
   green: '#2E7D32',
   overlay: 'rgba(0,0,0,0.5)',
-  stripe: '#F9FAFB',
-  tableHover: '#F0F4F0',
+  stripe: '#F7FAF7',
+  tableHover: '#EAF1EA',
   headerText: '#FFFFFF',
 };
 
-// the web's .dark-mode only overrides surfaces and text; brand colours stay the same
+// dark mode uses the site's dark greens; brand colours stay the same
 export const dark: Palette = {
   ...light,
+  primary: '#81C784',
   primaryLight: '#1B3A1D',
-  bg: '#121212',
-  card: '#1E1E1E',
-  surface: '#1E1E1E',
-  input: '#2A2A2A',
-  text: '#E0E0E0',
-  textLight: '#9E9E9E',
-  border: '#333333',
+  primaryDark: '#A5D6A7',
+  bg: '#0c140d',
+  card: '#111814',
+  surface: '#111814',
+  input: '#182019',
+  text: '#E6EEE7',
+  textLight: '#9AA79B',
+  placeholder: '#6b776c',
+  border: '#26332a',
+  blue: '#BFC2E6',
+  purple: '#9AA79B',
   overlay: 'rgba(0,0,0,0.7)',
-  stripe: '#252525',
-  tableHover: '#2E3A2E',
+  stripe: '#141c15',
+  tableHover: '#1B2A1D',
 };
 
 export const spacing = {
@@ -73,57 +79,62 @@ export const spacing = {
   xxl: 32,
 };
 
-/** web: --radius 10px (cards), 8px (buttons, inputs), 6px (badges) */
+/** brand: 16 radius cards, pill buttons and badges, 12 radius inputs */
 export const radius = {
-  sm: 6,
-  md: 8,
-  lg: 10,
-  xl: 16,
+  sm: 8,
+  md: 12,
+  lg: 16,
+  xl: 20,
   pill: 999,
 };
 
-/** web: --shadow 0 2px 8px rgba(0,0,0,.08) / --shadow-lg 0 8px 30px rgba(0,0,0,.12) */
+/** Cards are flat in the brand style (level 1 is no shadow); only floating sheets lift. */
 export function shadow(level: 1 | 2 | 3 = 1) {
-  const y = [0, 2, 4, 8][level];
+  const y = [0, 0, 4, 8][level];
   return {
     shadowColor: '#000000',
-    shadowOpacity: [0, 0.08, 0.1, 0.12][level],
-    shadowRadius: [0, 8, 12, 30][level] / 2,
+    shadowOpacity: [0, 0, 0.1, 0.12][level],
+    shadowRadius: [0, 0, 12, 30][level] / 2,
     shadowOffset: { width: 0, height: y },
-    elevation: [0, 2, 4, 8][level],
+    elevation: [0, 0, 4, 8][level],
   };
 }
 
+/** Calibri sets slightly smaller than other fonts, so the scale sits one point higher. */
 export const font = {
-  xs: 11,
-  sm: 12,
-  md: 13,
-  base: 14,
-  lg: 15,
-  xl: 16,
-  xxl: 24,
-  huge: 34,
+  xs: 12,
+  sm: 13,
+  md: 14,
+  base: 15,
+  lg: 16,
+  xl: 17,
+  xxl: 26,
+  huge: 36,
 };
 
-/** Inter, as on the web (loaded in App.tsx via @expo-google-fonts/inter) */
+/**
+ * Carlito: the metric compatible, open licence twin of Calibri (the brand typeface), loaded in
+ * App.tsx via @expo-google-fonts/carlito. It ships Regular and Bold only, so the medium and
+ * semibold weights resolve to the nearest face.
+ */
 export const FONTS = {
-  '400': 'Inter_400Regular',
-  '500': 'Inter_500Medium',
-  '600': 'Inter_600SemiBold',
-  '700': 'Inter_700Bold',
-  '800': 'Inter_800ExtraBold',
+  '400': 'Carlito_400Regular',
+  '500': 'Carlito_400Regular',
+  '600': 'Carlito_700Bold',
+  '700': 'Carlito_700Bold',
+  '800': 'Carlito_700Bold',
 } as const;
 export type Weight = keyof typeof FONTS;
 /** fontFamily for a weight (Android needs a distinct family per weight) */
 export const ff = (weight: Weight | string = '400') => FONTS[(String(weight) in FONTS ? String(weight) : '400') as Weight];
 
-/** web .kpi-icon.{green|blue|orange|red|purple} — [light bg, dark bg, icon colour] */
+/** KPI icon tones: [light bg, dark bg, icon colour]. Forest for most, amber for warnings, red for errors. */
 export const KPI_TONES: Record<'green' | 'blue' | 'orange' | 'red' | 'purple', [string, string, string]> = {
-  green: ['#E8F5E9', '#1A3D1E', '#2E7D32'],
-  blue: ['#E3F2FD', '#1A3A5C', '#1976D2'],
-  orange: ['#FFF8E1', '#3D3420', '#F9A825'],
+  green: ['#1B5E20', '#1B5E20', '#FFFFFF'],
+  blue: ['#1B5E20', '#1B5E20', '#FFFFFF'],
+  orange: ['#F9A825', '#F9A825', '#111611'],
   red: ['#FFEBEE', '#3D1A1A', '#D32F2F'],
-  purple: ['#F3E5F5', '#2D1A3D', '#7B1FA2'],
+  purple: ['#1B5E20', '#1B5E20', '#FFFFFF'],
 };
 
 /** Status → chip colours, mirrors format.js:badgeClass. */
@@ -139,7 +150,8 @@ export const STATUS_TONES: Record<string, 'success' | 'warning' | 'danger' | 'in
   Excellent: 'success', Good: 'success', Average: 'warning', Poor: 'danger', Rejected: 'danger',
 };
 
+/** Charts: forest first, then amber, navy, green, soft lavender and slate. */
 export const CHART_PALETTE = [
-  '#2E7D32', '#1976D2', '#F9A825', '#D32F2F', '#7B1FA2',
-  '#00897B', '#E65100', '#5D4037', '#37474F', '#C2185B',
+  '#1B5E20', '#F9A825', '#0A108A', '#2E7D32', '#BFC2E6',
+  '#555555', '#81C784', '#9CA0D6', '#164719', '#D5E3D6',
 ];

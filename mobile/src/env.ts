@@ -12,5 +12,5 @@ export const WEB_ORIGIN = API_URL.replace(/\/api$/, '');
 
 if (!CLERK_PUBLISHABLE_KEY) {
   // eslint-disable-next-line no-console
-  console.warn('[Agriplan] EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is not set — copy mobile/.env.example to mobile/.env');
+  console.warn('[Agriplan] EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY is not set. Copy mobile/.env.example to mobile/.env');
 }

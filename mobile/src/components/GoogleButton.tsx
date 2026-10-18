@@ -80,7 +80,7 @@ export function GoogleButton({ onError, label = 'Continue with Google' }: { onEr
     }
     if (!sessionId) {
       if (!returnUrl && (verification === 'unverified' || !verification)) return false; // never finished Google
-      throw new Error('Google sign-in did not complete. Please try again.');
+      throw new Error('Google sign in did not complete. Please try again.');
     }
     haptics.success();
     await setActive!({ session: sessionId });
@@ -98,7 +98,7 @@ export function GoogleButton({ onError, label = 'Continue with Google' }: { onEr
         try {
           await finish(url);
         } catch (e: any) {
-          onError(clerkMessage(e, 'Google sign-in failed'));
+          onError(clerkMessage(e, 'Google sign in failed'));
         } finally {
           setBusy(false);
         }
@@ -109,7 +109,7 @@ export function GoogleButton({ onError, label = 'Continue with Google' }: { onEr
 
   const onPress = async () => {
     if (!signInLoaded || !signUpLoaded || !signIn || !signUp) {
-      onError('Sign-in is still starting up — please try again in a moment.');
+      onError('Sign in is still starting up. Please try again in a moment.');
       return;
     }
     setBusy(true);
@@ -126,7 +126,7 @@ export function GoogleButton({ onError, label = 'Continue with Google' }: { onEr
         attempt?.firstFactorVerification?.externalVerificationRedirectURL ||
         clerk.client?.signIn?.firstFactorVerification?.externalVerificationRedirectURL;
       if (!googleUrl) {
-        throw new Error(`Google sign-in could not start (status: ${attempt?.status ?? 'none'}). Check your internet connection and try again.`);
+        throw new Error(`Google sign in could not start (status: ${attempt?.status ?? 'none'}). Check your internet connection and try again.`);
       }
 
       // 2. Google consent in the system browser, which redirects back into the app
@@ -138,7 +138,7 @@ export function GoogleButton({ onError, label = 'Continue with Google' }: { onEr
       await finish(returnUrl);
     } catch (e: any) {
       haptics.error();
-      onError(clerkMessage(e, 'Google sign-in failed'));
+      onError(clerkMessage(e, 'Google sign in failed'));
     } finally {
       sub.remove();
       setBusy(false);

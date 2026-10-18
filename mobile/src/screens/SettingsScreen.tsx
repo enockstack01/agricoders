@@ -42,7 +42,7 @@ export function SettingsScreen() {
     try {
       await save.mutateAsync(form);
       setCurrency(form.currency);
-      toast('Defaults saved — they apply to every new business plan', 'success');
+      toast('Defaults saved. They apply to every new business plan', 'success');
     } catch (e: any) {
       toast(e?.message || 'Failed to save. Please try again.', 'error');
     }
@@ -62,7 +62,7 @@ export function SettingsScreen() {
 
   return (
     <Screen>
-      <PageHeader title="Profile & Settings" subtitle="These defaults pre-fill every new business plan. You can override them inside any plan." />
+      <PageHeader title="Profile & Settings" subtitle="These defaults prefill every new business plan. You can override them inside any plan." />
 
       <ChartCard title="Account" icon="user" style={{ marginBottom: 20 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 14, marginBottom: 16 }}>
@@ -74,8 +74,8 @@ export function SettingsScreen() {
             </View>
           )}
           <View style={{ flex: 1, gap: 2 }}>
-            <AppText weight="600" style={{ fontSize: 15 }}>{user?.fullName || '—'}</AppText>
-            <AppText variant="subtitle" style={{ fontSize: 13 }}>{user?.primaryEmailAddress?.emailAddress || '—'}</AppText>
+            <AppText weight="600" style={{ fontSize: 15 }}>{user?.fullName || 'N/A'}</AppText>
+            <AppText variant="subtitle" style={{ fontSize: 13 }}>{user?.primaryEmailAddress?.emailAddress || 'N/A'}</AppText>
             <View style={{ flexDirection: 'row', gap: 8, marginTop: 4 }}>
               <Badge label={ROLE_LABEL[role]} tone={role === 'user' ? 'neutral' : 'info'} />
             </View>
@@ -92,7 +92,7 @@ export function SettingsScreen() {
             backgroundColor: pressed ? colors.bg : colors.input, paddingHorizontal: 14, minHeight: 42,
           })}
         >
-          <AppText style={{ flex: 1, fontSize: 12, fontFamily: 'monospace' }} numberOfLines={1}>{user?.id || '—'}</AppText>
+          <AppText style={{ flex: 1, fontSize: 12, fontFamily: 'monospace' }} numberOfLines={1}>{user?.id || 'N/A'}</AppText>
           <Icon name="copy" size={13} color={colors.primary} />
         </Pressable>
       </ChartCard>
@@ -101,7 +101,7 @@ export function SettingsScreen() {
         <>
           <ChartCard title="Company Defaults" icon="building" style={{ marginBottom: 20 }} bodyStyle={{ gap: spacing.md }}>
             <Grid columns={cols} gap={spacing.md}>
-              <TextField label="Default Author Title" hint="Pre-filled in every new plan" value={form.authorTitle} onChangeValue={(v) => set('authorTitle', v)} placeholder="Founder & CEO" />
+              <TextField label="Default Author Title" hint="Prefilled in every new plan" value={form.authorTitle} onChangeValue={(v) => set('authorTitle', v)} placeholder="Founder & CEO" />
               <TextField label="Default Location / Country" value={form.location} onChangeValue={(v) => set('location', v)} placeholder="e.g. Kigali, Rwanda" />
               <SelectField label="Default Company Type" value={form.companyType} onChangeValue={(v) => set('companyType', v)} options={COMPANY_TYPES} />
               <TextField label="Default Industry" value={form.industry} onChangeValue={(v) => set('industry', v)} placeholder="e.g. AgriTech, Poultry, Horticulture" />

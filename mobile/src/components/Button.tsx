@@ -4,13 +4,13 @@ import { Icon } from './Icon';
 import { useTheme } from '../theme/ThemeProvider';
 import { ff, radius } from '../theme/theme';
 import { PressableScale } from './PressableScale';
+import { useOnBanner } from './banner';
 
 type Kind = 'primary' | 'secondary' | 'danger' | 'ghost';
 
 /**
- * web .btn / .btn-primary / .btn-secondary / .btn-danger / .btn-sm:
- * 8px radius, Inter 600 13px, icon before the label. Touch height is kept at 44px
- * (web buttons are ~40px) so they stay comfortable to tap.
+ * Brand buttons: pill shape, Carlito bold, icon before the label, 44px touch height.
+ * On the forest page banner the primary button turns amber and the secondary one outlined.
  */
 export function Button({
   title,
@@ -31,24 +31,25 @@ export function Button({
   size?: 'sm' | 'md';
   style?: ViewStyle;
 }) {
-  const { colors } = useTheme();
+  const { colors, isDark } = useTheme();
+  const onBanner = useOnBanner();
   const isDisabled = disabled || loading;
 
   const bg: Record<Kind, string> = {
-    primary: colors.primary,
-    secondary: colors.card,
+    primary: onBanner ? '#F9A825' : isDark ? '#1B5E20' : colors.primary,
+    secondary: onBanner ? 'transparent' : colors.card,
     danger: colors.red,
     ghost: 'transparent',
   };
   const fg: Record<Kind, string> = {
-    primary: '#fff',
-    secondary: colors.text,
+    primary: onBanner ? '#111611' : '#fff',
+    secondary: onBanner ? '#fff' : colors.text,
     danger: '#fff',
-    ghost: colors.primary,
+    ghost: onBanner ? '#fff' : colors.primary,
   };
   const border: Record<Kind, string> = {
-    primary: colors.primary,
-    secondary: colors.border,
+    primary: onBanner ? '#F9A825' : isDark ? '#1B5E20' : colors.primary,
+    secondary: onBanner ? 'rgba(255,255,255,0.45)' : colors.border,
     danger: colors.red,
     ghost: 'transparent',
   };
@@ -68,7 +69,7 @@ export function Button({
           alignItems: 'center',
           justifyContent: 'center',
           gap: 8,
-          borderRadius: radius.md,
+          borderRadius: radius.pill,
           borderWidth: 1,
           borderColor: border[kind],
           backgroundColor: bg[kind],
@@ -84,7 +85,7 @@ export function Button({
       ) : icon ? (
         <Icon name={icon} size={sm ? 12 : 13} color={fg[kind]} />
       ) : null}
-      <Text style={{ color: fg[kind], fontFamily: ff('600'), fontSize: sm ? 12 : 13 }}>{title}</Text>
+      <Text style={{ color: fg[kind], fontFamily: ff('700'), fontSize: sm ? 13 : 14 }}>{title}</Text>
     </PressableScale>
   );
 }

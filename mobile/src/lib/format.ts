@@ -1,16 +1,16 @@
 // Ported from client/src/lib/format.js
 
 export function formatDate(dateStr?: string | null): string {
-  if (!dateStr) return '—';
+  if (!dateStr) return 'N/A';
   const d = new Date(dateStr);
-  if (Number.isNaN(d.getTime())) return '—';
+  if (Number.isNaN(d.getTime())) return 'N/A';
   return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
 export function formatDateTime(dateStr?: string | null): string {
-  if (!dateStr) return '—';
+  if (!dateStr) return 'N/A';
   const d = new Date(dateStr);
-  if (Number.isNaN(d.getTime())) return '—';
+  if (Number.isNaN(d.getTime())) return 'N/A';
   return (
     d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) +
     ' ' +
@@ -24,7 +24,7 @@ export function formatNumber(num?: number | string | null): string {
 }
 
 // The signed-in user's default currency (Settings → Default currency, default USD).
-// RootGate sets it from the profile; it pre-fills the currency on new records and is
+// RootGate sets it from the profile; it prefills the currency on new records and is
 // the fallback when a value has no currency of its own. Records carry their own
 // `currency`, so pass it: formatCurrency(r.amount, r.currency).
 let userCurrency = 'USD';
