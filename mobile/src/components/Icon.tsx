@@ -1,4 +1,3 @@
-import React from 'react';
 import { StyleProp, TextStyle } from 'react-native';
 import { FontAwesome6, MaterialCommunityIcons } from '@expo/vector-icons';
 // the free solid set's glyph names (FontAwesome6 does not expose glyphMap statically)

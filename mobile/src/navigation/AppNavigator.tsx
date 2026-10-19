@@ -1,4 +1,3 @@
-import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { useTheme } from '../theme/ThemeProvider';
 import { useLayout } from '../components/ui';

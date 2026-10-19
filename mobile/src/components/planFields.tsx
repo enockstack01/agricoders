@@ -132,7 +132,7 @@ export function FormSection({ title, right, children }: { title: string; right?:
 
 /** "✨ Generate with AI" pill (website AIButton). */
 export function AIButton({ onPress, loading, label = 'Generate with AI' }: { onPress: () => void; loading?: boolean; label?: string }) {
-  const { colors, isDark } = useTheme();
+  const { isDark } = useTheme();
   const purple = isDark ? '#BFC2E6' : '#555555';
   return (
     <Pressable

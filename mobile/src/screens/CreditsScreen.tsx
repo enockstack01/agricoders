@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { RefreshControl, View } from 'react-native';
 import { useRoute } from '@react-navigation/native';
 import { useTheme } from '../theme/ThemeProvider';

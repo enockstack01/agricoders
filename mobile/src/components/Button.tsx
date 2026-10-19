@@ -1,4 +1,3 @@
-import React from 'react';
 import { ActivityIndicator, Text, ViewStyle } from 'react-native';
 import { Icon } from './Icon';
 import { useTheme } from '../theme/ThemeProvider';

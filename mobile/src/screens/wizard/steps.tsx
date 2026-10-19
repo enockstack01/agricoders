@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Pressable, Switch, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { radius, spacing } from '../../theme/theme';

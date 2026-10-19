@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { View } from 'react-native';
 import { useSignIn } from '@clerk/clerk-expo';
 import { spacing } from '../../theme/theme';
