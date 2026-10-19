@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
@@ -20,6 +20,7 @@ import { SplashHost, SplashReadyOnMount, useSplashReady } from './components/App
 import { AppNavigator } from './navigation/AppNavigator';
 import { AuthNavigator } from './navigation/AuthNavigator';
 import { ConnectionErrorScreen } from './screens/ConnectionErrorScreen';
+import { SignInServiceErrorScreen } from './screens/SignInServiceErrorScreen';
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false, staleTime: 15_000 } },
@@ -76,9 +77,25 @@ function NavRoot() {
 }
 
 /** Mounts the app once Clerk has restored the session (the splash covers the wait). */
-function AppShell() {
+/** How long to wait for the sign in service before showing an error instead of the spinner. */
+const AUTH_LOAD_TIMEOUT = 15000;
+
+function AppShell({ onRetry }: { onRetry: () => void }) {
   const { isLoaded } = useAuth();
-  if (!isLoaded) return <Loading label="Connecting to Agriplan…" />;
+  const [stalled, setStalled] = useState(false);
+
+  useEffect(() => {
+    if (isLoaded) {
+      setStalled(false);
+      return;
+    }
+    const t = setTimeout(() => setStalled(true), AUTH_LOAD_TIMEOUT);
+    return () => clearTimeout(t);
+  }, [isLoaded]);
+
+  if (!isLoaded) {
+    return stalled ? <SignInServiceErrorScreen onRetry={onRetry} /> : <Loading label="Connecting to Agriplan…" />;
+  }
   return (
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
@@ -95,6 +112,8 @@ export default function App() {
   // Carlito (the open twin of Calibri, the brand typeface); the splash covers the moment it takes to load
   const [fontsLoaded, fontError] = useFonts({ Carlito_400Regular, Carlito_700Bold });
   const ready = fontsLoaded || !!fontError;
+  // bumping the key remounts Clerk, which retries loading the sign in service
+  const [attempt, setAttempt] = useState(0);
 
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
@@ -103,11 +122,12 @@ export default function App() {
           <SplashHost>
             {ready ? (
               <ClerkProvider
+                key={attempt}
                 publishableKey={CLERK_PUBLISHABLE_KEY}
                 tokenCache={tokenCache}
                 experimental={{ rethrowOfflineNetworkErrors: true }}
               >
-                <AppShell />
+                <AppShell onRetry={() => setAttempt((n) => n + 1)} />
               </ClerkProvider>
             ) : null}
           </SplashHost>

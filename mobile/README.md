@@ -47,6 +47,19 @@ mobile/
 Not yet on mobile (use the website): Admin Panel / User Management (admins get a shortcut in the
 drawer), and uploading a company logo (a logo added on the website is kept when editing).
 
+## Clerk setup for the mobile app
+
+The app signs in through the same Clerk production instance as the website, and Clerk must allow
+native apps. In the Clerk dashboard, open **Configure, then Native applications** and:
+
+1. Turn **Native API** on. If it is off, Clerk never finishes loading and the app shows
+   "Can't connect to sign in" (before that fix it spun forever on "Connecting to Agriplan").
+2. Add an Android app with package name `com.agricoders.agriplan` and the SHA-256 fingerprint of
+   the key that signs the APK. For the debug signed builds the fingerprint is
+   `FA:C6:17:45:DC:09:03:78:6F:B9:ED:E6:2A:96:2B:39:9F:73:48:F0:BB:6F:89:9B:83:32:66:75:91:03:3B:9C`.
+   Add the fingerprint of your own release key before publishing to Google Play.
+3. Allow the mobile redirect URL `agriplan://sso-callback` so "Continue with Google" can return to the app.
+
 ## Run it
 
 ```bash
