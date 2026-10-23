@@ -56,7 +56,7 @@ export default function MarketingFooter() {
               </li>
               <li className="flex items-center gap-3">
                 <EnvelopeSimple size={20} weight="fill" className="flex-shrink-0 text-[#F9A825]" />
-                <a href="mailto:agricoders@gmail.com" className="text-white/75 no-underline hover:text-white">agricoders@gmail.com</a>
+                <a href="mailto:agricoderstech@gmail.com" className="text-white/75 no-underline hover:text-white">agricoderstech@gmail.com</a>
               </li>
               <li className="flex items-center gap-3">
                 <Phone size={20} weight="fill" className="flex-shrink-0 text-[#F9A825]" />

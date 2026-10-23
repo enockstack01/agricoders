@@ -45,7 +45,7 @@ const NAV_COLS = [
       { label: "Features",         href: "/#features",   icon: <Globe size={13} /> },
       { label: "Agricoders Portal",href: "/",             icon: <Globe size={13} /> },
       { label: "System Status",    href: "/api/health",  icon: <Shield size={13} />, external: true },
-      { label: "Support",          href: "mailto:agricoders@gmail.com", icon: <HelpCircle size={13} />, external: true },
+      { label: "Support",          href: "mailto:agricoderstech@gmail.com", icon: <HelpCircle size={13} />, external: true },
     ],
   },
   {
@@ -53,7 +53,7 @@ const NAV_COLS = [
     links: [
       { label: "Privacy Policy",   href: "/privacy",  icon: <FileText size={13} /> },
       { label: "Terms of Service", href: "/terms",    icon: <FileText size={13} /> },
-      { label: "Contact",          href: "mailto:agricoders@gmail.com", icon: <MessageSquare size={13} />, external: true },
+      { label: "Contact",          href: "mailto:agricoderstech@gmail.com", icon: <MessageSquare size={13} />, external: true },
     ],
   },
 ];
@@ -62,7 +62,7 @@ const SOCIALS = [
   { label: "LinkedIn", href: "https://linkedin.com", icon: <Link2 size={16} /> },
   { label: "Twitter",  href: "https://twitter.com",  icon: <Share2 size={16} /> },
   { label: "GitHub",   href: "https://github.com",   icon: <GitBranch size={16} /> },
-  { label: "Email",    href: "mailto:agricoders@gmail.com", icon: <Mail size={16} /> },
+  { label: "Email",    href: "mailto:agricoderstech@gmail.com", icon: <Mail size={16} /> },
 ];
 
 const FEATURES = [

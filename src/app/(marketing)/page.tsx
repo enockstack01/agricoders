@@ -477,7 +477,7 @@ export default function AgricodersPage() {
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row">
                 <a
-                  href="mailto:agricoders@gmail.com"
+                  href="mailto:agricoderstech@gmail.com"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-[#F9A825] px-8 py-4 text-base font-bold text-[#111611] no-underline shadow-lg transition-transform hover:-translate-y-0.5"
                 >
                   <EnvelopeSimple size={20} weight="fill" />

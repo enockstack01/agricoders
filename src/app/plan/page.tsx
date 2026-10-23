@@ -175,7 +175,7 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoaded && isSignedIn) router.push("/plan/dashboard");
+    if (isLoaded && isSignedIn) router.replace("/plan/dashboard");
   }, [isLoaded, isSignedIn, router]);
 
   return (
