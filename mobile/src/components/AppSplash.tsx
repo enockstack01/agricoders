@@ -70,21 +70,21 @@ export function SplashHost({ children }: { children: React.ReactNode }) {
           <Animated.View
             pointerEvents={ready ? 'none' : 'auto'}
             onLayout={() => SplashScreen.hideAsync().catch(() => {})}
-            style={[StyleSheet.absoluteFill, { opacity: fade, backgroundColor: dark ? '#0F1A10' : '#2E7D32', alignItems: 'center', justifyContent: 'center' }]}
+            style={[StyleSheet.absoluteFill, { opacity: fade, backgroundColor: dark ? '#0c140d' : '#1B5E20', alignItems: 'center', justifyContent: 'center' }]}
           >
             {/* same size/position as the native splash image (imageWidth 180) */}
             <Animated.View style={{ transform: [{ translateY: leafY }, { scale: leafScale }] }}>
-              <AgriplanLogo size={180} scale={0.78} color={dark ? '#66BB6A' : '#FFFFFF'} />
+              <AgriplanLogo size={180} scale={0.78} color={dark ? '#81C784' : '#FFFFFF'} />
             </Animated.View>
             <Animated.View style={{ position: 'absolute', top: '58%', alignItems: 'center', opacity: intro, transform: [{ translateY: textY }] }}>
-              <Animated.Text style={{ color: '#FFFFFF', fontSize: 30, fontWeight: '800', letterSpacing: 0.5 }}>Agriplan</Animated.Text>
+              <Animated.Text style={{ color: '#FFFFFF', fontSize: 28, fontWeight: '700', letterSpacing: 6, textTransform: 'uppercase' }}>Agriplan</Animated.Text>
               <Animated.Text style={{ color: 'rgba(255,255,255,0.78)', fontSize: 14, marginTop: 6 }}>
                 Business plans, made simple
               </Animated.Text>
               <View style={{ width: 120, height: 3, borderRadius: 2, backgroundColor: 'rgba(255,255,255,0.18)', marginTop: 28, overflow: 'hidden' }}>
                 <Animated.View
                   style={{
-                    width: 48, height: 3, borderRadius: 2, backgroundColor: '#FFFFFF',
+                    width: 48, height: 3, borderRadius: 2, backgroundColor: '#F9A825',
                     transform: [{ translateX: progress.interpolate({ inputRange: [0, 1], outputRange: [-48, 120] }) }],
                   }}
                 />

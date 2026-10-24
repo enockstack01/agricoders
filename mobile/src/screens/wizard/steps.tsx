@@ -1,8 +1,12 @@
 import { useState } from 'react';
-import { Pressable, Switch, View } from 'react-native';
+import { Image, Pressable, Switch, View } from 'react-native';
+import * as ImagePicker from 'expo-image-picker';
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
 import { useTheme } from '../../theme/ThemeProvider';
 import { radius, spacing } from '../../theme/theme';
 import { AppText, Grid, StatTile, useLayout } from '../../components/ui';
+import { Button } from '../../components/Button';
+import { Icon } from '../../components/Icon';
 import { DateField, SelectField, TextAreaField, TextField } from '../../components/fields';
 import {
   AddRowButton, AIButton, Callout, COMPANY_TYPES, CURRENCIES, FormSection, ItemCard, NumField, PercentField, StringList,
@@ -91,7 +95,54 @@ export function CompanyStep({ data, update }: StepProps) {
           <DateField label="Submission Date" value={ci.submissionDate} onChangeValue={(v) => set('submissionDate', v)} />
         </Grid>
       </FormSection>
-      {ci.companyLogo ? <Callout tone="info">Your company logo (added on the website) is kept and will appear on the cover page.</Callout> : null}
+      <FormSection title="Company Logo">
+        <LogoField value={ci.companyLogo} onChange={(v) => set('companyLogo', v)} />
+      </FormSection>
+    </View>
+  );
+}
+
+/**
+ * Company logo for the cover page of the business plan, stored as a data URL like on the website.
+ * The picture is scaled to 600 px wide and saved as PNG (keeps transparency) so it stays small.
+ */
+function LogoField({ value, onChange }: { value?: string; onChange: (v: string) => void }) {
+  const { colors } = useTheme();
+  const toast = useToast();
+  const [busy, setBusy] = useState(false);
+
+  const pick = async () => {
+    try {
+      const picked = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ['images'], allowsEditing: false, quality: 1 });
+      if (picked.canceled || !picked.assets?.[0]) return;
+      setBusy(true);
+      const out = await manipulateAsync(picked.assets[0].uri, [{ resize: { width: 600 } }], { compress: 0.9, format: SaveFormat.PNG, base64: true });
+      if (!out.base64) throw new Error('The picture could not be read');
+      onChange(`data:image/png;base64,${out.base64}`);
+    } catch (e: any) {
+      toast(e?.message || 'Could not add the logo', 'error');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <View style={{ gap: spacing.sm }}>
+      <AppText variant="caption">Shown on the cover page of your business plan. PNG, JPG, GIF or WebP. A logo at least 300 px wide looks best.</AppText>
+      {value ? (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: spacing.md, borderWidth: 1, borderColor: colors.border, borderRadius: radius.lg, padding: 12, backgroundColor: colors.card }}>
+          <Image source={{ uri: value }} style={{ width: 96, height: 64 }} resizeMode="contain" accessibilityLabel="Company logo" />
+          <View style={{ flex: 1 }}>
+            <AppText weight="700" style={{ fontSize: 13, color: colors.primary }}>Logo uploaded</AppText>
+            <AppText variant="caption">It will appear on the cover page of your business plan.</AppText>
+          </View>
+          <Pressable onPress={() => onChange('')} hitSlop={10} accessibilityRole="button" accessibilityLabel="Remove logo">
+            <Icon name="xmark" size={16} color={colors.textLight} />
+          </Pressable>
+        </View>
+      ) : (
+        <Button title="Upload logo" icon="arrow-up-from-bracket" kind="secondary" loading={busy} onPress={pick} style={{ alignSelf: 'flex-start' }} />
+      )}
     </View>
   );
 }
@@ -516,20 +567,32 @@ export function ReviewStep({ data }: { data: PlanInput }) {
   if (!results) return <Callout tone="warning">Some figures are incomplete, so the summary can't be computed yet. Check steps 4 to 9.</Callout>;
   const last = results.totalRevenue.length - 1;
 
+  const hasProducts = results.productResults.length > 0;
+  const people = data.staff.reduce((sum, m) => sum + m.count, 0);
+  const payroll = data.staff.reduce((sum, m) => sum + m.salaryPerEmployee * m.count, 0);
+
+  // same figures, in the same order, as the website's Financial Summary Preview
   const items: [string, string][] = [
     ['Company', ci.companyName || 'N/A'],
     ['Product / Project', ci.productName || 'N/A'],
+    ['Author', ci.authorName || 'N/A'],
+    ['Location', ci.location || 'N/A'],
+    ['Industry', ci.companyFocus || 'N/A'],
     ['Currency', cur],
-    ['Staff', `${data.staff.reduce((s, m) => s + m.count, 0)} people`],
+    ['Staff Members', `${people} people`],
+    ['Total Monthly Payroll', `${fmt(payroll)} ${cur}`],
     ['Initial Investment (CAPEX)', `${fmt(results.capexTotal)} ${cur}`],
+    ...(hasProducts ? results.productResults.map((pr): [string, string] => [`Unit Cost: ${pr.name}`, `${fmt(Math.round(pr.unitCost))} ${cur}`]) : []),
     ['Annual OPEX (Y1)', `${fmt(results.totalOpex[0] ?? 0)} ${cur}`],
     ['Year 1 Revenue', `${fmt(results.totalRevenue[0] ?? 0)} ${cur}`],
     [`Year ${n} Revenue`, `${fmt(results.totalRevenue[last] ?? 0)} ${cur}`],
     ['Net Income After Tax (Y1)', `${fmt(results.incomeStatement.netIncomeAfterTax[0] ?? 0)} ${cur}`],
-    ['Payback Period', results.payback.years > 0 ? `${results.payback.years.toFixed(2)} yrs` : 'N/A'],
+    [`Net Income After Tax (Y${n})`, `${fmt(results.incomeStatement.netIncomeAfterTax[last] ?? 0)} ${cur}`],
+    ['Payback Period', results.payback.years > 0 ? `${results.payback.years.toFixed(2)} yrs (${results.payback.months.toFixed(1)} mo)` : 'N/A'],
     ['IRR', `${(results.npv.irr * 100).toFixed(1)}%`],
     ['NPV Total', `${fmt(results.npv.npvTotal)} ${cur}`],
     [`B/C Ratio (Y${n})`, (results.cba.bcRatio[last] ?? 0).toFixed(2)],
+    ...(hasProducts ? [['Break Even (Units)', `${results.breakEven.bepUnits.toFixed(0)} units`] as [string, string]] : []),
   ];
 
   const rows: [string, number[]][] = [
@@ -554,7 +617,7 @@ export function ReviewStep({ data }: { data: PlanInput }) {
           ))}
         </Grid>
       </FormSection>
-      <FormSection title={`${n}-Year Projection (${cur})`}>
+      <FormSection title={`${n} Year Projection (${cur})`}>
         {rows.map(([label, vals]) => (
           <View key={label} style={{ borderWidth: 1, borderColor: colors.border, borderRadius: radius.lg, padding: 12, gap: 6, backgroundColor: colors.card }}>
             <AppText weight="600" style={{ fontSize: 13 }}>{label}</AppText>

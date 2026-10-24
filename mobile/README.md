@@ -44,8 +44,15 @@ mobile/
   100 per day, and 6 AI plan generations per hour and 20 per day. When a limit is reached the app shows
   the server's message (which limit, and when to try again).
 
-Not yet on mobile (use the website): Admin Panel / User Management (admins get a shortcut in the
-drawer), and uploading a company logo (a logo added on the website is kept when editing).
+- **Company logo** — pick a picture in Step 1 of the wizard. It is scaled to 600 px wide, saved as PNG
+  and shown on the cover page of the business plan, the same as the website.
+- **Admin Panel** (admins and super admins) — Overview (platform numbers and plans per day), Users
+  (search, add or remove credits, credit history), Plans (every plan, searchable) and Requests
+  (approve or reject credit requests, with a note).
+- **User Management** (super admins) — see every user and change their role.
+
+Not yet on mobile (use the website): the Disease risk tab of the Admin Panel (the drawer has a
+"More admin tools (website)" shortcut for admins).
 
 ## Clerk setup for the mobile app
 

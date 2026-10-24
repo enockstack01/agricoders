@@ -51,6 +51,10 @@ export function CustomDrawer(props: DrawerContentComponentProps) {
   const activeRoute = props.state.routeNames[props.state.index];
 
   const role = useRole();
+  // hide items the signed in role cannot use (the Administration section is for admins only)
+  const visibleSections = NAV_SECTIONS
+    .map((section) => ({ ...section, items: section.items.filter((item) => !item.roles || item.roles.includes(role)) }))
+    .filter((section) => section.items.length > 0);
 
   const go = (route: string) => {
     haptics.select();
@@ -80,7 +84,7 @@ export function CustomDrawer(props: DrawerContentComponentProps) {
 
       {/* .sidebar-nav */}
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingVertical: 12 }}>
-        {NAV_SECTIONS.map((section) => (
+        {visibleSections.map((section) => (
           <View key={section.label || 'root'}>
             {section.label ? (
               <Text
@@ -102,7 +106,7 @@ export function CustomDrawer(props: DrawerContentComponentProps) {
       {/* .sidebar-footer */}
       <View style={{ borderTopWidth: 1, borderTopColor: DIVIDER, paddingTop: 6, paddingBottom: insets.bottom + 8 }}>
         {role !== 'user' ? (
-          <NavItem icon="arrow-up-right-from-square" label="Admin Panel (website)" onPress={() => Linking.openURL(`${WEB_ORIGIN}/plan/admin`)} />
+          <NavItem icon="arrow-up-right-from-square" label="More admin tools (website)" onPress={() => Linking.openURL(`${WEB_ORIGIN}/plan/admin`)} />
         ) : null}
         <NavItem icon="logout" label="Sign out" onPress={onSignOut} danger />
       </View>

@@ -1,9 +1,12 @@
-export type NavItem = { route: string; label: string; icon: string };
+import type { NavRole } from '../lib/useResource';
+
+/** roles: who sees the item (everyone when omitted). The server checks the role again on every call. */
+export type NavItem = { route: string; label: string; icon: string; roles?: NavRole[] };
 export type NavSection = { label?: string; items: NavItem[] };
 
 /**
- * Drawer layout — mirrors the Agriplan website's sidebar sections (AppShell.tsx), with
- * Font Awesome solid icons as in CropManager. Admin tools stay on the website for now.
+ * Drawer layout, the same sections as the Agriplan website's sidebar (AppShell.tsx), with
+ * Font Awesome solid icons. The Administration section is only shown to admins.
  */
 export const NAV_SECTIONS: NavSection[] = [
   { items: [{ route: 'dashboard', label: 'Dashboard', icon: 'table-cells-large' }] },
@@ -12,6 +15,13 @@ export const NAV_SECTIONS: NavSection[] = [
     items: [
       { route: 'plans', label: 'My Business Plans', icon: 'folder-open' },
       { route: 'plan-form', label: 'New Business Plan', icon: 'circle-plus' },
+    ],
+  },
+  {
+    label: 'Administration',
+    items: [
+      { route: 'admin', label: 'Admin Panel', icon: 'chart-column', roles: ['admin', 'super_admin'] },
+      { route: 'user-management', label: 'User Management', icon: 'users', roles: ['super_admin'] },
     ],
   },
   {

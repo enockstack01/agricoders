@@ -8,6 +8,9 @@ import { PlansScreen } from '../screens/PlansScreen';
 import { PlanWizardScreen } from '../screens/wizard/PlanWizardScreen';
 import { CreditsScreen } from '../screens/CreditsScreen';
 import { SettingsScreen } from '../screens/SettingsScreen';
+import { AdminScreen } from '../screens/admin/AdminScreen';
+import { UserManagementScreen } from '../screens/admin/UserManagementScreen';
+import { useRole } from '../lib/useResource';
 
 export type DrawerParams = {
   dashboard: undefined;
@@ -16,6 +19,8 @@ export type DrawerParams = {
   'plan-form': { editId?: string; nonce?: number } | undefined;
   credits: { request?: boolean } | undefined;
   settings: undefined;
+  admin: undefined;
+  'user-management': undefined;
 };
 
 const Drawer = createDrawerNavigator<DrawerParams>();
@@ -30,6 +35,7 @@ export function AppNavigator() {
   const { colors } = useTheme();
   // web: the sidebar is fixed from 768px up and becomes a slide-out menu below it
   const { isTablet } = useLayout();
+  const role = useRole();
   return (
     <Drawer.Navigator
       initialRouteName="dashboard"
@@ -48,6 +54,12 @@ export function AppNavigator() {
       <Drawer.Screen name="plan-form" component={PlanFormHost} options={{ title: 'Business Plan' }} />
       <Drawer.Screen name="credits" component={CreditsScreen} options={{ title: 'Credits' }} />
       <Drawer.Screen name="settings" component={SettingsScreen} options={{ title: 'Profile & Settings' }} />
+      {role === 'admin' || role === 'super_admin' ? (
+        <Drawer.Screen name="admin" component={AdminScreen} options={{ title: 'Admin Panel' }} />
+      ) : null}
+      {role === 'super_admin' ? (
+        <Drawer.Screen name="user-management" component={UserManagementScreen} options={{ title: 'User Management' }} />
+      ) : null}
     </Drawer.Navigator>
   );
 }
