@@ -13,7 +13,7 @@ import { NAV_SECTIONS } from './navConfig';
 
 /*
  * The web app's sidebar (layout.css .sidebar): dark green gradient, logo row with a
- * translucent tile and two-tone "Agriplan", uppercase section labels, 13px items
+ * translucent tile and two-tone "Planner", uppercase section labels, 13px items
  * with a highlighted background and #66BB6A left accent on the active page.
  */
 const TEXT = 'rgba(255,255,255,0.7)';
@@ -64,7 +64,7 @@ export function CustomDrawer(props: DrawerContentComponentProps) {
   };
 
   const onSignOut = async () => {
-    const ok = await confirm('Sign out of Agriplan on this device?', { confirmLabel: 'Sign out', danger: true });
+    const ok = await confirm('Sign out of Planner on this device?', { confirmLabel: 'Sign out', danger: true });
     if (ok) signOut();
   };
 
@@ -79,7 +79,7 @@ export function CustomDrawer(props: DrawerContentComponentProps) {
         }}
       >
         <Image source={require('../../assets/icon.png')} style={{ width: 36, height: 36, borderRadius: 8 }} />
-        <Text style={{ fontSize: 16, fontFamily: ff('700'), color: '#FFFFFF', letterSpacing: 3, textTransform: 'uppercase' }}>Agriplan</Text>
+        <Text style={{ fontSize: 16, fontFamily: ff('700'), color: '#FFFFFF', letterSpacing: 3, textTransform: 'uppercase' }}>Planner</Text>
       </View>
 
       {/* .sidebar-nav */}
@@ -89,7 +89,7 @@ export function CustomDrawer(props: DrawerContentComponentProps) {
             {section.label ? (
               <Text
                 style={{
-                  fontSize: 10, fontFamily: ff('700'), textTransform: 'uppercase', letterSpacing: 1.2,
+                  fontSize: 12, fontFamily: ff('700'), textTransform: 'uppercase', letterSpacing: 1.2,
                   color: 'rgba(255,255,255,0.35)', paddingTop: 16, paddingBottom: 6, paddingHorizontal: 20,
                 }}
               >

@@ -4,7 +4,7 @@ import { api } from './api';
 import type { FormSubmission, UserProfileDefaults } from '../shared/types';
 
 /*
- * Data hooks for the Agriplan API (the Next.js site's /api routes). Same endpoints and
+ * Data hooks for the Planner API (the Next.js site's /api routes). Same endpoints and
  * payloads as the website; the Clerk session token is attached by lib/api.ts.
  */
 

@@ -55,7 +55,7 @@ function ToastItem({ item, onDone }: { item: Item; onDone: (id: number) => void 
     <Animated.View
       style={{
         opacity: anim,
-        transform: [{ translateY: anim.interpolate({ inputRange: [0, 1], outputRange: [-24, 0] }) }],
+        transform: [{ translateY: anim.interpolate({ inputRange: [0, 1], outputRange: [24, 0] }) }],
         maxWidth: '92%',
         marginBottom: spacing.sm,
       }}
@@ -102,7 +102,8 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   return (
     <ToastCtx.Provider value={value}>
       {children}
-      <View pointerEvents="box-none" style={[StyleSheet.absoluteFill, { top: insets.top + spacing.sm, alignItems: 'center' }]}>
+      {/* bottom of the screen, above the tab bar and the Back and Next bar, like an Android snackbar */}
+      <View pointerEvents="box-none" style={[StyleSheet.absoluteFill, { justifyContent: 'flex-end', alignItems: 'center', paddingBottom: insets.bottom + 84 }]}>
         {items.map((t) => (
           <ToastItem key={t.id} item={t} onDone={remove} />
         ))}

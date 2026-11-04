@@ -63,7 +63,7 @@ export const AGRICODERS_APPS: AppEntry[] = [
     tagline: "Livestock Management System",
     description:
       "Track herds, health records, breeding cycles, feed schedules and production for your livestock operation in one place, online or offline, in ten languages.",
-    href: "https://livestockpro.agricoders.com/",
+    href: "https://livestock.agricoders.com/",
     status: "live",
     category: "Farm Management",
     accentColor: "#b45309",
@@ -98,9 +98,9 @@ export const AGRICODERS_APPS: AppEntry[] = [
     ],
   },
   {
-    id: "agriplan",
-    icon: "/brand/icons/agriplan.png",
-    name: "Agriplan",
+    id: "planner",
+    icon: "/brand/icons/planner.png",
+    name: "Planner",
     tagline: "AI Business Plan and Financial Model Generator",
     description:
       "Generate investor ready business plans and 19 sheet financial models in under 15 minutes. Fully written, formatted and ready to submit.",

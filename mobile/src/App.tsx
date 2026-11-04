@@ -3,7 +3,8 @@ import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer, DefaultTheme, DarkTheme } from '@react-navigation/native';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { onlineManager, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { addNetworkStateListener } from 'expo-network';
 import { ClerkProvider, SignedIn, SignedOut, useAuth } from '@clerk/clerk-expo';
 import { useFonts, Carlito_400Regular, Carlito_700Bold } from '@expo-google-fonts/carlito';
 
@@ -21,6 +22,12 @@ import { AppNavigator } from './navigation/AppNavigator';
 import { AuthNavigator } from './navigation/AuthNavigator';
 import { ConnectionErrorScreen } from './screens/ConnectionErrorScreen';
 import { SignInServiceErrorScreen } from './screens/SignInServiceErrorScreen';
+
+// Tell React Query when the phone goes offline or comes back, so screens refresh by themselves on reconnect.
+onlineManager.setEventListener((setOnline) => {
+  const sub = addNetworkStateListener((s) => setOnline(s.isConnected !== false && s.isInternetReachable !== false));
+  return () => sub.remove();
+});
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { retry: 1, refetchOnWindowFocus: false, staleTime: 15_000 } },
@@ -46,7 +53,7 @@ function RootGate() {
     if (!isLoading) splashReady();
   }, [isLoading, splashReady]);
 
-  if (isLoading) return <Loading label="Connecting to Agriplan…" />;
+  if (isLoading) return <Loading label="Connecting to Planner…" />;
   if (isError || !defaults) {
     return <ConnectionErrorScreen error={error} retrying={isFetching} onRetry={() => refetch()} />;
   }
@@ -94,7 +101,7 @@ function AppShell({ onRetry }: { onRetry: () => void }) {
   }, [isLoaded]);
 
   if (!isLoaded) {
-    return stalled ? <SignInServiceErrorScreen onRetry={onRetry} /> : <Loading label="Connecting to Agriplan…" />;
+    return stalled ? <SignInServiceErrorScreen onRetry={onRetry} /> : <Loading label="Connecting to Planner…" />;
   }
   return (
     <QueryClientProvider client={queryClient}>

@@ -33,11 +33,11 @@ export function ConnectionErrorScreen({ error, retrying, onRetry }: { error: any
         <Icon name={network ? 'cloud-off-outline' : 'alert-circle-outline'} size={46} color={colors.primary} />
       </View>
       <AppText variant="title" style={{ fontSize: 22, textAlign: 'center' }}>
-        {network ? "Can't reach Agriplan" : 'Something went wrong'}
+        {network ? "Can't reach Planner" : 'Something went wrong'}
       </AppText>
       <AppText variant="subtitle" style={{ textAlign: 'center', marginTop: spacing.sm, maxWidth: 340 }}>
         {network
-          ? "You're signed in, but we couldn't connect to Agriplan. Check that your phone has an internet connection, then try again."
+          ? "You're signed in, but we couldn't connect to Planner. Check that your phone has an internet connection, then try again."
           : error?.message || 'Your account could not be loaded.'}
       </AppText>
 

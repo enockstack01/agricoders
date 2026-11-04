@@ -1,5 +1,5 @@
 "use client";
-// Agriplan icon set — Phosphor icons exposed under the lucide-style names the
+// Planner icon set — Phosphor icons exposed under the lucide-style names the
 // app already uses. Default weight is "fill", matching CropManager's Font Awesome solid set;
 // small UI glyphs (chevrons, ×, +, spinners) render "bold".
 import type { CSSProperties } from "react";

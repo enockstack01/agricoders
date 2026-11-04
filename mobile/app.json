@@ -1,23 +1,23 @@
 {
   "expo": {
-    "name": "Agriplan",
-    "slug": "agriplan",
+    "name": "Planner",
+    "slug": "planner",
     "owner": "enockstack",
-    "version": "1.1.0",
+    "version": "1.2.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "scheme": "agriplan",
+    "scheme": "planner",
     "userInterfaceStyle": "automatic",
     "assetBundlePatterns": [
       "**/*"
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.agricoders.agriplan"
+      "bundleIdentifier": "com.agricoders.planner"
     },
     "android": {
-      "package": "com.agricoders.agriplan",
-      "versionCode": 2,
+      "package": "com.agricoders.planner",
+      "versionCode": 5,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundImage": "./assets/adaptive-icon-bg.png",
@@ -41,7 +41,7 @@
         }
       ],
       "@react-native-community/datetimepicker",
-      ["expo-image-picker", { "photosPermission": "Agriplan uses your photos so you can add your company logo to the cover page of your business plan." }],
+      ["expo-image-picker", { "photosPermission": "Planner uses your photos so you can add your company logo to the cover page of your business plan." }],
       "expo-font",
       "expo-status-bar",
       "expo-web-browser",

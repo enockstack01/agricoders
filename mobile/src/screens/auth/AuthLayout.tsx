@@ -9,7 +9,7 @@ import { haptics } from '../../lib/haptics';
 
 /**
  * The web app's sign-in page at phone width (client/src/components/AuthScreen.jsx):
- * white page, brand row (gradient leaf tile + "Agriplan"), page heading and
+ * white page, brand row (gradient leaf tile + "Planner"), page heading and
  * subtitle, then a Clerk-style card with a centred title/subtitle holding the form,
  * and an optional line under the card ("Don't have an account? Sign up").
  */

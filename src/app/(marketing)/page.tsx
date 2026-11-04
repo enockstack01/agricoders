@@ -36,7 +36,7 @@ import { AGRICODERS_APPS } from "@/lib/apps";
 export const metadata: Metadata = {
   title: "Agricoders | Building the Future of Digital Agriculture",
   description:
-    "Agricoders is building the operating system for African agriculture: CropManager, LivestockPro and Agriplan, made in Kigali for African farmers.",
+    "Agricoders is building the operating system for African agriculture: CropManager and LivestockPro for farmers, and Planner, which writes business plans and financial models for any business. Made in Kigali.",
 };
 
 /* Brand tokens, taken from the Agricoders pitch decks */
@@ -190,7 +190,7 @@ export default function AgricodersPage() {
                     className="inline-flex items-center justify-center gap-2 rounded-full border-2 border-white/40 px-8 py-4 text-base font-bold text-white no-underline transition-all hover:-translate-y-0.5 hover:bg-white/10"
                   >
                     <Stack size={20} weight="duotone" />
-                    Try Agriplan
+                    Try Planner
                   </Link>
                 </div>
               </Reveal>

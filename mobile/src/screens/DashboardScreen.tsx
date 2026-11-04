@@ -4,23 +4,22 @@ import { useNavigation } from '@react-navigation/native';
 import { useUser } from '@clerk/clerk-expo';
 import { useTheme } from '../theme/ThemeProvider';
 import { spacing } from '../theme/theme';
-import { AppText, ChartCard, EmptyState, Grid, KpiCard, PageHeader, Screen, SkeletonList, useLayout } from '../components/ui';
+import { AppText, ChartCard, EmptyState, Grid, Screen, SkeletonList, StatCard } from '../components/ui';
 import { Button } from '../components/Button';
 import { Icon } from '../components/Icon';
-import { PressableScale } from '../components/PressableScale';
+import { BannerContext } from '../components/banner';
 import { useConfirm } from '../components/Confirm';
 import { useToast } from '../components/Toast';
 import { CreditRequestSheet, DocumentSheet, PlanCard, useDocumentActions } from '../components/plan';
 import { useCredits, useDocMeta, usePlanMutations, useSubmissions, Submission } from '../lib/useResource';
 import { CREDITS_PER_DOC } from '../lib/documents';
-import { formatDate, getGreeting } from '../lib/format';
+import { getGreeting } from '../lib/format';
 
-/** Website dashboard: welcome header, 4 KPI cards, recent plans, quick actions, what's included. */
+/** Home: greeting, credit balance, plan counts and the latest plans. */
 export function DashboardScreen() {
   const nav = useNavigation<any>();
   const { colors } = useTheme();
   const { user } = useUser();
-  const { columns } = useLayout();
   const confirm = useConfirm();
   const toast = useToast();
 
@@ -40,7 +39,6 @@ export function DashboardScreen() {
       return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
     }).length;
   }, [list]);
-  const latest = list[0];
   const balance = credits.data?.credits;
   const generations = balance != null ? Math.floor(balance / CREDITS_PER_DOC) : null;
 
@@ -61,55 +59,51 @@ export function DashboardScreen() {
     }
   };
 
-  const QuickAction = ({ icon, title, sub, onPress }: { icon: string; title: string; sub: string; onPress: () => void }) => (
-    <PressableScale
-      onPress={onPress}
-      accessibilityRole="button"
-      style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, borderWidth: 1, borderColor: colors.border, borderRadius: 16, backgroundColor: colors.card }}
-    >
-      <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#1B5E20', alignItems: 'center', justifyContent: 'center' }}>
-        <Icon name={icon} size={14} color="#FFFFFF" />
-      </View>
-      <View style={{ flex: 1 }}>
-        <AppText weight="600" style={{ fontSize: 13 }}>{title}</AppText>
-        <AppText variant="caption">{sub}</AppText>
-      </View>
-      <Icon name="chevron-right" size={11} color={colors.textLight} />
-    </PressableScale>
-  );
+  const newPlan = () => nav.navigate('plan-form', { editId: undefined, nonce: Date.now() });
 
   return (
-    <Screen refreshControl={<RefreshControl refreshing={plans.isRefetching} onRefresh={refresh} tintColor={colors.primary} />}>
-      <PageHeader
-        title={`${getGreeting()}${user?.firstName ? `, ${user.firstName}` : ''}`}
-        subtitle="Manage your business plans and financial models"
-        action={
-          <View style={{ flexDirection: 'row', gap: 10, flexWrap: 'wrap' }}>
-            <Button title="New Business Plan" icon="circle-plus" onPress={() => nav.navigate('plan-form', { editId: undefined, nonce: Date.now() })} />
-            <Button title="Request Credits" icon="paper-plane" kind="secondary" onPress={() => setRequestOpen(true)} />
-          </View>
-        }
-      />
+    <Screen refreshControl={<RefreshControl refreshing={plans.isRefetching} onRefresh={refresh} tintColor={colors.primary} />} contentStyle={{ paddingTop: 16, gap: spacing.lg }}>
+      <View accessible accessibilityRole="header" accessibilityLabel={`${getGreeting()}${user?.firstName ? `, ${user.firstName}` : ''}`}>
+        <AppText weight="700" style={{ fontSize: 26, lineHeight: 32 }}>{getGreeting()}{user?.firstName ? `, ${user.firstName}` : ''}</AppText>
+        <AppText variant="subtitle" style={{ fontSize: 15, marginTop: 2 }}>Here is where your business plans stand.</AppText>
+      </View>
 
-      <Grid columns={columns >= 2 ? 2 : 1} gap={spacing.lg} style={{ marginBottom: 24 }}>
-        <KpiCard icon="file-lines" tone="green" label="Total Plans" value={plans.isLoading ? '…' : list.length} onPress={() => nav.navigate('plans')} />
-        <KpiCard icon="calendar" tone="blue" label="This Month" value={plans.isLoading ? '…' : thisMonth} />
-        <KpiCard
-          icon="coins"
-          tone={balance === 0 ? 'red' : balance != null && balance < 10 ? 'orange' : 'green'}
-          label={generations != null ? `Credit Balance · ${generations} generation${generations === 1 ? '' : 's'}` : 'Credit Balance'}
-          value={balance ?? '…'}
-          onPress={() => nav.navigate('credits')}
-        />
-        <KpiCard icon="arrow-trend-up" tone="purple" label={latest ? `Latest Plan · ${formatDate(latest.createdAt)}` : 'Latest Plan'} value={latest?.companyInfo?.companyName || 'N/A'} />
+      {/* credit balance: each generated document costs credits, so this is the number to watch */}
+      <BannerContext.Provider value={true}>
+        <View style={{ backgroundColor: '#1B5E20', borderRadius: 20, padding: 20, gap: 14, overflow: 'hidden' }}>
+          <View pointerEvents="none" style={{ position: 'absolute', width: 220, height: 220, borderRadius: 110, backgroundColor: 'rgba(255,255,255,0.05)', top: -90, right: -60 }} />
+          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
+            <View style={{ flex: 1 }}>
+              <AppText weight="700" style={{ fontSize: 12, letterSpacing: 2.4, textTransform: 'uppercase', color: '#F9A825' }}>Credit balance</AppText>
+              <AppText weight="700" style={{ fontSize: 44, lineHeight: 52, color: '#FFFFFF' }} accessibilityLabel={`${balance ?? 'loading'} credits`}>{balance ?? '…'}</AppText>
+              <AppText style={{ fontSize: 15, color: 'rgba(255,255,255,0.88)' }}>
+                {generations != null ? `${generations} document${generations === 1 ? '' : 's'} can be generated` : 'Checking your balance'}
+              </AppText>
+            </View>
+            <View style={{ width: 52, height: 52, borderRadius: 26, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name="coins" size={22} color="#1B5E20" />
+            </View>
+          </View>
+          {balance === 0 ? (
+            <AppText weight="700" style={{ fontSize: 14, color: '#F9A825' }}>No credits left. Each document costs {CREDITS_PER_DOC} credits.</AppText>
+          ) : null}
+          <View style={{ flexDirection: 'row', gap: 10, flexWrap: 'wrap' }}>
+            <Button title="Request credits" icon="paper-plane" onPress={() => setRequestOpen(true)} />
+            <Button title="History" kind="secondary" onPress={() => nav.navigate('credits')} />
+          </View>
+        </View>
+      </BannerContext.Provider>
+
+      <Grid columns={2} gap={spacing.md}>
+        <StatCard icon="file-lines" label="Total plans" value={plans.isLoading ? '…' : list.length} onPress={() => nav.navigate('plans')} />
+        <StatCard icon="calendar" label="This month" value={plans.isLoading ? '…' : thisMonth} />
       </Grid>
 
       <ChartCard
-        title="Recent Business Plans"
+        title="Recent plans"
         icon="folder-open"
         right={list.length > 3 ? <Button title="View all" kind="ghost" size="sm" onPress={() => nav.navigate('plans')} /> : null}
         bodyStyle={{ padding: list.length ? 12 : 0, gap: 12 }}
-        style={{ marginBottom: 24 }}
       >
         {plans.isLoading ? (
           <SkeletonList rows={2} />
@@ -118,8 +112,8 @@ export function DashboardScreen() {
             icon="file-lines"
             title="No plans yet"
             description="Create your first business plan to get started."
-            actionLabel="Create Business Plan"
-            onAction={() => nav.navigate('plan-form', { editId: undefined, nonce: Date.now() })}
+            actionLabel="Create business plan"
+            onAction={newPlan}
           />
         ) : (
           list.slice(0, 3).map((p) => (
@@ -135,30 +129,23 @@ export function DashboardScreen() {
         )}
       </ChartCard>
 
-      <Grid columns={columns >= 2 ? 2 : 1} gap={spacing.lg}>
-        <ChartCard title="Quick Actions" icon="bolt" bodyStyle={{ gap: 10 }}>
-          <QuickAction icon="circle-plus" title="New Business Plan" sub="Start the 10 step wizard" onPress={() => nav.navigate('plan-form', { editId: undefined, nonce: Date.now() })} />
-          <QuickAction icon="coins" title="Request Credits" sub={`Balance: ${balance ?? '…'}`} onPress={() => setRequestOpen(true)} />
-          <QuickAction icon="gear" title="Plan Defaults" sub="Currency, tax & loan rates" onPress={() => nav.navigate('settings')} />
-        </ChartCard>
-        <ChartCard title="What's Included" icon="layer-group" bodyStyle={{ gap: 14 }}>
-          {[
-            { icon: 'layer-group', title: 'AI Enhanced Documents', desc: 'Our intelligent system writes the entire business plan proposal.' },
-            { icon: 'chart-column', title: 'Python Chart Engine', desc: '6 professional charts embedded in your Word document.' },
-            { icon: 'download', title: 'Multi Format Export', desc: 'Business Plan (.docx) + 19 sheet Financial Model (.xlsx).' },
-          ].map((f) => (
-            <View key={f.title} style={{ flexDirection: 'row', gap: 12 }}>
-              <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#1B5E20', alignItems: 'center', justifyContent: 'center' }}>
-                <Icon name={f.icon} size={14} color="#FFFFFF" />
-              </View>
-              <View style={{ flex: 1 }}>
-                <AppText weight="600" style={{ fontSize: 13 }}>{f.title}</AppText>
-                <AppText variant="subtitle" style={{ fontSize: 12 }}>{f.desc}</AppText>
-              </View>
+      <ChartCard title="What is included" icon="layer-group" bodyStyle={{ gap: 16 }}>
+        {[
+          { icon: 'layer-group', title: 'AI enhanced documents', desc: 'Our intelligent system writes the entire business plan proposal.' },
+          { icon: 'chart-column', title: 'Charts built in', desc: 'Six professional charts embedded in your Word document.' },
+          { icon: 'download', title: 'Multi format export', desc: 'Business Plan (.docx) and a 19 sheet Financial Model (.xlsx).' },
+        ].map((f) => (
+          <View key={f.title} style={{ flexDirection: 'row', gap: 12 }}>
+            <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#1B5E20', alignItems: 'center', justifyContent: 'center' }}>
+              <Icon name={f.icon} size={15} color="#FFFFFF" />
             </View>
-          ))}
-        </ChartCard>
-      </Grid>
+            <View style={{ flex: 1 }}>
+              <AppText weight="700" style={{ fontSize: 15 }}>{f.title}</AppText>
+              <AppText variant="subtitle" style={{ fontSize: 14 }}>{f.desc}</AppText>
+            </View>
+          </View>
+        ))}
+      </ChartCard>
 
       <DocumentSheet plan={docPlan} meta={docPlan ? meta.data?.[docPlan._id] : undefined} onClose={() => setDocPlan(null)} onRun={docs.run} />
       <CreditRequestSheet visible={requestOpen} onClose={() => setRequestOpen(false)} />

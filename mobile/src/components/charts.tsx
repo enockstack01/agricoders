@@ -39,7 +39,7 @@ function LegendDot({ color, label }: { color: string; label: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
       <View style={{ width: 9, height: 9, borderRadius: 5, backgroundColor: color }} />
-      <AppText variant="caption" style={{ fontSize: 11 }}>{label}</AppText>
+      <AppText variant="caption" style={{ fontSize: 12 }}>{label}</AppText>
     </View>
   );
 }

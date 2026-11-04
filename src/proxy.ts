@@ -18,7 +18,7 @@ const isProtectedRoute = createRouteMatcher([
   "/api/onehealth(.*)",
 ]);
 
-// Pages a signed in user has no reason to see: the Agriplan landing page and the sign in or sign up screens.
+// Pages a signed in user has no reason to see: the Planner landing page and the sign in or sign up screens.
 const isSignedOutOnlyRoute = createRouteMatcher(["/plan", "/plan/sign-in(.*)", "/plan/sign-up(.*)"]);
 
 // Users whose role has already been resolved by this server process. A new session token

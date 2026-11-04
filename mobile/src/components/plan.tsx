@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { ActivityIndicator, Modal, Pressable, StyleSheet, View } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTheme } from '../theme/ThemeProvider';
-import { ff, KPI_TONES, radius, shadow, spacing } from '../theme/theme';
+import { KPI_TONES, radius, shadow, spacing } from '../theme/theme';
 import { AppText, Badge, Card, IconButton } from './ui';
 import { Icon } from './Icon';
 import { Button } from './Button';
@@ -26,7 +26,7 @@ export function Stepper({ value, onChange }: { value: number; onChange: (v: numb
       accessibilityRole="button"
       accessibilityLabel={label === '−' ? 'Decrease' : 'Increase'}
       style={({ pressed }) => ({
-        width: 34, height: 34, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border,
+        width: 44, height: 44, borderRadius: 22, borderWidth: 1, borderColor: colors.border,
         alignItems: 'center', justifyContent: 'center', opacity: disabled ? 0.4 : 1,
         backgroundColor: pressed ? colors.bg : colors.card,
       })}
@@ -257,7 +257,7 @@ export function DocumentSheet({
         <AppText weight="600" style={{ fontSize: 13 }}>{title}</AppText>
         {sub ? <AppText variant="caption">{sub}</AppText> : null}
       </View>
-      {right ? <AppText weight="700" style={{ fontSize: 11, color: right === 'Free' ? colors.primary : colors.textLight }}>{right}</AppText> : null}
+      {right ? <AppText weight="700" style={{ fontSize: 12, color: right === 'Free' ? colors.primary : colors.textLight }}>{right}</AppText> : null}
     </Pressable>
   );
 
@@ -296,7 +296,7 @@ export function DocumentSheet({
 }
 
 /* ----------------------------------------------------------------- PlanCard */
-/** One business plan (website table row → mobile card). */
+/** One business plan. Tap the card for its documents; the menu button holds Edit and Delete. */
 export function PlanCard({
   plan,
   meta,
@@ -311,29 +311,56 @@ export function PlanCard({
   onDelete: () => void;
 }) {
   const { colors } = useTheme();
+  const [menu, setMenu] = useState(false);
   const ci = plan.companyInfo || ({} as Submission['companyInfo']);
   const sub = [ci.companyFocus, ci.location].filter(Boolean).join(' · ');
+  const name = ci.companyName || 'Unnamed plan';
+
+  const MenuRow = ({ icon, label, danger, onPress }: { icon: string; label: string; danger?: boolean; onPress: () => void }) => (
+    <Pressable
+      onPress={() => { haptics.select(); setMenu(false); onPress(); }}
+      accessibilityRole="button"
+      style={({ pressed }) => ({
+        flexDirection: 'row', alignItems: 'center', gap: 14, minHeight: 56, paddingHorizontal: 8, borderRadius: radius.md,
+        backgroundColor: pressed ? colors.bg : 'transparent',
+      })}
+    >
+      <Icon name={icon} size={18} color={danger ? colors.red : colors.textLight} />
+      <AppText weight="600" style={{ fontSize: 16, color: danger ? colors.red : colors.text }}>{label}</AppText>
+    </Pressable>
+  );
+
   return (
     <Card style={{ padding: 0 }}>
-      <PressableScale onPress={onDocuments} scaleTo={0.99} accessibilityRole="button" accessibilityLabel={`Documents for ${ci.companyName}`} style={{ padding: 16, gap: 10 }}>
+      <PressableScale onPress={onDocuments} scaleTo={0.99} accessibilityRole="button" accessibilityLabel={`Documents for ${name}`} style={{ padding: 16, gap: 12 }}>
         <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 12 }}>
-          <View style={{ width: 40, height: 40, borderRadius: 10, backgroundColor: colors.primaryLight, alignItems: 'center', justifyContent: 'center' }}>
-            <Icon name="file-lines" size={16} color={colors.primary} />
+          <View style={{ width: 44, height: 44, borderRadius: 22, backgroundColor: '#1B5E20', alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name="file-lines" size={17} color="#FFFFFF" />
           </View>
           <View style={{ flex: 1, minWidth: 0 }}>
-            <AppText weight="600" style={{ fontSize: 15 }} numberOfLines={1}>{ci.companyName || 'Unnamed plan'}</AppText>
-            {ci.productName ? <AppText variant="subtitle" style={{ fontSize: 12 }} numberOfLines={1}>{ci.productName}</AppText> : null}
-            <AppText variant="caption" numberOfLines={1}>{[sub, formatDate(plan.createdAt)].filter(Boolean).join(' · ')}</AppText>
+            <AppText weight="700" style={{ fontSize: 17 }} numberOfLines={2}>{name}</AppText>
+            {ci.productName ? <AppText variant="subtitle" style={{ fontSize: 14 }} numberOfLines={1}>{ci.productName}</AppText> : null}
+            {sub ? <AppText variant="caption" style={{ fontSize: 13 }} numberOfLines={2}>{sub}</AppText> : null}
+            <AppText variant="caption" style={{ fontSize: 13 }}>Created {formatDate(plan.createdAt)}</AppText>
           </View>
-          <IconButton name="pen" label="Edit plan" onPress={onEdit} />
-          <IconButton name="trash-can" label="Delete plan" color={colors.red} onPress={onDelete} />
+          <View style={{ marginTop: -6, marginRight: -8 }}>
+            <IconButton name="ellipsis-vertical" label={`More actions for ${name}`} size={16} onPress={() => setMenu(true)} />
+          </View>
         </View>
         <View style={{ flexDirection: 'row', gap: 8, flexWrap: 'wrap' }}>
           <Badge label={meta?.docx ? `Business Plan · ${formatDate(meta.docx)}` : 'Business Plan'} tone="info" />
           <Badge label={meta?.xlsx ? `Financial Model · ${formatDate(meta.xlsx)}` : 'Financial Model'} tone="success" />
         </View>
-        <AppText weight="600" style={{ fontSize: 12, color: colors.primary, fontFamily: ff('600') }}>Tap for documents ›</AppText>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+          <AppText weight="700" style={{ fontSize: 14, color: colors.primary }}>Open documents</AppText>
+          <Icon name="chevron-right" size={11} color={colors.primary} />
+        </View>
       </PressableScale>
+
+      <Sheet visible={menu} onClose={() => setMenu(false)} title={name} size="sm">
+        <MenuRow icon="pen" label="Edit plan" onPress={onEdit} />
+        <MenuRow icon="trash-can" label="Delete plan" danger onPress={onDelete} />
+      </Sheet>
     </Card>
   );
 }

@@ -8,7 +8,7 @@ import { NumberField, TextField } from './fields';
 import { haptics } from '../lib/haptics';
 
 /*
- * Field helpers for Agriplan's plan forms (website FormField.tsx equivalents):
+ * Field helpers for Planner's plan forms (website FormField.tsx equivalents):
  * numeric/percent inputs that keep a numeric value, editable string lists, repeatable
  * item cards and the "Generate with AI" button.
  */
@@ -146,7 +146,7 @@ export function AIButton({ onPress, loading, label = 'Generate with AI' }: { onP
       })}
     >
       <Icon name={loading ? 'spinner' : 'wand-magic-sparkles'} size={11} color={purple} />
-      <AppText weight="600" style={{ fontSize: 11.5, color: purple }}>{loading ? 'Generating…' : label}</AppText>
+      <AppText weight="600" style={{ fontSize: 12, color: purple }}>{loading ? 'Generating…' : label}</AppText>
     </Pressable>
   );
 }

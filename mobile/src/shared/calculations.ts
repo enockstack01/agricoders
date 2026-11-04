@@ -1,4 +1,4 @@
-// Shared with the Agriplan website: copied verbatim from src/lib/calculations.ts — keep the two in sync.
+// Shared with the Planner website: copied verbatim from src/lib/calculations.ts — keep the two in sync.
 import {
   FinancialData,
   StaffMember,

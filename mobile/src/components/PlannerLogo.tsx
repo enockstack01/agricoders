@@ -2,7 +2,7 @@ import React from 'react';
 import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from 'react-native-svg';
 
 /*
- * The Agriplan mark — three stacked layers (a plan built up layer by layer), the same
+ * The Planner mark — three stacked layers (a plan built up layer by layer), the same
  * symbol as the website's sidebar logo. Drawn in a 24-unit box; `tile` adds the rounded
  * green gradient square used for the app icon and the auth screens.
  */
@@ -12,7 +12,7 @@ const LOW = 'M2 17 L12 22 L22 17';
 
 let uid = 0;
 
-export function AgriplanLogo({
+export function PlannerLogo({
   size = 48,
   color = '#FFFFFF',
   tile = false,
@@ -26,7 +26,7 @@ export function AgriplanLogo({
   /** mark size within the box (defaults to the icon's proportions) */
   scale?: number;
 }) {
-  const id = React.useMemo(() => `agri${++uid}`, []);
+  const id = React.useMemo(() => `planner${++uid}`, []);
   const s = scale ?? (tile ? 0.62 : 0.86);
   const offset = 12 - 12 * s;
 

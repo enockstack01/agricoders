@@ -32,7 +32,7 @@ export class InsufficientCreditsError extends Error {
 }
 
 function fileName(companyName: string, type: DocType) {
-  const base = (companyName || 'Agriplan').replace(/[^\w\- ]+/g, '').trim().replace(/\s+/g, '_') || 'Agriplan';
+  const base = (companyName || 'Planner').replace(/[^\w\- ]+/g, '').trim().replace(/\s+/g, '_') || 'Planner';
   return `${base}_${type === 'business-plan' ? 'Business_Plan' : 'Financial_Model'}.${docExt(type)}`;
 }
 

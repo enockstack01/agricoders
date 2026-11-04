@@ -10,10 +10,10 @@ import { haptics } from '../lib/haptics';
 import { Icon } from '../components/Icon';
 import { AppText } from '../components/ui';
 import { Sheet } from '../components/Sheet';
+import { OfflineStrip } from '../components/OfflineStrip';
 
-/** web .topbar-btn: 38px, radius 8, muted icon */
-function TopbarButton({ icon, onPress, label, badge }: { icon: string; onPress: () => void; label: string; badge?: number }) {
-  const { colors } = useTheme();
+/** 48 px touch target with a white icon, for use on the forest app bar. */
+function BarButton({ icon, onPress, label, badge }: { icon: string; onPress: () => void; label: string; badge?: number }) {
   return (
     <Pressable
       onPress={() => {
@@ -21,29 +21,28 @@ function TopbarButton({ icon, onPress, label, badge }: { icon: string; onPress: 
         onPress();
       }}
       accessibilityRole="button"
-      accessibilityLabel={label}
-      hitSlop={4}
+      accessibilityLabel={badge ? `${label}, ${badge} unread` : label}
       style={({ pressed }) => ({
-        width: 40, height: 40, borderRadius: radius.md, alignItems: 'center', justifyContent: 'center',
-        backgroundColor: pressed ? colors.bg : 'transparent',
+        width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center',
+        backgroundColor: pressed ? 'rgba(255,255,255,0.14)' : 'transparent',
       })}
     >
-      <Icon name={icon} size={17} color={colors.textLight} />
+      <Icon name={icon} size={20} color="#FFFFFF" />
       {badge ? (
         <View
           style={{
-            position: 'absolute', top: 4, right: 4, minWidth: 18, height: 18, borderRadius: 9, paddingHorizontal: 4,
-            backgroundColor: colors.red, alignItems: 'center', justifyContent: 'center',
+            position: 'absolute', top: 5, right: 4, minWidth: 18, height: 18, borderRadius: 9, paddingHorizontal: 4,
+            backgroundColor: '#F9A825', alignItems: 'center', justifyContent: 'center',
           }}
         >
-          <Text style={{ color: '#fff', fontSize: 10, fontFamily: ff('700') }}>{badge > 9 ? '9+' : badge}</Text>
+          <Text style={{ color: '#111611', fontSize: 12, lineHeight: 15, fontFamily: ff('700') }}>{badge > 9 ? '9+' : badge}</Text>
         </View>
       ) : null}
     </Pressable>
   );
 }
 
-// website NotificationBell: one icon + tone per notification type (.notif-icon.*)
+// one icon and tone per notification type (same as the website's notification bell)
 const NOTIF_STYLE: Record<string, { icon: string; tone: keyof typeof KPI_TONES }> = {
   credits_approved: { icon: 'coins', tone: 'green' },
   credits_rejected: { icon: 'xmark', tone: 'red' },
@@ -63,29 +62,45 @@ function NotifRow({ n, last, onToggle }: { n: Notif; last: boolean; onToggle: ()
       accessibilityRole="button"
       accessibilityHint={n.read ? 'Mark as unread' : 'Mark as read'}
       style={{
-        flexDirection: 'row', gap: 12, paddingVertical: 12, paddingHorizontal: 10, borderRadius: radius.md,
+        flexDirection: 'row', gap: 12, paddingVertical: 14, paddingHorizontal: 12, borderRadius: radius.md, minHeight: 64,
         backgroundColor: n.read ? 'transparent' : colors.primaryLight,
         borderBottomWidth: last ? 0 : StyleSheet.hairlineWidth, borderBottomColor: colors.border,
       }}
     >
-      <View style={{ width: 36, height: 36, borderRadius: 8, backgroundColor: isDark ? bgDark : bgLight, alignItems: 'center', justifyContent: 'center' }}>
-        <Icon name={s.icon} size={14} color={fg} />
+      <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: isDark ? bgDark : bgLight, alignItems: 'center', justifyContent: 'center' }}>
+        <Icon name={s.icon} size={15} color={fg} />
       </View>
       <View style={{ flex: 1 }}>
-        <AppText weight="600" style={{ fontSize: 13 }}>{n.title}</AppText>
-        <AppText variant="subtitle" style={{ fontSize: 12, marginTop: 2 }}>{n.body}</AppText>
-        <AppText variant="caption" style={{ marginTop: 3 }}>{formatDateTime(n.createdAt)}</AppText>
+        <AppText weight="700" style={{ fontSize: 15 }}>{n.title}</AppText>
+        <AppText variant="subtitle" style={{ fontSize: 14, marginTop: 2 }}>{n.body}</AppText>
+        <AppText variant="caption" style={{ marginTop: 4 }}>{formatDateTime(n.createdAt)}</AppText>
       </View>
+      {!n.read ? <View accessibilityLabel="Unread" style={{ width: 8, height: 8, borderRadius: 4, backgroundColor: colors.primary, marginTop: 6 }} /> : null}
     </Pressable>
   );
 }
 
+export type LeftAction = 'none' | 'back' | 'close';
+
 /**
- * The website's .topbar: white bar with the menu button (phones), dark-mode toggle,
- * notifications bell with unread count, and the user's avatar (opens Profile & Settings).
+ * App bar: solid forest green with the screen title, so you always know where you are. It has an
+ * optional back or close button on the left and the notification bell on the right (plus the
+ * profile picture on tablets, where the bottom tab bar is replaced by the side menu).
  */
-export function TopBar({ navigation, showMenu }: { navigation: any; showMenu: boolean }) {
-  const { colors, isDark, setMode } = useTheme();
+export function TopBar({
+  title,
+  left = 'none',
+  onLeft,
+  showAvatar,
+  onAvatar,
+}: {
+  title: string;
+  left?: LeftAction;
+  onLeft?: () => void;
+  showAvatar?: boolean;
+  onAvatar?: () => void;
+}) {
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const { user } = useUser();
   const [notifOpen, setNotifOpen] = useState(false);
@@ -99,27 +114,39 @@ export function TopBar({ navigation, showMenu }: { navigation: any; showMenu: bo
   const avatar = user?.hasImage ? user.imageUrl : null;
 
   return (
-    <View style={{ paddingTop: insets.top, backgroundColor: colors.card, borderBottomWidth: 1, borderBottomColor: colors.border }}>
-      <View style={{ height: 60, flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.md, gap: 4 }}>
-        {showMenu ? <TopbarButton icon="bars" label="Open menu" onPress={() => navigation.openDrawer()} /> : null}
-        <View style={{ flex: 1 }} />
-        <TopbarButton icon={isDark ? 'sun' : 'moon'} label="Toggle dark mode" onPress={() => setMode(isDark ? 'light' : 'dark')} />
-        <TopbarButton icon="bell" label="Notifications" badge={unread} onPress={() => setNotifOpen(true)} />
-        <Pressable
-          onPress={() => navigation.navigate('settings')}
-          accessibilityRole="button"
-          accessibilityLabel="Profile & Settings"
-          style={({ pressed }) => ({ marginLeft: 6, borderRadius: 17, opacity: pressed ? 0.8 : 1 })}
-        >
-          {avatar ? (
-            <Image source={{ uri: avatar }} style={{ width: 34, height: 34, borderRadius: 17 }} />
-          ) : (
-            <View style={{ width: 34, height: 34, borderRadius: 17, backgroundColor: colors.primaryLight, alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={{ color: colors.primary, fontFamily: ff('700'), fontSize: 14 }}>{initials}</Text>
-            </View>
-          )}
-        </Pressable>
+    <View style={{ backgroundColor: '#1B5E20' }}>
+      <View style={{ paddingTop: insets.top }}>
+        <View style={{ height: 56, flexDirection: 'row', alignItems: 'center', paddingLeft: left === 'none' ? 20 : 4, paddingRight: 4, gap: 4 }}>
+          {left !== 'none' ? (
+            <BarButton icon={left === 'close' ? 'xmark' : 'arrow-left'} label={left === 'close' ? 'Close' : 'Back'} onPress={() => onLeft?.()} />
+          ) : null}
+          <Text
+            accessibilityRole="header"
+            numberOfLines={1}
+            style={{ flex: 1, color: '#FFFFFF', fontSize: 21, fontFamily: ff('700'), marginLeft: left === 'none' ? 0 : 4 }}
+          >
+            {title}
+          </Text>
+          <BarButton icon="bell" label="Notifications" badge={unread} onPress={() => setNotifOpen(true)} />
+          {showAvatar ? (
+            <Pressable
+              onPress={onAvatar}
+              accessibilityRole="button"
+              accessibilityLabel="Profile & Settings"
+              style={({ pressed }) => ({ marginHorizontal: 6, opacity: pressed ? 0.8 : 1 })}
+            >
+              {avatar ? (
+                <Image source={{ uri: avatar }} style={{ width: 36, height: 36, borderRadius: 18 }} />
+              ) : (
+                <View style={{ width: 36, height: 36, borderRadius: 18, backgroundColor: '#FFFFFF', alignItems: 'center', justifyContent: 'center' }}>
+                  <Text style={{ color: '#1B5E20', fontFamily: ff('700'), fontSize: 14 }}>{initials}</Text>
+                </View>
+              )}
+            </Pressable>
+          ) : null}
+        </View>
       </View>
+      <OfflineStrip />
 
       <Sheet
         visible={notifOpen}
@@ -127,13 +154,21 @@ export function TopBar({ navigation, showMenu }: { navigation: any; showMenu: bo
         title="Notifications"
         size="sm"
         footer={unread ? (
-          <Pressable onPress={() => markAllRead.mutate()} hitSlop={8} accessibilityRole="button">
-            <AppText weight="600" style={{ fontSize: 12, color: colors.primary }}>Mark all read</AppText>
+          <Pressable
+            onPress={() => markAllRead.mutate()}
+            accessibilityRole="button"
+            style={{ minHeight: 44, justifyContent: 'center', paddingHorizontal: 8 }}
+          >
+            <AppText weight="700" style={{ fontSize: 15, color: colors.primary }}>Mark all read</AppText>
           </Pressable>
         ) : undefined}
       >
         {notifs.length === 0 ? (
-          <AppText variant="subtitle" style={{ fontSize: 13, textAlign: 'center', paddingVertical: spacing.lg }}>No notifications yet</AppText>
+          <View style={{ alignItems: 'center', gap: spacing.sm, paddingVertical: spacing.xl }}>
+            <Icon name="bell" size={28} color={colors.textLight} />
+            <AppText weight="700" style={{ fontSize: 16 }}>You're all caught up</AppText>
+            <AppText variant="subtitle" style={{ textAlign: 'center' }}>Updates about your documents and credits show up here.</AppText>
+          </View>
         ) : (
           notifs.map((n, i) => (
             <NotifRow key={n._id} n={n} last={i === notifs.length - 1} onToggle={() => setRead.mutate({ id: n._id, read: !n.read })} />

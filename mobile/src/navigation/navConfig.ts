@@ -5,7 +5,7 @@ export type NavItem = { route: string; label: string; icon: string; roles?: NavR
 export type NavSection = { label?: string; items: NavItem[] };
 
 /**
- * Drawer layout, the same sections as the Agriplan website's sidebar (AppShell.tsx), with
+ * Drawer layout, the same sections as the Planner website's sidebar (AppShell.tsx), with
  * Font Awesome solid icons. The Administration section is only shown to admins.
  */
 export const NAV_SECTIONS: NavSection[] = [

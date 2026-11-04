@@ -19,7 +19,7 @@ const Ctx = createContext<ThemeCtx>({
   setMode: () => {},
 });
 
-const KEY = 'agriplan.themeMode';
+const KEY = 'planner.themeMode';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const system = useColorScheme();

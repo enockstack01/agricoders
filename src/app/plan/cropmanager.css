@@ -1,5 +1,5 @@
 /* ============================================================
-   AGRIPLAN APP DESIGN SYSTEM — Agricoders brand tokens
+   PLANNER APP DESIGN SYSTEM — Agricoders brand tokens
    Forest #1B5E20, amber #F9A825, tint #F3F8F3, lines #D5E3D6, ink #111611, Calibri.
    Class names come from the CropManager component set and are kept verbatim.
    Everything is scoped under `.cm-app` so the agricoders marketing
@@ -893,7 +893,7 @@
   }
   .cm-app .page-header > * { position: relative; }
   .cm-app .page-header > div:first-child::before {
-    content: 'Agriplan'; display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700;
+    content: 'Planner'; display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700;
     letter-spacing: 0.28em; text-transform: uppercase; color: #F9A825;
   }
   .cm-app .page-header .page-title { color: #fff; font-size: 30px; }

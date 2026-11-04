@@ -1,5 +1,5 @@
 /**
- * Agricoders brand tokens, shared with the Agriplan website: forest #1B5E20, amber #F9A825,
+ * Agricoders brand tokens, shared with the Planner website: forest #1B5E20, amber #F9A825,
  * tint #F3F8F3, lines #D5E3D6, ink #111611, slate #555555. Navy #0A108A is the parent brand
  * colour and is used where a second colour is needed (info badges, links).
  */

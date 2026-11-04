@@ -12,7 +12,7 @@ import { AGRICODERS_APPS } from "@/lib/apps";
 export const metadata: Metadata = {
   title: "Our Systems | Agricoders",
   description:
-    "CropManager, LivestockPro and Agriplan: the systems Agricoders has built for farmers and agribusinesses.",
+    "CropManager, LivestockPro and Planner: the systems Agricoders has built: farm software for farmers and Planner, which writes business plans and financial models for any business.",
 };
 
 export default function SystemsPage() {
@@ -21,7 +21,7 @@ export default function SystemsPage() {
       <AgriNav />
 
       <PageHero eyebrow="Agricoders" title="Our systems">
-        <p>Three live products on web, iOS and Android, built for African farmers.</p>
+        <p>Three live products on web, iOS and Android: two for farmers and Planner for any business.</p>
       </PageHero>
 
       {AGRICODERS_APPS.map((app, i) => {

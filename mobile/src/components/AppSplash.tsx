@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useRef, useState } from 'react';
 import { Animated, Easing, StyleSheet, useColorScheme, View } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
-import { AgriplanLogo } from './AgriplanLogo';
+import { PlannerLogo } from './PlannerLogo';
 
 // keep the native splash up until the animated one has drawn its first frame
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -74,10 +74,10 @@ export function SplashHost({ children }: { children: React.ReactNode }) {
           >
             {/* same size/position as the native splash image (imageWidth 180) */}
             <Animated.View style={{ transform: [{ translateY: leafY }, { scale: leafScale }] }}>
-              <AgriplanLogo size={180} scale={0.78} color={dark ? '#81C784' : '#FFFFFF'} />
+              <PlannerLogo size={180} scale={0.78} color={dark ? '#81C784' : '#FFFFFF'} />
             </Animated.View>
             <Animated.View style={{ position: 'absolute', top: '58%', alignItems: 'center', opacity: intro, transform: [{ translateY: textY }] }}>
-              <Animated.Text style={{ color: '#FFFFFF', fontSize: 28, fontWeight: '700', letterSpacing: 6, textTransform: 'uppercase' }}>Agriplan</Animated.Text>
+              <Animated.Text style={{ color: '#FFFFFF', fontSize: 28, fontWeight: '700', letterSpacing: 6, textTransform: 'uppercase' }}>Planner</Animated.Text>
               <Animated.Text style={{ color: 'rgba(255,255,255,0.78)', fontSize: 14, marginTop: 6 }}>
                 Business plans, made simple
               </Animated.Text>

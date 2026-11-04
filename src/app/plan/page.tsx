@@ -190,7 +190,7 @@ export default function Home() {
           <div className="max-w-3xl">
             <div>
               <Reveal>
-                <p className="mb-5 text-sm font-bold uppercase tracking-[0.28em] text-[#F9A825]">Agriplan</p>
+                <p className="mb-5 text-sm font-bold uppercase tracking-[0.28em] text-[#F9A825]">Planner</p>
               </Reveal>
               <Reveal delay={60}>
                 <h1 className="mb-5 text-balance text-[clamp(2.4rem,5.6vw,4.2rem)] font-bold leading-[1.05] tracking-tight">
@@ -199,7 +199,7 @@ export default function Home() {
               </Reveal>
               <Reveal delay={120}>
                 <p className="mb-8 max-w-xl text-xl leading-relaxed text-green-50/90">
-                  Agriplan produces a complete Business Plan and a full Financial Model, so you can focus on building your business, not writing documents.
+                  Planner produces a complete Business Plan and a full Financial Model, so you can focus on building your business, not writing documents.
                 </p>
               </Reveal>
               <Reveal delay={180}>
@@ -440,7 +440,7 @@ export default function Home() {
                 Your next business plan should not take weeks
               </h2>
               <p className="mb-9 text-lg leading-relaxed text-green-50/90">
-                Join entrepreneurs and consultants who use Agriplan to produce professional business documents in a single session.
+                Join entrepreneurs and consultants who use Planner to produce professional business documents in a single session.
               </p>
               <div className="flex flex-col justify-center gap-3 sm:flex-row">
                 <SignUpButton mode="modal" forceRedirectUrl="/plan/dashboard">

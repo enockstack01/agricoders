@@ -14,6 +14,7 @@ import {
   ShadingType,
   TableLayoutType,
   Footer,
+  Header,
   PageNumber,
   NumberFormat,
   Bookmark,
@@ -245,6 +246,22 @@ function makeFooter(): Footer {
           new TextRun({ children: [PageNumber.CURRENT], font: TNR, size: 20 }),
         ],
       }),
+      new Paragraph({
+        alignment: AlignmentType.CENTER,
+        children: [new TextRun({ text: "Prepared with Planner by Agricoders", font: TNR, size: 16, color: "2E8B57" })],
+      }),
+    ],
+  });
+}
+
+function makeHeader(): Header {
+  return new Header({
+    children: [
+      new Paragraph({
+        alignment: AlignmentType.RIGHT,
+        border: { bottom: { style: BorderStyle.SINGLE, size: 4, color: "2E8B57", space: 4 } },
+        children: [new TextRun({ text: "PLANNER", bold: true, font: TNR, size: 18, color: "1A5C3A" })],
+      }),
     ],
   });
 }
@@ -381,6 +398,11 @@ export async function generateBusinessPlanDocx(
     new Paragraph({ children: [], spacing: { after: 200 } }),
     para(`Submitted To: ${ci.submittedTo}`),
     para(`Date: ${ci.submissionDate}`),
+    new Paragraph({
+      children: [new TextRun({ text: "Prepared with Planner by Agricoders", italics: true, size: 20, font: TNR, color: "2E8B57" })],
+      alignment: AlignmentType.CENTER,
+      spacing: { before: 600 },
+    }),
   ];
 
   // ─── SECTION 2: Front matter — TOC, LOT, LOF (roman numeral footer) ───────
@@ -981,6 +1003,9 @@ export async function generateBusinessPlanDocx(
 
   // ─── Assemble document ────────────────────────────────────────────────────
   const doc = new Document({
+    creator: "Planner",
+    title: `${ci.companyName || "Company"} Business Plan Proposal`,
+    description: "Business plan proposal prepared with Planner by Agricoders",
     styles: {
       default: {
         document: {
@@ -1005,6 +1030,7 @@ export async function generateBusinessPlanDocx(
             },
           },
         },
+        headers: { default: makeHeader() },
         footers: { default: makeFooter() },
         children: frontMatterChildren,
       },
@@ -1019,6 +1045,7 @@ export async function generateBusinessPlanDocx(
             },
           },
         },
+        headers: { default: makeHeader() },
         footers: { default: makeFooter() },
         children: mainChildren,
       },

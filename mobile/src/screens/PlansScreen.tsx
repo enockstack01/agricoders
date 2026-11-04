@@ -15,7 +15,7 @@ import { useDocMeta, usePlanMutations, useSubmissions, Submission } from '../lib
 export function PlansScreen() {
   const nav = useNavigation<any>();
   const { colors } = useTheme();
-  const { gutter, isWide } = useLayout();
+  const { gutter, isWide, isTablet } = useLayout();
   const confirm = useConfirm();
   const toast = useToast();
 
@@ -55,7 +55,7 @@ export function PlansScreen() {
         data={plans.isLoading ? [] : filtered}
         keyExtractor={(p) => p._id}
         contentContainerStyle={[
-          { paddingHorizontal: gutter, paddingTop: 20, paddingBottom: 110, gap: spacing.md },
+          { paddingHorizontal: gutter, paddingTop: 16, paddingBottom: isTablet ? 110 : 24, gap: spacing.md },
           isWide ? { maxWidth: 1000, width: '100%', alignSelf: 'center' } : null,
         ]}
         refreshControl={<RefreshControl refreshing={plans.isRefetching} onRefresh={() => { plans.refetch(); meta.refetch(); }} tintColor={colors.primary} />}
@@ -63,7 +63,7 @@ export function PlansScreen() {
           <View style={{ gap: spacing.md, marginBottom: 4 }}>
             <PageHeader title="My Business Plans" subtitle="Generate, download, edit or delete your plans" />
             {all.length > 0 ? (
-              <TextField icon="magnifying-glass" placeholder="Search plans…" value={search} onChangeValue={setSearch} autoCapitalize="none" />
+              <TextField icon="magnifying-glass" placeholder="Search by company, industry or place" value={search} onChangeValue={setSearch} autoCapitalize="none" />
             ) : null}
             {plans.isLoading ? <SkeletonList rows={4} /> : null}
           </View>
@@ -92,7 +92,7 @@ export function PlansScreen() {
           ) : null
         }
       />
-      <FAB onPress={newPlan} icon="plus" label="New plan" />
+      {isTablet ? <FAB onPress={newPlan} icon="plus" label="New plan" /> : null}
       <DocumentSheet plan={docPlan} meta={docPlan ? meta.data?.[docPlan._id] : undefined} onClose={() => setDocPlan(null)} onRun={docs.run} />
       {docs.ui}
     </View>

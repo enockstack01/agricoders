@@ -1,7 +1,7 @@
 /**
  * Client for LivestockPro's health-records feed.
  *
- * CONTRACT — what livestockpro.agricoders.com needs to expose:
+ * CONTRACT — what livestock.agricoders.com needs to expose:
  *
  *   GET {LIVESTOCK_API_URL}/api/onehealth/records?since=<cursor>&limit=<n>
  *   Header: Authorization: Bearer {LIVESTOCK_API_KEY}

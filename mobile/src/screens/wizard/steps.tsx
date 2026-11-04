@@ -26,6 +26,8 @@ import type { BusinessDescription, FinancialData, MarketAnalysis, RevenuePackage
 export type StepProps = {
   data: PlanInput;
   update: <K extends keyof PlanInput>(key: K, value: PlanInput[K]) => void;
+  /** messages for required fields that are still empty, keyed by field name */
+  errors?: Record<string, string>;
 };
 
 const fmt = (n: number) => Math.round(n || 0).toLocaleString('en-US');
@@ -62,7 +64,7 @@ function useAI(data: PlanInput) {
 }
 
 /* ------------------------------------------------------------ 1 Company */
-export function CompanyStep({ data, update }: StepProps) {
+export function CompanyStep({ data, update, errors = {} }: StepProps) {
   const { columns } = useLayout();
   const ci = data.companyInfo;
   const set = (k: keyof typeof ci, v: string) => update('companyInfo', { ...ci, [k]: v });
@@ -72,20 +74,20 @@ export function CompanyStep({ data, update }: StepProps) {
       <AppText variant="subtitle" style={{ fontSize: 13 }}>Enter your company and author information. It appears on the cover page of your business plan.</AppText>
       <FormSection title="Author Information">
         <Grid columns={cols} gap={spacing.md}>
-          <TextField label="Author Full Name" required value={ci.authorName} onChangeValue={(v) => set('authorName', v)} placeholder="Your full name" />
-          <TextField label="Author Title" required value={ci.authorTitle} onChangeValue={(v) => set('authorTitle', v)} placeholder="Founder & CEO" />
+          <TextField label="Author Full Name" required error={errors.authorName} value={ci.authorName} onChangeValue={(v) => set('authorName', v)} placeholder="Your full name" />
+          <TextField label="Author Title" required error={errors.authorTitle} value={ci.authorTitle} onChangeValue={(v) => set('authorTitle', v)} placeholder="Founder & CEO" />
           <TextField label="Phone Number" value={ci.phone} onChangeValue={(v) => set('phone', v)} keyboardType="phone-pad" placeholder="+250 7xx xxx xxx" />
           <TextField label="Email Address" value={ci.email} onChangeValue={(v) => set('email', v)} keyboardType="email-address" autoCapitalize="none" placeholder="you@company.com" />
         </Grid>
       </FormSection>
       <FormSection title="Company Information">
         <Grid columns={cols} gap={spacing.md}>
-          <TextField label="Company Name" required value={ci.companyName} onChangeValue={(v) => set('companyName', v)} placeholder="Your company name" />
-          <TextField label="Product / Project Name" required value={ci.productName} onChangeValue={(v) => set('productName', v)} placeholder="Your flagship product or project" />
+          <TextField label="Company Name" required error={errors.companyName} value={ci.companyName} onChangeValue={(v) => set('companyName', v)} placeholder="Your company name" />
+          <TextField label="Product / Project Name" required error={errors.productName} value={ci.productName} onChangeValue={(v) => set('productName', v)} placeholder="Your flagship product or project" />
           <TextField label="Location / Country" value={ci.location} onChangeValue={(v) => set('location', v)} placeholder="e.g. Kigali, Rwanda" />
           <SelectField label="Company Type" value={ci.companyType} onChangeValue={(v) => set('companyType', v)} options={COMPANY_TYPES} />
-          <TextField label="Industry / Company Focus" value={ci.companyFocus} onChangeValue={(v) => set('companyFocus', v)} placeholder="e.g. AgriTech, Poultry" />
-          <SelectField label="Currency" required value={ci.currency} onChangeValue={(v) => set('currency', v)} options={CURRENCIES.includes(ci.currency) ? CURRENCIES : [ci.currency, ...CURRENCIES]} placeholder="" />
+          <TextField label="Industry / Company Focus" value={ci.companyFocus} onChangeValue={(v) => set('companyFocus', v)} placeholder="e.g. Retail, Technology" />
+          <SelectField label="Currency" required error={errors.currency} value={ci.currency} onChangeValue={(v) => set('currency', v)} options={CURRENCIES.includes(ci.currency) ? CURRENCIES : [ci.currency, ...CURRENCIES]} placeholder="" />
           <TextField label="Company Website" value={ci.website ?? ''} onChangeValue={(v) => set('website', v)} autoCapitalize="none" placeholder="https://" />
         </Grid>
       </FormSection>
@@ -269,7 +271,7 @@ export function TeamStep({ data, update }: StepProps) {
       <Callout tone="success">{`Total monthly payroll: ${fmt(payroll)} ${cur} · ${staff.reduce((s, m) => s + m.count, 0)} people`}</Callout>
       {staff.map((m, i) => (
         <ItemCard key={i} title={m.role || `Staff member ${i + 1}`} onRemove={() => update('staff', staff.filter((_, j) => j !== i))}>
-          <TextField label="Role / Title" value={m.role} onChangeValue={(v) => setRow(i, { role: v })} placeholder="e.g. Farm Manager" />
+          <TextField label="Role / Title" value={m.role} onChangeValue={(v) => setRow(i, { role: v })} placeholder="e.g. Operations Manager" />
           <NumField label="Number of Employees" integer value={m.count} onChange={(v) => setRow(i, { count: v })} />
           <NumField label={`Monthly Salary Per Employee (${cur})`} value={m.salaryPerEmployee} onChange={(v) => setRow(i, { salaryPerEmployee: v })} />
           <TextAreaField label="Responsibilities" value={m.responsibilities} onChangeValue={(v) => setRow(i, { responsibilities: v })} />
@@ -611,7 +613,7 @@ export function ReviewStep({ data }: { data: PlanInput }) {
         <Grid columns={columns >= 2 ? 3 : 2} gap={spacing.sm}>
           {items.map(([k, v]) => (
             <View key={k} style={{ backgroundColor: colors.bg, borderRadius: radius.lg, padding: 12, minHeight: 64 }}>
-              <AppText weight="600" style={{ fontSize: 10.5, color: colors.textLight, textTransform: 'uppercase', letterSpacing: 0.4 }} numberOfLines={2}>{k}</AppText>
+              <AppText weight="600" style={{ fontSize: 12, color: colors.textLight, textTransform: 'uppercase', letterSpacing: 0.4 }} numberOfLines={2}>{k}</AppText>
               <AppText weight="700" style={{ fontSize: 13, marginTop: 4 }} numberOfLines={2}>{v}</AppText>
             </View>
           ))}

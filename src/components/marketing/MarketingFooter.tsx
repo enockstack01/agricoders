@@ -28,7 +28,7 @@ export default function MarketingFooter() {
         <div className="mb-14 flex flex-col items-start justify-between gap-5 rounded-2xl bg-[#1B5E20] p-7 sm:flex-row sm:items-center sm:p-9">
           <div>
             <p className="m-0 mb-1 text-2xl font-bold">Start your business plan today</p>
-            <p className="m-0 text-base text-green-50/90">Investor ready documents in under 15 minutes with Agriplan.</p>
+            <p className="m-0 text-base text-green-50/90">Investor ready documents in under 15 minutes with Planner.</p>
           </div>
           <Link
             href="/plan"

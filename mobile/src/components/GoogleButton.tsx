@@ -24,7 +24,7 @@ function GoogleG({ size = 20 }: { size?: number }) {
   );
 }
 
-const REDIRECT_URL = AuthSession.makeRedirectUri({ scheme: 'agriplan', path: 'sso-callback' });
+const REDIRECT_URL = AuthSession.makeRedirectUri({ scheme: 'planner', path: 'sso-callback' });
 
 const sleep = (ms: number) => new Promise<null>((r) => setTimeout(() => r(null), ms));
 const isReturnUrl = (url?: string | null) => !!url && url.startsWith(REDIRECT_URL);

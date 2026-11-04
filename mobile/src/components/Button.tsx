@@ -8,7 +8,7 @@ import { useOnBanner } from './banner';
 type Kind = 'primary' | 'secondary' | 'danger' | 'ghost';
 
 /**
- * Brand buttons: pill shape, Carlito bold, icon before the label, 44px touch height.
+ * Brand buttons: pill shape, Carlito bold, icon before the label, 48px tall (44px for the small size).
  * On the forest page banner the primary button turns amber and the secondary one outlined.
  */
 export function Button({
@@ -72,7 +72,7 @@ export function Button({
           borderWidth: 1,
           borderColor: border[kind],
           backgroundColor: bg[kind],
-          minHeight: sm ? 36 : 44,
+          minHeight: sm ? 44 : 48,
           paddingHorizontal: sm ? 14 : 18,
           opacity: isDisabled ? 0.6 : pressed ? 0.9 : 1,
         },

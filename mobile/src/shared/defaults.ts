@@ -1,4 +1,4 @@
-// Shared with the Agriplan website: copied verbatim from src/lib/defaults.ts — keep the two in sync.
+// Shared with the Planner website: copied verbatim from src/lib/defaults.ts — keep the two in sync.
 import { FormSubmission, UserProfileDefaults } from "./types";
 
 // Base defaults — all text fields empty, financial rates use sensible universal defaults

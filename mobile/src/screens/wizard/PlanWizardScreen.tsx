@@ -1,15 +1,17 @@
-import { useEffect, useRef, useState } from 'react';
-import { Pressable, ScrollView, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { BackHandler, Keyboard, KeyboardAvoidingView, Pressable, ScrollView, StyleSheet, View } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../../theme/ThemeProvider';
-import { radius, spacing } from '../../theme/theme';
-import { AppText, Card, EmptyState, Loading, PageHeader, useLayout } from '../../components/ui';
+import { AppText, Card, EmptyState, Loading, useLayout } from '../../components/ui';
 import { Button } from '../../components/Button';
 import { Icon } from '../../components/Icon';
 import { Sheet } from '../../components/Sheet';
 import { useToast } from '../../components/Toast';
 import { CreditRequestSheet } from '../../components/plan';
 import { haptics } from '../../lib/haptics';
+import { clearDraft, Draft, loadDraft, saveDraft } from '../../lib/draft';
+import { formatDateTime } from '../../lib/format';
 import { PlanInput, useCredits, usePlanMutations, useProfile, useSubmission } from '../../lib/useResource';
 import { CREDITS_PER_DOC } from '../../lib/documents';
 import { buildDefaultFormData } from '../../shared/defaults';
@@ -40,13 +42,43 @@ function toPlanInput(raw: any): PlanInput {
   return rest as PlanInput;
 }
 
+/** Required fields per step, with the message shown under the field while it is empty. */
+function validateStep(step: number, data: PlanInput): Record<string, string> {
+  const e: Record<string, string> = {};
+  if (step === 0) {
+    const ci = data.companyInfo;
+    if (!ci.authorName?.trim()) e.authorName = 'Enter your full name';
+    if (!ci.authorTitle?.trim()) e.authorTitle = 'Enter your title';
+    if (!ci.companyName?.trim()) e.companyName = 'Enter the company name';
+    if (!ci.productName?.trim()) e.productName = 'Enter the product or project name';
+    if (!ci.currency?.trim()) e.currency = 'Choose a currency';
+  }
+  return e;
+}
+
+/** True while the on screen keyboard is open (the Back and Next bar steps aside to give the form room). */
+function useKeyboardVisible() {
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const show = Keyboard.addListener('keyboardDidShow', () => setVisible(true));
+    const hide = Keyboard.addListener('keyboardDidHide', () => setVisible(false));
+    return () => {
+      show.remove();
+      hide.remove();
+    };
+  }, []);
+  return visible;
+}
+
 /** The 10 step business-plan wizard (website /plan/form), for new plans and edits. */
 export function PlanWizardScreen({ editId }: { editId?: string }) {
   const nav = useNavigation<any>();
   const { colors } = useTheme();
   const { gutter, isWide } = useLayout();
+  const insets = useSafeAreaInsets();
   const toast = useToast();
   const scrollRef = useRef<ScrollView>(null);
+  const keyboardVisible = useKeyboardVisible();
 
   const credits = useCredits();
   const { defaults } = useProfile();
@@ -57,36 +89,102 @@ export function PlanWizardScreen({ editId }: { editId?: string }) {
   const [step, setStep] = useState(0);
   const [jumpOpen, setJumpOpen] = useState(false);
   const [requestOpen, setRequestOpen] = useState(false);
+  const [lockOpen, setLockOpen] = useState(false);
+  const [attempted, setAttempted] = useState(false);
+  const [dirty, setDirty] = useState(false);
+  const [savedAt, setSavedAt] = useState<number | null>(null);
+  const [draftOffer, setDraftOffer] = useState<Draft | null>(null);
 
   // initialise once: the plan being edited, or a fresh plan prefilled from profile defaults
   useEffect(() => {
     if (data) return;
+    let initial: PlanInput | null = null;
     if (editId) {
-      if (existing.data) setData(toPlanInput(existing.data));
+      if (existing.data) initial = toPlanInput(existing.data);
     } else if (defaults) {
-      setData(buildDefaultFormData(defaults) as PlanInput);
+      initial = buildDefaultFormData(defaults) as PlanInput;
     }
+    if (!initial) return;
+    setData(initial);
+    // a saved draft of this plan, if there is one, is offered once
+    loadDraft(editId).then((d) => {
+      if (d) setDraftOffer(d);
+    });
   }, [data, editId, existing.data, defaults]);
 
-  const update = <K extends keyof PlanInput>(key: K, value: PlanInput[K]) => setData((d) => (d ? { ...d, [key]: value } : d));
+  const update = <K extends keyof PlanInput>(key: K, value: PlanInput[K]) => {
+    setDirty(true);
+    setData((d) => (d ? { ...d, [key]: value } : d));
+  };
 
-  const goTo = (i: number) => {
+  // save the draft a moment after the last change
+  useEffect(() => {
+    if (!data || !dirty) return;
+    const t = setTimeout(() => {
+      saveDraft(editId, data, step).then((ok) => {
+        if (ok) setSavedAt(Date.now());
+      });
+    }, 800);
+    return () => clearTimeout(t);
+  }, [data, step, dirty, editId]);
+
+  // a new plan needs credits: without them only the first step opens
+  const balance = credits.data?.credits ?? 0;
+  const locked = !editId && !credits.isLoading && balance < CREDITS_PER_DOC;
+
+  const goTo = useCallback((i: number) => {
+    if (locked && i > 0) {
+      haptics.error();
+      setLockOpen(true);
+      return;
+    }
     haptics.select();
     setStep(i);
-    scrollRef.current?.scrollTo({ y: 0, animated: true });
+    setAttempted(false);
+    Keyboard.dismiss();
+    scrollRef.current?.scrollTo({ y: 0, animated: false });
+  }, [locked]);
+
+  // Android back button: previous step first, and from the first step leave the wizard (the draft is kept)
+  useFocusEffect(
+    useCallback(() => {
+      const sub = BackHandler.addEventListener('hardwareBackPress', () => {
+        if (step > 0) {
+          goTo(step - 1);
+          return true;
+        }
+        return false;
+      });
+      return () => sub.remove();
+    }, [step, goTo]),
+  );
+
+  const next = () => {
+    if (!data) return;
+    if (Object.keys(validateStep(step, data)).length) {
+      setAttempted(true);
+      haptics.error();
+      toast('Fill in the highlighted fields to continue', 'warning');
+      scrollRef.current?.scrollTo({ y: 0, animated: true });
+      return;
+    }
+    goTo(step + 1);
   };
 
   const submit = async () => {
     if (!data) return;
-    const ci = data.companyInfo;
-    if (!ci.companyName?.trim() || !ci.productName?.trim()) {
-      toast('Company Name and Product / Project Name are required (step 1)', 'warning');
-      goTo(0);
+    if (Object.keys(validateStep(0, data)).length) {
+      setStep(0);
+      setAttempted(true);
+      haptics.error();
+      toast('Fill in the required fields in Company Info first', 'warning');
+      scrollRef.current?.scrollTo({ y: 0, animated: false });
       return;
     }
     try {
       if (editId) await replace.mutateAsync({ id: editId, body: data });
       else await create.mutateAsync(data);
+      await clearDraft(editId);
       haptics.success();
       toast(editId ? 'Plan updated' : 'Plan saved. Generate your documents from My Business Plans', 'success');
       nav.navigate('plans');
@@ -95,40 +193,44 @@ export function PlanWizardScreen({ editId }: { editId?: string }) {
     }
   };
 
-  // ── loading / errors / credit gate ──────────────────────────────────────
+  // dismissing the draft prompt without choosing keeps the draft and continues with it (nothing is lost)
+  const continueDraft = () => {
+    if (draftOffer) {
+      setData(draftOffer.data);
+      setStep(locked ? 0 : Math.min(Math.max(0, draftOffer.step), STEPS.length - 1));
+      setDirty(true);
+      setSavedAt(draftOffer.savedAt);
+    }
+    setDraftOffer(null);
+  };
+  const startOver = async () => {
+    await clearDraft(editId);
+    setDraftOffer(null);
+    setSavedAt(null);
+  };
+
+  // loading, errors and the credit gate
   if (editId && existing.isError) {
-    return <EmptyState icon="circle-exclamation" title="Couldn't load this plan" description={existing.error?.message} actionLabel="Back to plans" onAction={() => nav.navigate('plans')} />;
+    return (
+      <EmptyState
+        icon="circle-exclamation"
+        title="Couldn't load this plan"
+        description={existing.error?.message}
+        actionLabel="Back to plans"
+        onAction={() => nav.navigate('plans')}
+      />
+    );
   }
   if (!data || (!editId && credits.isLoading)) return <Loading label={editId ? 'Loading plan…' : 'Preparing your plan…'} />;
 
-  const balance = credits.data?.credits ?? 0;
-  if (!editId && balance < CREDITS_PER_DOC) {
-    return (
-      <ScrollView contentContainerStyle={{ padding: gutter, paddingTop: 20 }} style={{ backgroundColor: colors.bg }}>
-        <PageHeader title="New Business Plan" />
-        <Card style={{ alignItems: 'center', gap: 10 }}>
-          <View style={{ width: 64, height: 64, borderRadius: 32, backgroundColor: '#FFF8E1', alignItems: 'center', justifyContent: 'center' }}>
-            <Icon name="coins" size={26} color={colors.orange} />
-          </View>
-          <AppText weight="600" style={{ fontSize: 16 }}>Insufficient credits</AppText>
-          <AppText variant="subtitle" style={{ fontSize: 13, textAlign: 'center' }}>
-            You need {CREDITS_PER_DOC} credits to create a plan. Your balance: {balance} credit{balance === 1 ? '' : 's'}.
-          </AppText>
-          <Button title="Request Credits" icon="paper-plane" onPress={() => setRequestOpen(true)} style={{ marginTop: 6, alignSelf: 'stretch' }} />
-          <Button title="Back to Dashboard" kind="secondary" onPress={() => nav.navigate('dashboard')} style={{ alignSelf: 'stretch' }} />
-        </Card>
-        <CreditRequestSheet visible={requestOpen} onClose={() => { setRequestOpen(false); credits.refetch(); }} required={CREDITS_PER_DOC} balance={balance} />
-      </ScrollView>
-    );
-  }
-
-  const progress = Math.round((step / (STEPS.length - 1)) * 100);
+  const progress = Math.round(((step + 1) / STEPS.length) * 100);
   const current = STEPS[step];
   const last = step === STEPS.length - 1;
   const saving = create.isPending || replace.isPending;
+  const errors = attempted ? validateStep(step, data) : {};
 
   const stepView = (() => {
-    const p = { data, update };
+    const p = { data, update, errors };
     switch (step) {
       case 0: return <CompanyStep {...p} />;
       case 1: return <BusinessStep {...p} />;
@@ -144,50 +246,73 @@ export function PlanWizardScreen({ editId }: { editId?: string }) {
   })();
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.bg }}>
-      <ScrollView
-        ref={scrollRef}
-        keyboardShouldPersistTaps="handled"
-        contentContainerStyle={[{ padding: gutter, paddingTop: 20, paddingBottom: 40 }, isWide ? { maxWidth: 900, width: '100%', alignSelf: 'center' } : null]}
-      >
-        <PageHeader title={editId ? 'Edit Business Plan' : 'New Business Plan'} subtitle="Your answers drive the business plan narrative and the financial model." />
-
-        {/* step picker (website step list / mobile step jumper) */}
+    <KeyboardAvoidingView behavior="padding" style={{ flex: 1, backgroundColor: colors.bg }}>
+      {/* sticky step header: where you are, how far along, tap to jump to another section */}
+      <View style={{ backgroundColor: colors.card, borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border }}>
+        <View style={{ height: 4, backgroundColor: colors.bg }} accessibilityRole="progressbar" accessibilityValue={{ min: 0, max: 100, now: progress }}>
+          <View style={{ width: `${progress}%`, height: 4, backgroundColor: '#F9A825' }} />
+        </View>
         <Pressable
           onPress={() => setJumpOpen(true)}
           accessibilityRole="button"
-          accessibilityLabel={`Step ${step + 1} of ${STEPS.length}: ${current.label}. Change step`}
+          accessibilityLabel={`Step ${step + 1} of ${STEPS.length}: ${current.label}. Choose a section`}
           style={({ pressed }) => ({
-            backgroundColor: pressed ? colors.bg : colors.card, borderWidth: 1, borderColor: colors.border, borderRadius: radius.lg,
-            overflow: 'hidden', marginBottom: 16,
+            flexDirection: 'row', alignItems: 'center', gap: 12, paddingHorizontal: gutter, minHeight: 64,
+            backgroundColor: pressed ? colors.bg : colors.card,
           })}
         >
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14 }}>
-            <View style={{ width: 36, height: 36, borderRadius: 10, backgroundColor: colors.primaryLight, alignItems: 'center', justifyContent: 'center' }}>
-              <Icon name={current.icon} size={15} color={colors.primary} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <AppText variant="caption">Step {step + 1} of {STEPS.length} · {progress}%</AppText>
-              <AppText weight="600" style={{ fontSize: 15 }}>{current.label}</AppText>
-            </View>
-            <Icon name="chevron-down" size={12} color={colors.textLight} />
+          <View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: '#1B5E20', alignItems: 'center', justifyContent: 'center' }}>
+            <Icon name={current.icon} size={16} color="#FFFFFF" />
           </View>
-          <View style={{ height: 4, backgroundColor: colors.bg }}>
-            <View style={{ width: `${progress}%`, height: 4, backgroundColor: colors.primary }} />
+          <View style={{ flex: 1 }}>
+            <AppText variant="caption" style={{ fontSize: 13 }}>
+              Step {step + 1} of {STEPS.length}{savedAt ? ' · Draft saved' : ''}
+            </AppText>
+            <AppText weight="700" style={{ fontSize: 18 }} numberOfLines={1}>{current.label}</AppText>
           </View>
+          <Icon name="list" size={16} color={colors.textLight} />
         </Pressable>
+      </View>
 
-        <Card style={{ padding: 18 }}>{stepView}</Card>
+      <ScrollView
+        ref={scrollRef}
+        keyboardShouldPersistTaps="handled"
+        keyboardDismissMode="on-drag"
+        style={{ flex: 1 }}
+        contentContainerStyle={[{ padding: gutter, paddingTop: 16, paddingBottom: 32 }, isWide ? { maxWidth: 900, width: '100%', alignSelf: 'center' } : null]}
+      >
+        {locked ? (
+          <Pressable
+            onPress={() => setLockOpen(true)}
+            accessibilityRole="button"
+            accessibilityLabel="Credits needed to open the next steps"
+            style={{ flexDirection: 'row', alignItems: 'center', gap: 12, padding: 14, marginBottom: 12, borderRadius: 14, backgroundColor: '#FFF4D6', borderWidth: 1, borderColor: '#F9A825' }}
+          >
+            <Icon name="lock" size={18} color="#111611" />
+            <AppText style={{ flex: 1, fontSize: 14, color: '#111611' }}>
+              Purchase credits to open the next steps. You can fill in Company Info for free.
+            </AppText>
+          </Pressable>
+        ) : null}
+        <Card style={{ padding: 16 }}>{stepView}</Card>
+      </ScrollView>
 
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between', gap: 12, marginTop: 20 }}>
-          <Button title="Previous" icon="chevron-left" kind="secondary" onPress={() => goTo(Math.max(0, step - 1))} disabled={step === 0} />
+      {/* sticky Back and Next bar, hidden while the keyboard is open */}
+      {keyboardVisible ? null : (
+        <View
+          style={{
+            flexDirection: 'row', gap: 12, paddingHorizontal: gutter, paddingTop: 12, paddingBottom: 12 + insets.bottom,
+            backgroundColor: colors.card, borderTopWidth: StyleSheet.hairlineWidth, borderTopColor: colors.border,
+          }}
+        >
+          {step > 0 ? <Button title="Back" icon="chevron-left" kind="secondary" onPress={() => goTo(step - 1)} /> : null}
           {last ? (
-            <Button title={editId ? 'Save Changes' : 'Submit Plan'} icon="circle-check" onPress={submit} loading={saving} style={{ flex: 1 }} />
+            <Button title={editId ? 'Save changes' : 'Submit plan'} icon="circle-check" onPress={submit} loading={saving} style={{ flex: 1 }} />
           ) : (
-            <Button title="Next" icon="chevron-right" onPress={() => goTo(step + 1)} style={{ flex: 1 }} />
+            <Button title="Next" icon="chevron-right" onPress={next} style={{ flex: 1 }} />
           )}
         </View>
-      </ScrollView>
+      )}
 
       <Sheet visible={jumpOpen} onClose={() => setJumpOpen(false)} title="Plan sections" size="sm">
         {STEPS.map((s, i) => {
@@ -197,25 +322,74 @@ export function PlanWizardScreen({ editId }: { editId?: string }) {
             <Pressable
               key={s.label}
               onPress={() => { setJumpOpen(false); goTo(i); }}
+              accessibilityRole="button"
+              accessibilityState={{ selected: active }}
               style={({ pressed }) => ({
-                flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 11, paddingHorizontal: 10, borderRadius: radius.md,
+                flexDirection: 'row', alignItems: 'center', gap: 14, minHeight: 56, paddingHorizontal: 10, borderRadius: 12,
                 backgroundColor: active ? colors.primaryLight : pressed ? colors.bg : 'transparent',
               })}
             >
-              <View style={{
-                width: 24, height: 24, borderRadius: 12, alignItems: 'center', justifyContent: 'center',
-                backgroundColor: active ? colors.primary : done ? colors.primaryLight : colors.bg,
-                borderWidth: 1, borderColor: active ? colors.primary : done ? 'transparent' : colors.border,
-              }}>
-                {done ? <Icon name="check" size={10} color={colors.primary} /> : <AppText weight="700" style={{ fontSize: 11, color: active ? '#fff' : colors.textLight }}>{i + 1}</AppText>}
+              <View
+                style={{
+                  width: 28, height: 28, borderRadius: 14, alignItems: 'center', justifyContent: 'center',
+                  backgroundColor: active ? '#1B5E20' : done ? colors.primaryLight : colors.bg,
+                  borderWidth: 1, borderColor: active ? '#1B5E20' : done ? 'transparent' : colors.border,
+                }}
+              >
+                {locked && i > 0 ? (
+                  <Icon name="lock" size={12} color={colors.textLight} />
+                ) : done ? (
+                  <Icon name="check" size={12} color={colors.primary} />
+                ) : (
+                  <AppText weight="700" style={{ fontSize: 13, color: active ? '#FFFFFF' : colors.textLight }}>{i + 1}</AppText>
+                )}
               </View>
-              <Icon name={s.icon} size={13} color={active ? colors.primary : colors.textLight} />
-              <AppText weight={active ? '600' : '400'} style={{ fontSize: 14, color: active ? colors.primary : colors.text }}>{s.label}</AppText>
+              <AppText weight={active ? '700' : '500'} style={{ fontSize: 16, color: active ? colors.primary : colors.text }}>{s.label}</AppText>
             </Pressable>
           );
         })}
       </Sheet>
-      <View style={{ height: spacing.sm }} />
-    </View>
+
+      <Sheet
+        visible={lockOpen}
+        onClose={() => setLockOpen(false)}
+        title="Purchase credits first"
+        size="sm"
+        footer={
+          <>
+            <Button title="Not now" kind="secondary" onPress={() => setLockOpen(false)} />
+            <Button title="Get credits" icon="coins" onPress={() => { setLockOpen(false); setRequestOpen(true); }} />
+          </>
+        }
+      >
+        <AppText style={{ fontSize: 16 }}>
+          You need {CREDITS_PER_DOC} credits to go beyond Company Info. Your balance is {balance} credit{balance === 1 ? '' : 's'}.
+        </AppText>
+        <AppText variant="subtitle" style={{ fontSize: 14 }}>
+          Purchase credits to explore the next steps. What you entered here is saved as a draft.
+        </AppText>
+      </Sheet>
+
+      <CreditRequestSheet visible={requestOpen} onClose={() => { setRequestOpen(false); credits.refetch(); }} required={CREDITS_PER_DOC} balance={balance} />
+
+      <Sheet
+        visible={!!draftOffer}
+        onClose={continueDraft}
+        title="Continue your draft?"
+        size="sm"
+        footer={
+          <>
+            <Button title="Start over" kind="secondary" onPress={startOver} />
+            <Button title="Continue draft" icon="chevron-right" onPress={continueDraft} />
+          </>
+        }
+      >
+        <AppText style={{ fontSize: 16 }}>
+          You started this plan{draftOffer ? ` on ${formatDateTime(new Date(draftOffer.savedAt).toISOString())}` : ''} and did not finish it.
+          {draftOffer?.data.companyInfo?.companyName ? ` It is for ${draftOffer.data.companyInfo.companyName}.` : ''}
+        </AppText>
+        <AppText variant="subtitle" style={{ fontSize: 14 }}>Your answers were saved on this phone.</AppText>
+      </Sheet>
+    </KeyboardAvoidingView>
   );
 }

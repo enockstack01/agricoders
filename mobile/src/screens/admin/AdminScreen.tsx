@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { FlatList, RefreshControl, View } from 'react-native';
 import { useTheme } from '../../theme/ThemeProvider';
 import { radius, spacing } from '../../theme/theme';
-import { AppText, Badge, Card, ChartCard, EmptyState, Grid, KpiCard, PageHeader, SkeletonList, useLayout } from '../../components/ui';
+import { AppText, Badge, Card, ChartCard, EmptyState, Grid, PageHeader, SkeletonList, StatCard, useLayout } from '../../components/ui';
 import { Button } from '../../components/Button';
 import { Sheet } from '../../components/Sheet';
 import { NumberField, TextAreaField, TextField } from '../../components/fields';
@@ -87,13 +87,13 @@ function OverviewTab({ header, contentStyle }: TabProps) {
           {stats.isError ? <EmptyState icon="circle-exclamation" title="Could not load the numbers" description={(stats.error as any)?.message} actionLabel="Try again" onAction={() => stats.refetch()} /> : null}
           {s ? (
             <>
-              <Grid columns={columns >= 2 ? 2 : 1} gap={spacing.md}>
-                <KpiCard icon="users" tone="green" label="Total Users" value={s.totalUsers} />
-                <KpiCard icon="file-lines" tone="green" label="Total Plans" value={s.totalSubmissions} />
-                <KpiCard icon="calendar" tone="green" label="Plans This Week" value={s.plansThisWeek} />
-                <KpiCard icon="user-check" tone="green" label="Active Users" value={s.activeUsers} />
-                <KpiCard icon="user-shield" tone="orange" label="Admins" value={s.admins} />
-                <KpiCard icon="chart-line" tone="green" label="Plans per Active User" value={average} />
+              <Grid columns={columns >= 3 ? 3 : 2} gap={spacing.md}>
+                <StatCard icon="users" label="Total users" value={s.totalUsers} />
+                <StatCard icon="file-lines" label="Total plans" value={s.totalSubmissions} />
+                <StatCard icon="calendar" label="Plans this week" value={s.plansThisWeek} />
+                <StatCard icon="user-check" label="Active users" value={s.activeUsers} />
+                <StatCard icon="user-shield" label="Admins" value={s.admins} />
+                <StatCard icon="chart-line" label="Plans per active user" value={average} />
               </Grid>
               <ChartCard title="Plans Created, Last 7 Days" icon="chart-column">
                 <Bars labels={labels} datasets={[{ label: 'Plans', data: days.map((d) => s.dailyCounts[d] ?? 0) }]} height={200} emptyLabel="No plans this week" />

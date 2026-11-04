@@ -14,7 +14,7 @@ global.onehealthMongoose = cached;
 
 /** Separate MongoDB cluster dedicated to the One Health intelligence dashboard's own data
  *  (synced livestock records, computed risk alerts, sync state) — kept apart from the
- *  primary Agriplan database. */
+ *  primary Planner database. */
 export async function connectOneHealthDB(): Promise<mongoose.Connection> {
   const uri = process.env.LIVESTOCK_MONGODB_URI;
   if (!uri) {

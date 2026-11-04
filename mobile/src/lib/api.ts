@@ -53,7 +53,7 @@ api.interceptors.response.use(
       );
     }
     const data = error.response.data as any;
-    // Agriplan's API reports problems as { error } (some routes add { message })
+    // Planner's API reports problems as { error } (some routes add { message })
     const message = data?.message || data?.error || error.response.statusText || error.message || 'Request failed';
     return Promise.reject(new ApiError(message, error.response.status, false, data));
   },

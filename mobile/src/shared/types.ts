@@ -1,4 +1,4 @@
-// Shared with the Agriplan website: copied verbatim from src/types/index.ts — keep the two in sync.
+// Shared with the Planner website: copied verbatim from src/types/index.ts — keep the two in sync.
 export interface CompanyInfo {
   authorName: string;
   authorTitle: string;

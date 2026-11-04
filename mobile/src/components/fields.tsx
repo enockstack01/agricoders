@@ -41,24 +41,31 @@ function Field({
   label,
   required,
   hint,
+  error,
   children,
 }: {
   label?: string;
   required?: boolean;
   hint?: string;
+  /** shown in red under the field, replacing the hint */
+  error?: string;
   children: React.ReactNode;
 }) {
   const { colors } = useTheme();
   return (
     <View style={{ gap: 6 }}>
       {label ? (
-        <AppText variant="label">
+        <AppText weight="700" style={{ fontSize: 14 }}>
           {label}
-          {required ? <AppText variant="label" style={{ color: colors.red }}> *</AppText> : null}
+          {required ? <AppText weight="700" style={{ fontSize: 14, color: colors.red }}> *</AppText> : null}
         </AppText>
       ) : null}
       {children}
-      {hint ? <AppText variant="caption" style={{ color: colors.textLight }}>{hint}</AppText> : null}
+      {error ? (
+        <AppText accessibilityRole="alert" weight="600" style={{ fontSize: 13, color: colors.red }}>{error}</AppText>
+      ) : hint ? (
+        <AppText variant="caption" style={{ fontSize: 13, color: colors.textLight }}>{hint}</AppText>
+      ) : null}
     </View>
   );
 }
@@ -70,8 +77,8 @@ const inputStyle = (colors: any) => ({
   borderRadius: radius.md,
   paddingHorizontal: 14,
   paddingVertical: 10,
-  minHeight: 42,
-  fontSize: 13,
+  minHeight: 48,
+  fontSize: 16,
   fontFamily: ff('400'),
   color: colors.text,
 });
@@ -80,10 +87,10 @@ const focusRing = (colors: any) => ({ borderColor: colors.primary, boxShadow: '0
 
 /* ------------------------------------------------------------- TextField */
 export function TextField({
-  label, required, hint, value, onChangeValue, placeholder, keyboardType, multiline, autoCapitalize, secureTextEntry, editable = true,
+  label, required, hint, error, value, onChangeValue, placeholder, keyboardType, multiline, autoCapitalize, secureTextEntry, editable = true,
   icon, autoComplete, textContentType, returnKeyType, onSubmitEditing,
 }: {
-  label?: string; required?: boolean; hint?: string;
+  label?: string; required?: boolean; hint?: string; error?: string;
   value: any; onChangeValue: (v: string) => void;
   placeholder?: string; keyboardType?: any; multiline?: boolean;
   autoCapitalize?: any; secureTextEntry?: boolean; editable?: boolean;
@@ -97,7 +104,7 @@ export function TextField({
   const isSecret = !!secureTextEntry;
 
   return (
-    <Field label={label} required={required} hint={hint}>
+    <Field label={label} required={required} hint={hint} error={error}>
       <View
         style={[
           inputStyle(colors),
@@ -106,6 +113,7 @@ export function TextField({
             paddingVertical: 0,
           },
           focused ? focusRing(colors) : null,
+          error ? { borderColor: colors.red, borderWidth: 1.5 } : null,
           !editable ? { opacity: 0.6 } : null,
         ]}
       >
@@ -126,16 +134,18 @@ export function TextField({
           autoCapitalize={autoCapitalize}
           autoComplete={autoComplete}
           textContentType={textContentType}
-          returnKeyType={returnKeyType}
+          returnKeyType={returnKeyType ?? (multiline ? 'default' : 'done')}
           onSubmitEditing={onSubmitEditing}
+          accessibilityLabel={label}
+          accessibilityHint={error}
           secureTextEntry={isSecret && hidden}
           editable={editable}
           multiline={multiline}
           onFocus={() => setFocused(true)}
           onBlur={() => setFocused(false)}
           style={[
-            { flex: 1, fontSize: 13, fontFamily: ff('400'), color: colors.text, paddingVertical: Platform.OS === 'ios' ? 11 : 9 },
-            multiline ? { minHeight: 84, textAlignVertical: 'top' } : null,
+            { flex: 1, fontSize: 16, fontFamily: ff('400'), color: colors.text, paddingVertical: Platform.OS === 'ios' ? 12 : 10 },
+            multiline ? { minHeight: 96, textAlignVertical: 'top' } : null,
           ]}
         />
         {isSecret ? (
@@ -188,9 +198,9 @@ export function MoneyField({
 const CURRENCY_CODES = CURRENCIES.map((c) => c.code);
 
 export function SelectField({
-  label, required, hint, value, onChangeValue, options = [], placeholder = 'Select…',
+  label, required, hint, error, value, onChangeValue, options = [], placeholder = 'Select…',
 }: {
-  label?: string; required?: boolean; hint?: string;
+  label?: string; required?: boolean; hint?: string; error?: string;
   value: any; onChangeValue: (v: string) => void;
   options: Option[]; placeholder?: string;
 }) {
@@ -200,13 +210,15 @@ export function SelectField({
   const display = current ? optLabel(current) : '';
 
   return (
-    <Field label={label} required={required} hint={hint}>
+    <Field label={label} required={required} hint={hint} error={error}>
       <Pressable
         onPress={() => setOpen(true)}
-        style={[inputStyle(colors), { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}
+        accessibilityRole="button"
+        accessibilityLabel={`${label ?? 'Select'}: ${display || 'none chosen'}`}
+        style={[inputStyle(colors), { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }, error ? { borderColor: colors.red, borderWidth: 1.5 } : null]}
       >
-        <AppText style={{ fontSize: 13, color: display ? colors.text : colors.placeholder, flex: 1 }} numberOfLines={1}>{display || placeholder}</AppText>
-        <Icon name="chevron-down" size={11} color={colors.textLight} />
+        <AppText style={{ fontSize: 16, color: display ? colors.text : colors.placeholder, flex: 1 }} numberOfLines={1}>{display || placeholder}</AppText>
+        <Icon name="chevron-down" size={13} color={colors.textLight} />
       </Pressable>
 
       <Sheet visible={open} onClose={() => setOpen(false)} title={label || 'Select'}>
@@ -233,12 +245,12 @@ function SelectRow({ label, selected, onPress }: { label: string; selected: bool
       onPress={onPress}
       style={({ pressed }) => ({
         flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
-        paddingVertical: spacing.md, paddingHorizontal: spacing.sm, borderRadius: radius.sm,
+        paddingVertical: spacing.md, paddingHorizontal: spacing.sm, borderRadius: radius.sm, minHeight: 52,
         backgroundColor: pressed ? colors.bg : 'transparent',
         borderBottomWidth: StyleSheet.hairlineWidth, borderBottomColor: colors.border,
       })}
     >
-      <AppText weight={selected ? '600' : '400'} style={{ fontSize: 14, color: selected ? colors.primary : colors.text }}>
+      <AppText weight={selected ? '700' : '400'} style={{ fontSize: 16, color: selected ? colors.primary : colors.text }}>
         {label}
       </AppText>
       {selected ? <Icon name="check" size={13} color={colors.primary} /> : null}
@@ -262,7 +274,7 @@ export function DateField({
         onPress={() => setShow(true)}
         style={[inputStyle(colors), { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }]}
       >
-        <AppText style={{ fontSize: 13, color: value ? colors.text : colors.placeholder }}>
+        <AppText style={{ fontSize: 16, color: value ? colors.text : colors.placeholder }}>
           {value ? formatDate(value) : 'mm/dd/yyyy'}
         </AppText>
         <Icon name="calendar" size={13} color={colors.textLight} />

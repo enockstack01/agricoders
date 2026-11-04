@@ -140,7 +140,9 @@ export async function generateFinancialModelXlsx(
   results: FinancialResults
 ): Promise<Buffer> {
   const wb = new ExcelJS.Workbook();
-  wb.creator = data.companyInfo.authorName || "Agriplan";
+  wb.creator = "Planner";
+  wb.company = "Agricoders";
+  wb.title = `${data.companyInfo.companyName || "Company"} Financial Model`;
   wb.created = wb.modified = new Date();
 
   const { financial: fin, staff } = data;
@@ -163,7 +165,7 @@ export async function generateFinancialModelXlsx(
   const wsInp = wb.addWorksheet("Inputs");
   wsInp.columns = [{ width: 35 }, { width: 25 }, { width: 45 }];
 
-  title(wsInp, 1, 1, "Agriplan — Financial Model Inputs");
+  title(wsInp, 1, 1, "Planner — Financial Model Inputs");
   wsInp.getCell(1, 3).value = `Generated: ${new Date().toLocaleDateString()}`;
 
   const inp = (row: number, label: string, val_: string | number, desc: string, numFmt?: string) => {
@@ -999,6 +1001,12 @@ export async function generateFinancialModelXlsx(
   ];
   sheetColors.forEach(([ws, col]) => {
     (ws as unknown as { tabColor?: { argb: string } }).tabColor = { argb: `FF${col}` };
+  });
+
+  // every printed page carries the Planner brand
+  wb.eachSheet((ws) => {
+    ws.headerFooter.oddHeader = "&R&BPlanner";
+    ws.headerFooter.oddFooter = "&LPrepared with Planner by Agricoders&RPage &P of &N";
   });
 
   const buffer = await wb.xlsx.writeBuffer();

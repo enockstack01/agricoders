@@ -36,7 +36,7 @@ export function SegmentedTabs<T extends string>({
             <AppText weight="700" style={{ fontSize: 14, color: active ? '#FFFFFF' : colors.text }}>{t.label}</AppText>
             {t.badge ? (
               <View style={{ minWidth: 20, height: 20, paddingHorizontal: 6, borderRadius: 10, backgroundColor: '#F9A825', alignItems: 'center', justifyContent: 'center' }}>
-                <AppText style={{ fontSize: 11, color: '#111611', fontFamily: ff('700') }}>{t.badge}</AppText>
+                <AppText style={{ fontSize: 12, color: '#111611', fontFamily: ff('700') }}>{t.badge}</AppText>
               </View>
             ) : null}
           </PressableScale>
