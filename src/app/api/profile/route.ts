@@ -3,6 +3,7 @@ import { auth } from "@clerk/nextjs/server";
 import { connectDB } from "@/lib/mongodb";
 import { UserProfileModel } from "@/models/UserProfile";
 import { UserProfileDefaults } from "@/types";
+import { ensurePlannerId } from "@/lib/plannerId";
 
 const DEFAULT_PROFILE: UserProfileDefaults = {
   currency: "USD",
@@ -23,15 +24,16 @@ export async function GET() {
   const { userId } = await auth();
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  const plannerId = await ensurePlannerId(userId).catch(() => null);
   try {
     await connectDB();
     const profile = await UserProfileModel.findOne({ userId }).lean();
     if (!profile) {
-      return NextResponse.json({ defaults: DEFAULT_PROFILE });
+      return NextResponse.json({ defaults: DEFAULT_PROFILE, plannerId });
     }
-    return NextResponse.json({ defaults: { ...DEFAULT_PROFILE, ...(profile as { defaults?: Partial<UserProfileDefaults> }).defaults } });
+    return NextResponse.json({ defaults: { ...DEFAULT_PROFILE, ...(profile as { defaults?: Partial<UserProfileDefaults> }).defaults }, plannerId });
   } catch {
-    return NextResponse.json({ defaults: DEFAULT_PROFILE });
+    return NextResponse.json({ defaults: DEFAULT_PROFILE, plannerId });
   }
 }
 

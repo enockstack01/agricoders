@@ -54,7 +54,7 @@ export function SettingsScreen() {
   const nav = useNavigation<any>();
   const confirm = useConfirm();
   const toast = useToast();
-  const { defaults } = useProfile();
+  const { defaults, profile } = useProfile();
   const save = useSaveProfile();
   const [form, setForm] = useState<UserProfileDefaults | null>(defaults);
 
@@ -76,9 +76,9 @@ export function SettingsScreen() {
   };
 
   const copyId = async () => {
-    if (!user?.id) return;
-    await Clipboard.setStringAsync(user.id);
-    toast('Account ID copied', 'success');
+    if (!profile?.plannerId) return;
+    await Clipboard.setStringAsync(profile.plannerId);
+    toast('Planner ID copied', 'success');
   };
 
   const onSignOut = async () => {
@@ -108,18 +108,18 @@ export function SettingsScreen() {
             </View>
           </View>
         </View>
-        <AppText variant="label">Your Account ID</AppText>
+        <AppText variant="label">Your Planner ID</AppText>
         <AppText variant="caption" style={{ marginBottom: 6 }}>Share this ID with an admin when requesting credits.</AppText>
         <Pressable
           onPress={copyId}
           accessibilityRole="button"
-          accessibilityLabel="Copy account ID"
+          accessibilityLabel="Copy Planner ID"
           style={({ pressed }) => ({
             flexDirection: 'row', alignItems: 'center', gap: 10, borderWidth: 1, borderColor: colors.border, borderRadius: radius.md,
             backgroundColor: pressed ? colors.bg : colors.input, paddingHorizontal: 14, minHeight: 48,
           })}
         >
-          <AppText style={{ flex: 1, fontSize: 12, fontFamily: 'monospace' }} numberOfLines={1}>{user?.id || 'N/A'}</AppText>
+          <AppText style={{ flex: 1, fontSize: 12, fontFamily: 'monospace' }} numberOfLines={1}>{profile?.plannerId || 'N/A'}</AppText>
           <Icon name="copy" size={13} color={colors.primary} />
         </Pressable>
       </ChartCard>

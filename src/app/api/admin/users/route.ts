@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import { Submission } from "@/models/Submission";
 import { UserCredit } from "@/models/UserCredit";
 import { requireRole } from "@/lib/roleGuard";
+import { plannerIdsFor } from "@/lib/plannerId";
 
 export const maxDuration = 30;
 
@@ -32,10 +33,13 @@ export async function GET() {
       (creditDocs as { userId: string; credits: number }[]).map((c) => [c.userId, c.credits])
     );
 
+    const plannerIds = await plannerIdsFor(userList.data.map((u) => u.id));
+
     const users = userList.data.map((u) => {
       const stats = countMap.get(u.id);
       return {
         id: u.id,
+        plannerId: plannerIds[u.id] ?? null,
         name: `${u.firstName ?? ""} ${u.lastName ?? ""}`.trim() || "—",
         email: u.emailAddresses[0]?.emailAddress ?? "—",
         role: (u.publicMetadata?.role as string) ?? "user",

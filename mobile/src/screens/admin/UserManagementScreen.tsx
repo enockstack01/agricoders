@@ -29,7 +29,7 @@ export function UserManagementScreen() {
   const list = useMemo(() => {
     const q = search.trim().toLowerCase();
     const all = users.data?.users ?? [];
-    return q ? all.filter((u) => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)) : all;
+    return q ? all.filter((u) => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q) || (u.plannerId || "").toLowerCase().includes(q)) : all;
   }, [users.data, search]);
 
   const change = async (u: AdminUser, role: NavRole) => {
@@ -73,6 +73,7 @@ export function UserManagementScreen() {
               <View style={{ flex: 1, minWidth: 0 }}>
                 <AppText weight="700" numberOfLines={1} style={{ fontSize: 16 }}>{item.name}{isSelf ? ' (you)' : ''}</AppText>
                 <AppText variant="caption" numberOfLines={1}>{item.email}</AppText>
+                {item.plannerId ? <AppText variant="caption" numberOfLines={1} style={{ fontFamily: 'monospace' }}>{item.plannerId}</AppText> : null}
                 <AppText variant="caption">{item.submissionCount} plan{item.submissionCount === 1 ? '' : 's'} · active {timeAgo(item.lastActive)}</AppText>
               </View>
               <RoleBadge role={item.role} />

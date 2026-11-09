@@ -105,7 +105,7 @@ export function useRequestCredits() {
 /* ---------------------------------------------------------------- profile */
 /** Plan defaults (currency, tax, loan…) that prefill every new plan. */
 export function useProfile() {
-  const query = useQuery<{ defaults: UserProfileDefaults }>({
+  const query = useQuery<{ defaults: UserProfileDefaults; plannerId?: string | null }>({
     queryKey: ['profile'],
     queryFn: () => api.get('/profile').then((r) => r.data),
     staleTime: 60_000,

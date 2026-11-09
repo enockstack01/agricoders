@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import { UserCredit } from "@/models/UserCredit";
 import { CreditTransaction } from "@/models/CreditTransaction";
 import { createNotification } from "@/lib/notifications";
+import { resolveUserId } from "@/lib/plannerId";
 
 // POST /api/admin/credits/assign
 // Body: { userId, credits, paymentAmount, currency, note }
@@ -22,9 +23,9 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { userId, credits, paymentAmount, currency, note } = body;
+    const { credits, paymentAmount, currency, note } = body;
 
-    if (!userId || typeof userId !== "string") {
+    if (!body.userId || typeof body.userId !== "string") {
       return NextResponse.json({ error: "userId is required" }, { status: 400 });
     }
     const creditsNum = parseInt(credits);
@@ -33,6 +34,10 @@ export async function POST(req: NextRequest) {
     }
 
     await connectDB();
+
+    // the admin may give a Planner ID or a Clerk ID
+    const userId = await resolveUserId(body.userId);
+    if (!userId) return NextResponse.json({ error: "No user has that Planner ID" }, { status: 404 });
 
     // Upsert credit balance, atomically add credits
     const updated = await UserCredit.findOneAndUpdate(
@@ -80,10 +85,12 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    const userId = req.nextUrl.searchParams.get("userId");
-    if (!userId) return NextResponse.json({ error: "userId required" }, { status: 400 });
+    const rawId = req.nextUrl.searchParams.get("userId");
+    if (!rawId) return NextResponse.json({ error: "userId required" }, { status: 400 });
 
     await connectDB();
+    const userId = await resolveUserId(rawId);
+    if (!userId) return NextResponse.json({ error: "No user has that Planner ID" }, { status: 404 });
     const [creditDoc, transactions] = await Promise.all([
       UserCredit.findOne({ userId }).lean(),
       CreditTransaction.find({ userId }).sort({ createdAt: -1 }).limit(30).lean(),

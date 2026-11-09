@@ -55,6 +55,7 @@ interface AdminUser {
   createdAt: number;
   imageUrl: string;
   credits: number;
+  plannerId?: string | null;
 }
 
 interface AdminSubmission {
@@ -194,7 +195,7 @@ export default function AdminPage() {
   ];
 
   const filteredUsers = userSearch
-    ? users.filter((u) => u.name.toLowerCase().includes(userSearch.toLowerCase()) || u.email.toLowerCase().includes(userSearch.toLowerCase()))
+    ? users.filter((u) => u.name.toLowerCase().includes(userSearch.toLowerCase()) || u.email.toLowerCase().includes(userSearch.toLowerCase()) || (u.plannerId ?? "").toLowerCase().includes(userSearch.toLowerCase()))
     : users;
 
   const totalPages = Math.ceil(submissionsTotal / 20);
@@ -299,6 +300,7 @@ export default function AdminPage() {
                             <div>
                               <div className="cell-primary truncate">{u.name || "N/A"}</div>
                               <div className="cell-sub truncate">{u.email}</div>
+                              {u.plannerId ? <div className="cell-sub mono">{u.plannerId}</div> : null}
                             </div>
                           </div>
                         </td>
@@ -326,6 +328,7 @@ export default function AdminPage() {
                       <div>
                         <div className="cell-primary truncate">{u.name || "N/A"}</div>
                         <div className="cell-sub truncate">{u.email}</div>
+                              {u.plannerId ? <div className="cell-sub mono">{u.plannerId}</div> : null}
                         <div className="mono cell-sub truncate" style={{ userSelect: "all" }}>{u.id}</div>
                         <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 6, flexWrap: "wrap" }}>
                           <Badge variant={roleBadgeVariant(u.role)}>{roleLabel(u.role)}</Badge>
@@ -793,8 +796,8 @@ function AdminCreditsPanel() {
       >
         <form onSubmit={handleAssign}>
           <div className="form-group">
-            <label className="form-label">User Account ID<span className="required">*</span></label>
-            <input value={assignUserId} onChange={(e) => setAssignUserId(e.target.value)} placeholder="user_2abc123def..." required className="form-control mono" />
+            <label className="form-label">Planner ID<span className="required">*</span></label>
+            <input value={assignUserId} onChange={(e) => setAssignUserId(e.target.value)} placeholder="Planner1234567890" required className="form-control mono" />
             <p className="form-hint">User can find this in Profile → Account.</p>
           </div>
           <div className="form-row-3 form-group">
@@ -834,7 +837,7 @@ function AdminCreditsPanel() {
         tone="blue" icon={<Search size={15} />} title="Lookup User Credits" sub="Check balance and transaction history"
       >
         <form onSubmit={handleLookup} style={{ display: "flex", gap: 8, marginBottom: 14 }}>
-          <input value={lookupId} onChange={(e) => setLookupId(e.target.value)} placeholder="Paste User Account ID…" className="form-control mono" />
+          <input value={lookupId} onChange={(e) => setLookupId(e.target.value)} placeholder="Paste Planner ID…" className="form-control mono" />
           <button type="submit" disabled={looking} className="btn btn-blue">
             {looking ? <Loader2 size={14} className="animate-spin" /> : <Search size={14} />}
             Lookup
@@ -884,12 +887,12 @@ function AdminCreditsPanel() {
         tone="red" icon={<AlertCircle size={15} />} title="Dismiss Credits" sub="Remove credits from a user account"
       >
         <form onSubmit={handleCheck} className="form-group">
-          <label className="form-label">User Account ID<span className="required">*</span></label>
+          <label className="form-label">Planner ID<span className="required">*</span></label>
           <div style={{ display: "flex", gap: 8 }}>
             <input
               value={deductUserId}
               onChange={(e) => { setDeductUserId(e.target.value); setBalance(null); setDeductResult(null); }}
-              placeholder="user_2abc123def..."
+              placeholder="Planner1234567890"
               required
               className="form-control mono"
             />

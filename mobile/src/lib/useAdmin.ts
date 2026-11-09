@@ -20,6 +20,7 @@ export type AdminStats = {
 
 export type AdminUser = {
   id: string;
+  plannerId?: string | null;
   name: string;
   email: string;
   role: NavRole;

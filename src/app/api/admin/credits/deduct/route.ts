@@ -4,6 +4,7 @@ import { connectDB } from "@/lib/mongodb";
 import { UserCredit } from "@/models/UserCredit";
 import { CreditTransaction } from "@/models/CreditTransaction";
 import { createNotification } from "@/lib/notifications";
+import { resolveUserId } from "@/lib/plannerId";
 
 export async function POST(req: NextRequest) {
   const { userId: adminId } = await auth();
@@ -15,13 +16,13 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
-  const { userId, credits, note } = await req.json() as {
+  const { userId: rawId, credits, note } = await req.json() as {
     userId: string;
     credits: number;
     note?: string;
   };
 
-  if (!userId || typeof userId !== "string") {
+  if (!rawId || typeof rawId !== "string") {
     return NextResponse.json({ error: "userId is required" }, { status: 400 });
   }
   if (!Number.isInteger(credits) || credits <= 0) {
@@ -29,6 +30,10 @@ export async function POST(req: NextRequest) {
   }
 
   await connectDB();
+
+  // the admin may give a Planner ID or a Clerk ID
+  const userId = await resolveUserId(rawId);
+  if (!userId) return NextResponse.json({ error: "No user has that Planner ID" }, { status: 404 });
 
   const current = await UserCredit.findOne({ userId });
   if (!current) {

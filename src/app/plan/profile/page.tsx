@@ -101,6 +101,7 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [error, setError] = useState("");
+  const [plannerId, setPlannerId] = useState("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -111,6 +112,7 @@ export default function ProfilePage() {
       ]);
       if (profileRes.status === "fulfilled") {
         setDefaults((prev) => ({ ...prev, ...profileRes.value.data.defaults }));
+        setPlannerId(profileRes.value.data.plannerId ?? "");
       }
       if (creditsRes.status === "fulfilled") {
         setCredits(creditsRes.value.data.credits ?? 0);
@@ -204,13 +206,13 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          <Field label="Your Account ID" hint="Share this ID with an admin when requesting credits. Keep it private otherwise.">
+          <Field label="Your Planner ID" hint="Share this ID with an admin when requesting credits.">
             <div style={{ display: "flex", gap: 8 }}>
-              <input readOnly value={user?.id || "N/A"} className="form-control mono" onFocus={(e) => e.target.select()} />
+              <input readOnly value={plannerId || "N/A"} className="form-control mono" onFocus={(e) => e.target.select()} />
               <button
                 onClick={() => {
-                  if (user?.id) {
-                    navigator.clipboard.writeText(user.id);
+                  if (plannerId) {
+                    navigator.clipboard.writeText(plannerId);
                     setCopied(true);
                     setTimeout(() => setCopied(false), 2000);
                   }
