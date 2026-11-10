@@ -15,7 +15,6 @@ const isProtectedRoute = createRouteMatcher([
   "/api/admin(.*)",
   "/api/super-admin(.*)",
   "/api/profile(.*)",
-  "/api/onehealth(.*)",
 ]);
 
 // Pages a signed in user has no reason to see: the Planner landing page and the sign in or sign up screens.

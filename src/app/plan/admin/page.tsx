@@ -15,25 +15,16 @@ import {
   Activity,
   Search,
   ChevronDown,
-  ChevronUp,
   Loader2,
   Shield,
   AlertTriangle,
   RefreshCw,
   Coins,
   CheckCircle,
-  CheckCircle2,
   AlertCircle,
   Clock,
   XCircle,
   Inbox,
-  ShieldAlert,
-  Skull,
-  Database,
-  MapPin,
-  PawPrint,
-  Settings,
-  ListChecks,
 } from "@/components/plan/icons";
 
 interface Stats {
@@ -79,7 +70,7 @@ interface CreditRequestItem {
   user: { name: string; email: string; imageUrl: string };
 }
 
-type Tab = "overview" | "users" | "submissions" | "credits" | "requests" | "onehealth";
+type Tab = "overview" | "users" | "submissions" | "credits" | "requests";
 
 const roleLabel = (r: string) => (r === "super_admin" ? "Super Admin" : r === "admin" ? "Admin" : "User");
 const creditBadge = (c: number) => (c === 0 ? "badge-danger" : c < 10 ? "badge-warning" : "badge-success");
@@ -191,7 +182,6 @@ export default function AdminPage() {
     { key: "submissions", label: "All Plans", icon: <FileText size={15} /> },
     { key: "credits", label: "Credits", icon: <Coins size={15} /> },
     { key: "requests", label: "Requests", icon: <Inbox size={15} />, badge: pendingRequestCount },
-    { key: "onehealth", label: "One Health", icon: <ShieldAlert size={15} /> },
   ];
 
   const filteredUsers = userSearch
@@ -436,9 +426,6 @@ export default function AdminPage() {
           }}
         />
       )}
-
-      {/* ── One Health tab ──────────────────────────────────────────────────── */}
-      {tab === "onehealth" && <OneHealthPanel />}
     </AppShell>
   );
 }
@@ -942,304 +929,5 @@ function AdminCreditsPanel() {
         )}
       </CollapsibleCard>
     </div>
-  );
-}
-
-// ── One Health Panel ──────────────────────────────────────────────────────────
-
-interface OneHealthSummary {
-  openAlerts: number;
-  zoonoticOpenAlerts: number;
-  severityCounts: Record<string, number>;
-  totalRecordsSynced: number;
-  sync: {
-    status: "ok" | "error" | "not_configured";
-    lastSyncedAt: string | null;
-    lastRunAt: string | null;
-    lastRunError: string | null;
-    recordsFetchedLastRun: number;
-    alertsCreatedLastRun: number;
-  };
-}
-
-interface OneHealthAlert {
-  _id: string;
-  type: "zoonotic_watchlist" | "mortality_spike" | "symptom_cluster";
-  disease?: string;
-  zoonotic: boolean;
-  severity: "low" | "medium" | "high" | "critical";
-  title: string;
-  description: string;
-  farmIds: string[];
-  species: string[];
-  district?: string;
-  status: "open" | "reviewed" | "dismissed";
-  detectedAt: string;
-}
-
-interface OneHealthRecordRow {
-  _id: string;
-  species: string;
-  farmName?: string;
-  farmId?: string;
-  eventType: string;
-  diagnosis?: string;
-  symptoms: string[];
-  recordedAt: string;
-}
-
-// CropManager alert tones per severity
-const OH_SEVERITY_STYLE: Record<OneHealthAlert["severity"], { badge: "rose" | "amber" | "blue" | "gray"; alert: string }> = {
-  critical: { badge: "rose", alert: "alert-danger" },
-  high: { badge: "amber", alert: "alert-warning" },
-  medium: { badge: "blue", alert: "alert-info" },
-  low: { badge: "gray", alert: "alert-success" },
-};
-
-const OH_TYPE_LABEL: Record<OneHealthAlert["type"], string> = {
-  zoonotic_watchlist: "Watchlist disease",
-  mortality_spike: "Mortality spike",
-  symptom_cluster: "Outbreak cluster",
-};
-
-function ohFmtDate(iso: string | null | undefined) {
-  if (!iso) return "Never";
-  return new Date(iso).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
-}
-
-function OneHealthPanel() {
-  const [summary, setSummary] = useState<OneHealthSummary | null>(null);
-  const [alerts, setAlerts] = useState<OneHealthAlert[]>([]);
-  const [total, setTotal] = useState(0);
-  const [page, setPage] = useState(1);
-  const [statusFilter, setStatusFilter] = useState<"open" | "reviewed" | "dismissed" | "all">("open");
-  const [severityFilter, setSeverityFilter] = useState<"all" | OneHealthAlert["severity"]>("all");
-  const [loading, setLoading] = useState(true);
-  const [syncing, setSyncing] = useState(false);
-  const [expanded, setExpanded] = useState<string | null>(null);
-  const [records, setRecords] = useState<OneHealthRecordRow[]>([]);
-  const [loadingRecords, setLoadingRecords] = useState(false);
-  const [updating, setUpdating] = useState<string | null>(null);
-
-  const loadSummary = useCallback(async () => {
-    try {
-      const { data } = await axios.get<OneHealthSummary>("/api/onehealth/summary");
-      setSummary(data);
-    } catch {
-      /* handled by empty state */
-    }
-  }, []);
-
-  const loadAlerts = useCallback(async (p = 1, status = statusFilter, severity = severityFilter) => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({ page: String(p), status, severity });
-      const { data } = await axios.get(`/api/onehealth/alerts?${params}`);
-      setAlerts(data.alerts);
-      setTotal(data.total);
-      setPage(p);
-    } finally {
-      setLoading(false);
-    }
-  }, [statusFilter, severityFilter]);
-
-  useEffect(() => {
-    const t = setTimeout(() => {
-      loadSummary();
-      loadAlerts(1, statusFilter, severityFilter);
-    }, 0);
-    return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [statusFilter, severityFilter]);
-
-  const handleSync = async () => {
-    setSyncing(true);
-    try {
-      await axios.post("/api/onehealth/sync");
-      await loadSummary();
-      await loadAlerts(page, statusFilter, severityFilter);
-    } finally {
-      setSyncing(false);
-    }
-  };
-
-  const toggleExpand = async (alert: OneHealthAlert) => {
-    if (expanded === alert._id) {
-      setExpanded(null);
-      return;
-    }
-    setExpanded(alert._id);
-    setLoadingRecords(true);
-    try {
-      const { data } = await axios.get(`/api/onehealth/alerts/${alert._id}`);
-      setRecords(data.records);
-    } finally {
-      setLoadingRecords(false);
-    }
-  };
-
-  const updateStatus = async (id: string, status: OneHealthAlert["status"]) => {
-    setUpdating(id);
-    try {
-      await axios.patch(`/api/onehealth/alerts/${id}`, { status });
-      setAlerts((prev) => prev.map((a) => (a._id === id ? { ...a, status } : a)));
-      loadSummary();
-    } finally {
-      setUpdating(null);
-    }
-  };
-
-  return (
-    <>
-      <div className="page-header" style={{ marginBottom: 16 }}>
-        <p className="page-subtitle" style={{ marginTop: 0 }}>
-          Disease risk signals synced automatically from LivestockPro every few minutes.
-        </p>
-        <button onClick={handleSync} disabled={syncing} className="btn btn-primary">
-          {syncing ? <Loader2 size={15} className="animate-spin" /> : <RefreshCw size={15} />}
-          Sync now
-        </button>
-      </div>
-
-      {summary?.sync.status === "not_configured" && (
-        <div className="alert-item alert-warning" style={{ marginBottom: 20 }}>
-          <Settings size={16} />
-          <div className="alert-content">
-            <strong className="alert-kicker">LivestockPro connection not configured yet</strong>
-            Set <code className="cm-code">LIVESTOCK_API_URL</code> and <code className="cm-code">LIVESTOCK_API_KEY</code> once
-            LivestockPro exposes the records feed, so this dashboard will start syncing automatically.
-          </div>
-        </div>
-      )}
-
-      {summary?.sync.status === "error" && (
-        <div className="alert-item alert-danger" style={{ marginBottom: 20 }}>
-          <AlertTriangle size={16} />
-          <div className="alert-content">
-            <strong className="alert-kicker">Last sync failed</strong>
-            {summary.sync.lastRunError ?? "Unknown error"}
-          </div>
-        </div>
-      )}
-
-      <div className="kpi-grid">
-        <StatsCard label="Open alerts" value={summary?.openAlerts ?? "N/A"} icon={<ShieldAlert size={18} />} accent="rose" />
-        <StatsCard label="Zoonotic risk (open)" value={summary?.zoonoticOpenAlerts ?? "N/A"} icon={<Skull size={18} />} accent="amber" />
-        <StatsCard label="Records synced" value={summary?.totalRecordsSynced ?? "N/A"} icon={<Database size={18} />} accent="blue" />
-        <StatsCard
-          label="Last sync"
-          value={summary ? ohFmtDate(summary.sync.lastSyncedAt) : "N/A"}
-          sub={summary?.sync.status === "ok" ? "Healthy" : summary?.sync.status}
-          icon={<RefreshCw size={18} />}
-          accent="green"
-        />
-      </div>
-
-      <div className="card">
-        <div className="card-header">
-          <h3><span className="icon-tile red"><ListChecks size={15} /></span>Risk Alerts</h3>
-          <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-            {(["open", "reviewed", "dismissed", "all"] as const).map((s) => (
-              <button key={s} onClick={() => setStatusFilter(s)} className={`chip ${statusFilter === s ? "active" : ""}`}>{s}</button>
-            ))}
-            <span style={{ width: 1, height: 20, background: "var(--border)", margin: "0 4px" }} />
-            {(["all", "critical", "high", "medium", "low"] as const).map((s) => (
-              <button key={s} onClick={() => setSeverityFilter(s)} className={`chip ${severityFilter === s ? "active" : ""}`}>{s}</button>
-            ))}
-          </div>
-        </div>
-
-        {loading ? (
-          <Loading label="Loading alerts…" />
-        ) : alerts.length === 0 ? (
-          <EmptyState
-            icon={<ShieldAlert size={28} />}
-            title={`No ${statusFilter !== "all" ? statusFilter + " " : ""}alerts`}
-            description="Risk signals detected from LivestockPro data will appear here."
-          />
-        ) : (
-          <div className="card-body">
-            {alerts.map((a) => {
-              const style = OH_SEVERITY_STYLE[a.severity];
-              const isOpen = expanded === a._id;
-              return (
-                <div key={a._id} className={`alert-item ${style.alert}`} style={{ flexDirection: "column", gap: 0, cursor: "pointer" }} onClick={() => toggleExpand(a)}>
-                  <div style={{ display: "flex", gap: 12, width: "100%", alignItems: "flex-start" }}>
-                    <div className="alert-content">
-                      <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                        <span className="cell-primary">{a.title}</span>
-                        {a.zoonotic && <Badge variant="rose">Zoonotic</Badge>}
-                        <Badge variant={style.badge}>{a.severity}</Badge>
-                        <Badge variant="gray">{OH_TYPE_LABEL[a.type]}</Badge>
-                      </div>
-                      <p className="cell-muted" style={{ fontSize: 12, marginTop: 4 }}>{a.description}</p>
-                      <div className="cell-sub" style={{ display: "flex", alignItems: "center", gap: 12, marginTop: 6, flexWrap: "wrap" }}>
-                        {a.district && <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><MapPin size={11} />{a.district}</span>}
-                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}><PawPrint size={11} />{a.species.join(", ")}</span>
-                        <span>{a.farmIds.length} farm{a.farmIds.length === 1 ? "" : "s"}</span>
-                        <span>Detected {ohFmtDate(a.detectedAt)}</span>
-                      </div>
-                    </div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 2, flexShrink: 0 }}>
-                      {a.status === "open" && (
-                        <>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); updateStatus(a._id, "reviewed"); }}
-                            disabled={updating === a._id}
-                            title="Mark reviewed"
-                            className="btn-icon"
-                          >
-                            <CheckCircle2 size={16} />
-                          </button>
-                          <button
-                            onClick={(e) => { e.stopPropagation(); updateStatus(a._id, "dismissed"); }}
-                            disabled={updating === a._id}
-                            title="Dismiss"
-                            className="btn-icon btn-icon-danger"
-                          >
-                            <XCircle size={16} />
-                          </button>
-                        </>
-                      )}
-                      {isOpen ? <ChevronUp size={16} style={{ color: "var(--text-light)" }} /> : <ChevronDown size={16} style={{ color: "var(--text-light)" }} />}
-                    </div>
-                  </div>
-
-                  {isOpen && (
-                    <div style={{ width: "100%", marginTop: 12 }} onClick={(e) => e.stopPropagation()}>
-                      {loadingRecords ? (
-                        <span className="cell-sub" style={{ display: "inline-flex", alignItems: "center", gap: 6 }}>
-                          <Loader2 size={13} className="animate-spin" /> Loading records…
-                        </span>
-                      ) : (
-                        <div className="table-responsive">
-                          <table className="data-table compact">
-                            <tbody>
-                              {records.map((r) => (
-                                <tr key={r._id}>
-                                  <td>
-                                    <span className="cell-primary">{r.species}</span>
-                                    <span className="cell-muted"> · {r.farmName ?? r.farmId ?? "Unknown farm"}</span>
-                                    {r.diagnosis && <span className="cell-muted"> · {r.diagnosis}</span>}
-                                    {r.symptoms?.length > 0 && <span className="cell-sub"> · {r.symptoms.join(", ")}</span>}
-                                  </td>
-                                  <td className="cell-muted text-right" style={{ whiteSpace: "nowrap" }}>{ohFmtDate(r.recordedAt)}</td>
-                                </tr>
-                              ))}
-                            </tbody>
-                          </table>
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        )}
-
-        <Pager page={page} totalPages={Math.ceil(total / 20)} onChange={(p) => loadAlerts(p)} />
-      </div>
-    </>
   );
 }
