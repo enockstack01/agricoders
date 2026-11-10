@@ -267,9 +267,11 @@ export function StatCard({ icon, label, value, onPress }: { icon: string; label:
 export function StatTile({ label, value, sub, color, tone }: { label: string; value: string | number; sub?: string; color?: string; tone?: 'green' | 'orange' | 'blue' }) {
   const { colors, isDark } = useTheme();
   const bg = tone ? (isDark ? KPI_TONES[tone][1] : KPI_TONES[tone][0]) : colors.bg;
+  // coloured labels: dark shades on the pale light mode tints, light shades on the dark tints
+  const labelColor = !tone ? colors.textLight : isDark ? { green: '#81C784', orange: '#FFD54F', blue: '#BFC2E6' }[tone] : { green: '#1B5E20', orange: '#8A4B00', blue: '#0A108A' }[tone];
   return (
     <View style={{ backgroundColor: bg, borderRadius: radius.lg, paddingVertical: 14, paddingHorizontal: 10, alignItems: 'center' }}>
-      <AppText weight="600" style={{ fontSize: 12, color: colors.textLight, textTransform: 'uppercase', letterSpacing: 0.5, textAlign: 'center' }} numberOfLines={2}>
+      <AppText weight="600" style={{ fontSize: 12, color: labelColor, textTransform: 'uppercase', letterSpacing: 0.5, textAlign: 'center' }} numberOfLines={2}>
         {label}
       </AppText>
       <AppText weight="800" style={{ fontSize: 22, lineHeight: 28, color: color ?? colors.text, marginTop: 6 }} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.5}>
@@ -292,7 +294,7 @@ export function Badge({
   const { colors, isDark } = useTheme();
   const tones: Record<string, [string, string]> = {
     success: [isDark ? '#1A3D1E' : '#F3F8F3', isDark ? '#81C784' : '#2E7D32'],
-    warning: [isDark ? '#3D3420' : '#FFF8E1', isDark ? '#FFD54F' : '#F57F17'],
+    warning: [isDark ? '#3D3420' : '#FFF8E1', isDark ? '#FFD54F' : '#8A4B00'],
     danger: [isDark ? '#3D1A1A' : '#FFEBEE', isDark ? '#EF9A9A' : '#D32F2F'],
     info: [isDark ? '#1C2058' : '#EAEBF8', isDark ? '#BFC2E6' : '#0A108A'],
     primary: [colors.primaryLight, isDark ? '#81C784' : colors.primary],
@@ -472,10 +474,10 @@ export function IconButton({
       accessibilityLabel={label ?? name}
       style={({ pressed }) => ({
         width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center',
-        opacity: disabled ? 0.35 : 1, backgroundColor: pressed ? colors.bg : 'transparent',
+        backgroundColor: pressed ? colors.bg : 'transparent',
       })}
     >
-      <Icon name={name} size={size} color={color ?? colors.textLight} />
+      <Icon name={name} size={size} color={disabled ? colors.placeholder : color ?? colors.textLight} />
     </Pressable>
   );
 }

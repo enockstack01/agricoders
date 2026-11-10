@@ -54,6 +54,21 @@ export function Button({
   };
   const sm = size === 'sm';
 
+  // A disabled button keeps a readable label: it gets its own muted fill with dark (light mode),
+  // light (dark mode) or white (on the forest banner) text, never a faded copy of the normal button.
+  // A button that is only loading keeps its normal colours.
+  if (disabled) {
+    if (onBanner) {
+      bg[kind] = 'rgba(255,255,255,0.16)';
+      fg[kind] = '#FFFFFF';
+      border[kind] = 'rgba(255,255,255,0.45)';
+    } else {
+      bg[kind] = isDark ? '#1E2A21' : '#E6EEE7';
+      fg[kind] = isDark ? '#C9D6CA' : '#3D4A3E';
+      border[kind] = isDark ? '#33443A' : '#C5D5C7';
+    }
+  }
+
   return (
     <PressableScale
       onPress={onPress}
@@ -74,7 +89,7 @@ export function Button({
           backgroundColor: bg[kind],
           minHeight: sm ? 44 : 48,
           paddingHorizontal: sm ? 14 : 18,
-          opacity: isDisabled ? 0.6 : pressed ? 0.9 : 1,
+          opacity: pressed && !isDisabled ? 0.9 : 1,
         },
         style,
       ]}

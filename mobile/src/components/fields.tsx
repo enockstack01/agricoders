@@ -114,7 +114,7 @@ export function TextField({
           },
           focused ? focusRing(colors) : null,
           error ? { borderColor: colors.red, borderWidth: 1.5 } : null,
-          !editable ? { opacity: 0.6 } : null,
+          !editable ? { backgroundColor: colors.bg } : null,
         ]}
       >
         {icon ? (

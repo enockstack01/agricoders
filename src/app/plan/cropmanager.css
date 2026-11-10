@@ -374,8 +374,8 @@
   .dark .cm-app .stat-tile.tone-green { background: #1A3D1E; }
   .dark .cm-app .stat-tile.tone-orange { background: #3D3420; }
   .dark .cm-app .stat-tile.tone-blue { background: #1C2058; }
-  .cm-app .stat-tile.tone-green .stat-tile-label { color: #2E7D32; }
-  .cm-app .stat-tile.tone-orange .stat-tile-label { color: #F57F17; }
+  .cm-app .stat-tile.tone-green .stat-tile-label { color: #1B5E20; }
+  .cm-app .stat-tile.tone-orange .stat-tile-label { color: #8A4B00; }
   .cm-app .stat-tile.tone-blue .stat-tile-label { color: #0A108A; }
 
   /* label / value summary rows */
@@ -402,7 +402,7 @@
   .dark .cm-app .alert-item.alert-danger { background: #3D1A1A; }
   .dark .cm-app .alert-item.alert-info { background: #1C2058; }
   .dark .cm-app .alert-item.alert-success { background: #1A3D1E; }
-  .cm-app .alert-item.alert-warning > svg { color: #F9A825; }
+  .cm-app .alert-item.alert-warning > svg { color: #8A4B00; }
   .cm-app .alert-item.alert-danger > svg { color: #D32F2F; }
   .cm-app .alert-item.alert-info > svg { color: #0A108A; }
   .cm-app .alert-item.alert-success > svg { color: #2E7D32; }
@@ -410,7 +410,7 @@
   .cm-app .alert-content strong.alert-kicker {
     font-weight: 600; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; display: block; margin-bottom: 2px;
   }
-  .cm-app .alert-item.alert-warning .alert-kicker { color: #F57F17; }
+  .cm-app .alert-item.alert-warning .alert-kicker { color: #8A4B00; }
   .cm-app .alert-item.alert-danger .alert-kicker { color: #D32F2F; }
   .cm-app .alert-item.alert-info .alert-kicker { color: #0A108A; }
   .cm-app .alert-item.alert-success .alert-kicker { color: #2E7D32; }
@@ -465,7 +465,7 @@
     font-size: 11px; font-weight: 600; white-space: nowrap; line-height: 1.3;
   }
   .cm-app .badge-success { background: #F3F8F3; color: #2E7D32; }
-  .cm-app .badge-warning { background: #FFF8E1; color: #F57F17; }
+  .cm-app .badge-warning { background: #FFF8E1; color: #8A4B00; }
   .cm-app .badge-danger { background: #FFEBEE; color: #D32F2F; }
   .cm-app .badge-info { background: #EAEBF8; color: #0A108A; }
   .cm-app .badge-purple { background: #F4F5FB; color: #555555; }
@@ -934,4 +934,23 @@
 
   .cm-app .data-table thead { background: #1B5E20; }
   .cm-app .data-table th { color: #fff; border-bottom: none; }
+
+  /* ============================================================
+     DISABLED CONTROLS — a muted fill with readable text in each mode,
+     never a faded copy of the normal button (e.g. "Request pending").
+     ============================================================ */
+  .cm-app .btn.btn:disabled { opacity: 1; cursor: not-allowed; background: #E6EEE7; color: #3D4A3E; border-color: #C5D5C7; }
+  .dark .cm-app .btn.btn:disabled { background: #1E2A21; color: #C9D6CA; border-color: #33443A; }
+  .cm-app .page-header .btn.btn:disabled { background: rgba(255, 255, 255, 0.16); color: #fff; border-color: rgba(255, 255, 255, 0.45); }
+  .cm-app .btn.btn:disabled svg, .cm-app .page-header .btn.btn:disabled svg { color: currentColor !important; }
+  .cm-app .form-control:disabled { opacity: 1; background: var(--bg); color: var(--text-light); }
+  .cm-app .btn-icon:disabled, .cm-app .dropdown-item:disabled { opacity: 1; color: var(--text-light); }
+  .cm-app .stepper button:disabled { opacity: 1; background: var(--bg); color: var(--text-light); }
+
+  /* ---- Readable coloured text in dark mode (light mode keeps the darker shades above) ---- */
+  .dark .cm-app .stat-tile.tone-green .stat-tile-label { color: #81C784; }
+  .dark .cm-app .stat-tile.tone-orange .stat-tile-label { color: #FFD54F; }
+  .dark .cm-app .stat-tile.tone-blue .stat-tile-label { color: #BFC2E6; }
+  .dark .cm-app .alert-item.alert-warning > svg, .dark .cm-app .alert-item.alert-warning .alert-kicker { color: #FFD54F; }
+  .dark .cm-app .alert-item.alert-info > svg, .dark .cm-app .alert-item.alert-info .alert-kicker { color: #BFC2E6; }
 }

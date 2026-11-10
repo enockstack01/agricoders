@@ -27,11 +27,11 @@ export function Stepper({ value, onChange }: { value: number; onChange: (v: numb
       accessibilityLabel={label === '−' ? 'Decrease' : 'Increase'}
       style={({ pressed }) => ({
         width: 44, height: 44, borderRadius: 22, borderWidth: 1, borderColor: colors.border,
-        alignItems: 'center', justifyContent: 'center', opacity: disabled ? 0.4 : 1,
-        backgroundColor: pressed ? colors.bg : colors.card,
+        alignItems: 'center', justifyContent: 'center',
+        backgroundColor: disabled ? colors.bg : pressed ? colors.bg : colors.card,
       })}
     >
-      <AppText weight="700" style={{ fontSize: 16 }}>{label}</AppText>
+      <AppText weight="700" style={{ fontSize: 16, color: disabled ? colors.textLight : colors.text }}>{label}</AppText>
     </Pressable>
   );
   return (
@@ -164,7 +164,7 @@ export function CreditRequestSheet({
       {required > 0 ? (
         <View style={{ flexDirection: 'row', gap: 10, backgroundColor: KPI_TONES.orange[0], borderLeftWidth: 3, borderLeftColor: colors.orange, borderRadius: radius.md, padding: 12, marginBottom: 16 }}>
           <Icon name="triangle-exclamation" size={14} color={colors.orange} />
-          <AppText style={{ flex: 1, fontSize: 13, color: '#263238' }}>
+          <AppText style={{ flex: 1, fontSize: 13, color: colors.text }}>
             You need {required} credits but have {balance ?? 0}. Request more from your admin below.
           </AppText>
         </View>
@@ -249,12 +249,12 @@ export function DocumentSheet({
       disabled={disabled}
       style={({ pressed }) => ({
         flexDirection: 'row', alignItems: 'center', gap: 12, paddingVertical: 12, paddingHorizontal: 10,
-        borderRadius: radius.md, opacity: disabled ? 0.45 : 1, backgroundColor: pressed ? colors.bg : 'transparent',
+        borderRadius: radius.md, backgroundColor: pressed ? colors.bg : 'transparent',
       })}
     >
       <Icon name={icon} size={15} color={colors.textLight} />
       <View style={{ flex: 1 }}>
-        <AppText weight="600" style={{ fontSize: 13 }}>{title}</AppText>
+        <AppText weight="600" style={{ fontSize: 13, color: disabled ? colors.textLight : colors.text }}>{title}</AppText>
         {sub ? <AppText variant="caption">{sub}</AppText> : null}
       </View>
       {right ? <AppText weight="700" style={{ fontSize: 12, color: right === 'Free' ? colors.primary : colors.textLight }}>{right}</AppText> : null}
