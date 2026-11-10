@@ -374,7 +374,9 @@
   .dark .cm-app .stat-tile.tone-green { background: #1A3D1E; }
   .dark .cm-app .stat-tile.tone-orange { background: #3D3420; }
   .dark .cm-app .stat-tile.tone-blue { background: #1C2058; }
-  .cm-app .stat-tile.tone-green .stat-tile-label { color: #1B5E20; }
+  .cm-app .stat-tile.tone-green .stat-tile-label,
+  .cm-app .stat-tile.tone-green .stat-tile-value,
+  .cm-app .stat-tile.tone-green .stat-tile-sub { color: #0A108A; }
   .cm-app .stat-tile.tone-orange .stat-tile-label { color: #8A4B00; }
   .cm-app .stat-tile.tone-blue .stat-tile-label { color: #0A108A; }
 
@@ -949,6 +951,7 @@
 
   /* ---- Readable coloured text in dark mode (light mode keeps the darker shades above) ---- */
   .dark .cm-app .stat-tile.tone-green .stat-tile-label { color: #81C784; }
+  .dark .cm-app .stat-tile.tone-green .stat-tile-value, .dark .cm-app .stat-tile.tone-green .stat-tile-sub { color: var(--text); }
   .dark .cm-app .stat-tile.tone-orange .stat-tile-label { color: #FFD54F; }
   .dark .cm-app .stat-tile.tone-blue .stat-tile-label { color: #BFC2E6; }
   .dark .cm-app .alert-item.alert-warning > svg, .dark .cm-app .alert-item.alert-warning .alert-kicker { color: #FFD54F; }

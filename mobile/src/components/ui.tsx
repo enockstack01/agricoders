@@ -268,16 +268,16 @@ export function StatTile({ label, value, sub, color, tone }: { label: string; va
   const { colors, isDark } = useTheme();
   const bg = tone ? (isDark ? KPI_TONES[tone][1] : KPI_TONES[tone][0]) : colors.bg;
   // coloured labels: dark shades on the pale light mode tints, light shades on the dark tints
-  const labelColor = !tone ? colors.textLight : isDark ? { green: '#81C784', orange: '#FFD54F', blue: '#BFC2E6' }[tone] : { green: '#1B5E20', orange: '#8A4B00', blue: '#0A108A' }[tone];
+  const labelColor = !tone ? colors.textLight : isDark ? { green: '#81C784', orange: '#FFD54F', blue: '#BFC2E6' }[tone] : { green: '#0A108A', orange: '#8A4B00', blue: '#0A108A' }[tone];
   return (
     <View style={{ backgroundColor: bg, borderRadius: radius.lg, paddingVertical: 14, paddingHorizontal: 10, alignItems: 'center' }}>
       <AppText weight="600" style={{ fontSize: 12, color: labelColor, textTransform: 'uppercase', letterSpacing: 0.5, textAlign: 'center' }} numberOfLines={2}>
         {label}
       </AppText>
-      <AppText weight="800" style={{ fontSize: 22, lineHeight: 28, color: color ?? colors.text, marginTop: 6 }} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.5}>
+      <AppText weight="800" style={{ fontSize: 22, lineHeight: 28, color: color ?? (tone === 'green' && !isDark ? '#0A108A' : colors.text), marginTop: 6 }} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.5}>
         {String(value)}
       </AppText>
-      {sub ? <AppText style={{ fontSize: 12, color: colors.textLight }}>{sub}</AppText> : null}
+      {sub ? <AppText style={{ fontSize: 12, color: tone === 'green' && !isDark ? '#0A108A' : colors.textLight }}>{sub}</AppText> : null}
     </View>
   );
 }
