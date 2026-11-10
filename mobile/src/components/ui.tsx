@@ -274,10 +274,10 @@ export function StatTile({ label, value, sub, color, tone }: { label: string; va
       <AppText weight="600" style={{ fontSize: 12, color: labelColor, textTransform: 'uppercase', letterSpacing: 0.5, textAlign: 'center' }} numberOfLines={2}>
         {label}
       </AppText>
-      <AppText weight="800" style={{ fontSize: 22, lineHeight: 28, color: color ?? (tone === 'green' && !isDark ? '#0A108A' : colors.text), marginTop: 6 }} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.5}>
+      <AppText weight="800" style={{ fontSize: 22, lineHeight: 28, color: color ?? ((tone === 'green' || tone === 'blue') && !isDark ? '#0A108A' : colors.text), marginTop: 6 }} numberOfLines={1} adjustsFontSizeToFit minimumFontScale={0.5}>
         {String(value)}
       </AppText>
-      {sub ? <AppText style={{ fontSize: 12, color: tone === 'green' && !isDark ? '#0A108A' : colors.textLight }}>{sub}</AppText> : null}
+      {sub ? <AppText style={{ fontSize: 12, color: (tone === 'green' || tone === 'blue') && !isDark ? '#0A108A' : colors.textLight }}>{sub}</AppText> : null}
     </View>
   );
 }
